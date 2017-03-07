@@ -8,13 +8,22 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "com.gedoor.kunfei.lunarreminder"
+        jackOptions {
+            enabled true
+        }
+        applicationId "gedoor.kunfei.lunarreminder"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 10000 + gitCommits
         versionName gitTag
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -31,6 +40,10 @@ android {
                         ".apk")
             }
         }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 
