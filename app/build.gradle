@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+def gitTag = 'git tag'.execute([], project.rootDir).text.trim().split("\n").last()
+def gitCommits = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -7,14 +11,25 @@ android {
         applicationId "com.gedoor.kunfei.lunarreminder"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 10000 + gitCommits
+        versionName gitTag
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
+                output.outputFile = file("${output.outputFile.parent}/Lunar-reminder" +
+                        "-${variant.buildType.name.toLowerCase()}" +
+                        "-${variant.versionName}" +
+                        "-${variant.flavorName.toLowerCase()}" +
+                        ".apk")
+            }
         }
     }
 }
@@ -27,5 +42,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
     compile 'com.android.support:design:25.1.1'
+    compile 'com.google.android.gms:play-services-auth:10.2.0'
+
     testCompile 'junit:junit:4.12'
 }
