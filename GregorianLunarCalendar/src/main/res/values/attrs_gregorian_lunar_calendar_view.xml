@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="GregorianLunarCalendarView">
+        <attr name="glcv_ScrollAnimation" format="reference|boolean" />
+        <attr name="glcv_GregorianThemeColor" format="reference|color" />
+        <attr name="glcv_LunarThemeColor" format="reference|color" />
+        <attr name="glcv_NormalTextColor" format="reference|color" />
+    </declare-styleable>
+
+</resources>
