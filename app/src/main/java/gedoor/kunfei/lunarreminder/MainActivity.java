@@ -1,5 +1,6 @@
 package gedoor.kunfei.lunarreminder;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,8 +11,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_REMINDER = 1;
+    private static final int REQUEST_PERMS = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_REMINDER);
             }
         );
+        //get permission
+        String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR};
+        if (!EasyPermissions.hasPermissions(this, perms)) {
+            EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
+        }
     }
 
     @Override
@@ -48,4 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
 }
