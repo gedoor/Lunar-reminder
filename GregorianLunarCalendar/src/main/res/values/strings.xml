@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">library</string>
+    <string name="app_name">GregorianLunarCalendar</string>
 
     <string-array name="npv_lunar_year_without_measure_hint">
         <item>二零一六</item>

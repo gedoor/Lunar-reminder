@@ -2,4 +2,13 @@
     <string name="app_name">Lunar reminder</string>
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
+    <string name="reminder_me">reminder me</string>
+    <string name="repeat">repeat</string>
+    <string name="all_day">All day</string>
+    <string name="ok">OK</string>
+
+    <string-array name="indicator_string_array">
+        <item>Gregorian calendar</item>
+        <item>Lunar calendar</item>
+    </string-array>
 </resources>

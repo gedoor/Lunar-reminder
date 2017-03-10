@@ -2,4 +2,14 @@
 <resources>
     <string name="app_name">农历提醒</string>
     <string name="action_settings">设置</string>
+    <string name="action_save">保存</string>
+    <string name="reminder_me">提醒我</string>
+    <string name="repeat">重复</string>
+    <string name="all_day">全天</string>
+    <string name="ok">确定</string>
+
+    <string-array name="indicator_string_array">
+        <item>公历</item>
+        <item>农历</item>
+    </string-array>
 </resources>

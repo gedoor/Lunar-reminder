@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="gedoor.kunfei.lunarreminder.ReminderActivity"
+    tools:showIn="@layout/activity_reminder">
+
+    <ImageView
+        android:id="@+id/ivwallday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ic_access_time_black_24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:contentDescription="@string/all_day"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_day"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toTopOf="@+id/ivwallday"
+        android:id="@+id/vwallday"
+        app:layout_constraintLeft_toRightOf="@+id/ivwallday"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="0dp"
+        tools:ignore="RtlHardcoded" />
+
+    <Switch
+        android:id="@+id/swallday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/vwallday"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/vwchinesedate"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="15dp"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="@+id/vwallday"
+        app:layout_constraintTop_toBottomOf="@+id/vwallday"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/vwtime"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp"
+        android:text="07.00"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vwchinesedate"
+        tools:ignore="RtlHardcoded" />
+
+    <ImageView
+        android:id="@+id/ivwrepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_refresh_black_24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/vwchinesedate"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintLeft_toLeftOf="@+id/ivwallday"
+        android:contentDescription="@string/repeat"
+        tools:ignore="RtlHardcoded"/>
+
+    <TextView
+        android:id="@+id/vwrepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="0dp"
+        android:text="@string/repeat"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toRightOf="@+id/ivwrepeat"
+        app:layout_constraintTop_toTopOf="@+id/ivwrepeat"
+        tools:ignore="RtlHardcoded" />
+
+
+</android.support.constraint.ConstraintLayout>

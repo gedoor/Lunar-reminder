@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <cn.carbs.android.indicatorview.library.IndicatorView
+        android:id="@+id/indicator_view"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="#ffeeeeee"
+        app:iv_IndicatorColorEnd="@color/colorLunar"
+        app:iv_IndicatorColorGradient="true"
+        app:iv_IndicatorColorStart="@color/colorGregorian"
+        app:iv_IndicatorEven="true"
+        app:iv_IndicatorHeight="2dp"
+        app:iv_IndicatorTextArray="@array/indicator_string_array"
+        app:iv_IndicatorTextSize="16dp" />
+
+    <cn.carbs.android.gregorianlunarcalendar.library.view.GregorianLunarCalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:glcv_GregorianThemeColor="@color/colorGregorian"
+        app:glcv_LunarThemeColor="@color/colorLunar"
+        app:glcv_NormalTextColor="#FF777777"
+        app:glcv_ScrollAnimation="true" />
+
+    <Button
+        android:id="@+id/button_get_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/ok" />
+</LinearLayout>
