@@ -1,10 +1,20 @@
 package gedoor.kunfei.lunarreminder.CalendarProvider;
 
+import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
+import android.support.v4.app.ActivityCompat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import gedoor.kunfei.lunarreminder.R;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
@@ -15,28 +25,78 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 public class initlunar {
 
     public static final String[] EVENT_PROJECTION = new String[] {
-            Calendars._ID,                           // 0
-            Calendars.ACCOUNT_NAME,                  // 1
-            Calendars.CALENDAR_DISPLAY_NAME,         // 2
-            Calendars.OWNER_ACCOUNT                  // 3
+            Calendars._ID,// 0
+            Calendars.ACCOUNT_NAME,// 1
+            Calendars.ACCOUNT_TYPE,//2
+            Calendars.NAME,//3
+            Calendars.CALENDAR_DISPLAY_NAME,// 4
+            Calendars.OWNER_ACCOUNT// 5
+
     };
 
-    // The indices for the projection array above.
-    private static final int PROJECTION_ID_INDEX = 0;
-    private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-    private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-    private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+    private static final int INDEX_ID = 0;
+    private static final int INDEX_ACCOUNT_NAME = 1;
+    private static final int INDEX_ACCOUNT_TYPE = 2;
+    private static final int INDEX_NAME = 3;
+    private static final int INDEX_CALENDAR_DISPLAY_NAME = 4;
+    private static final int OWNER_ACCOUNT = 5;
 
-    // Run query
-    Cursor cur = null;
-    ContentResolver cr = mContext.getContentResolver();
-    Uri uri = Calendars.CONTENT_URI;
-    String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
-            + Calendars.ACCOUNT_TYPE + " = ?) AND ("
-            + Calendars.OWNER_ACCOUNT + " = ?))";
-    String[] selectionArgs = new String[] {"sampleuser@gmail.com", "com.google",
-            "sampleuser@gmail.com"};
-    // Submit the query and get a Cursor object back.
+    public Uri addCalender(String accountName, String accountType) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Calendars.ACCOUNT_NAME, accountName);
+        contentValues.put(Calendars.ACCOUNT_TYPE, accountType);
+        contentValues.put(Calendars.NAME, "Lunar Birthday");
+        contentValues.put(Calendars.CALENDAR_DISPLAY_NAME, "Lunar Birthday");
+        contentValues.put(Calendars.CALENDAR_COLOR, R.color.colorLunar);
+        contentValues.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
+        contentValues.put(Calendars.OWNER_ACCOUNT, accountName);
+        ContentResolver cr = mContext.getContentResolver();
+        Uri uri = Calendars.CONTENT_URI;
+        uri = cr.insert(uri, contentValues);
+        return uri;
+    }
 
-//    cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+    public long getCalenderID(String accountName) {
+        long calenderID = 0;
+        Cursor cur = null;
+        ContentResolver cr = mContext.getContentResolver();
+        Uri uri = Calendars.CONTENT_URI;
+        String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
+                + Calendars.NAME + " = ?))";
+        String[] selectionArgs = new String[] {accountName, "Lunar Birthday"};
+        // Submit the query and get a Cursor object back
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return 0;
+        }
+        cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+
+        while (cur.moveToNext()) {
+            calenderID = cur.getLong(INDEX_ID);
+        }
+        cur.close();
+        return calenderID;
+    }
+
+    public Map getCalendarsAccountNames() {
+        Map accounts = new HashMap();
+        Cursor cur = null;
+        ContentResolver cr = mContext.getContentResolver();
+        Uri uri = Calendars.CONTENT_URI;
+        // Submit the query and get a Cursor object back
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+        cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
+
+        while (cur.moveToNext()) {
+            if (!accounts.keySet().contains(cur.getString(INDEX_ACCOUNT_NAME))) {
+                accounts.put(cur.getString(INDEX_ACCOUNT_NAME), cur.getString(INDEX_ACCOUNT_TYPE));
+            }
+        }
+        cur.close();
+        return accounts;
+    }
+
+
+
 }
