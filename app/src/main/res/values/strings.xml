@@ -6,9 +6,24 @@
     <string name="repeat">repeat</string>
     <string name="all_day">All day</string>
     <string name="ok">OK</string>
+    <string name="selectCalendarAaccount">请选择日历账户</string>
 
     <string-array name="indicator_string_array">
-        <item>Gregorian calendar</item>
         <item>Lunar calendar</item>
+        <item>Gregorian calendar</item>
+    </string-array>
+
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+
+    <string-array name="npv_lunar_year_without_measure_hint">
+        <item>二零一六</item>
+    </string-array>
+    <string-array name="npv_lunar_month_without_measure_hint">
+        <item>十一</item>
+    </string-array>
+    <string-array name="npv_lunar_day_with_measure_hint">
+        <item>初一</item>
     </string-array>
 </resources>

@@ -24,7 +24,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 public class initlunar {
 
-    public static final String[] EVENT_PROJECTION = new String[] {
+    public static final String[] EVENT_PROJECTION = new String[]{
             Calendars._ID,// 0
             Calendars.ACCOUNT_NAME,// 1
             Calendars.ACCOUNT_TYPE,//2
@@ -52,6 +52,9 @@ public class initlunar {
         contentValues.put(Calendars.OWNER_ACCOUNT, accountName);
         ContentResolver cr = mContext.getContentResolver();
         Uri uri = Calendars.CONTENT_URI;
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
         uri = cr.insert(uri, contentValues);
         return uri;
     }
@@ -96,7 +99,5 @@ public class initlunar {
         cur.close();
         return accounts;
     }
-
-
 
 }

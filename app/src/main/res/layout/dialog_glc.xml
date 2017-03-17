@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="#ffeeeeee"
-        app:iv_IndicatorColorEnd="@color/colorLunar"
+        app:iv_IndicatorColorStart="@color/colorLunar"
         app:iv_IndicatorColorGradient="true"
-        app:iv_IndicatorColorStart="@color/colorGregorian"
+        app:iv_IndicatorColorEnd="@color/colorGregorian"
         app:iv_IndicatorEven="true"
         app:iv_IndicatorHeight="2dp"
         app:iv_IndicatorTextArray="@array/indicator_string_array"
         app:iv_IndicatorTextSize="16dp" />
 
-    <cn.carbs.android.gregorianlunarcalendar.library.view.GregorianLunarCalendarView
+    <gedoor.kunfei.lunarreminder.view.GregorianLunarCalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="160dp"

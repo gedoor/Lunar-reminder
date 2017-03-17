@@ -14,6 +14,8 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.view.DialogGLC;
 
 /**
  * Created by GKF on 2017/3/7.
@@ -29,7 +31,7 @@ public class ReminderActivity extends AppCompatActivity {
     TextView vwtime;
 
     private DialogGLC mDialog;
-    private Calendar calendar;
+    private ChineseCalendar cc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +100,13 @@ public class ReminderActivity extends AppCompatActivity {
             mDialog.setDialogResult((String result) ->{
                 vwchinesedate.setText(result);
             });
-            mDialog.initCalendar(calendar, true);
+            mDialog.initCalendar(cc, false);
         }
     }
 
     private void initReminder() {
-        calendar = Calendar.getInstance();
+        cc = new ChineseCalendar(Calendar.getInstance());
         swallday.setChecked(true);
-        vwchinesedate.setText(calendar.getTime().toString());
+        vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
     }
 }

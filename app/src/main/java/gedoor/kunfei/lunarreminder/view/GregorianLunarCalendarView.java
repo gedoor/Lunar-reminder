@@ -1,4 +1,4 @@
-package cn.carbs.android.gregorianlunarcalendar.library.view;
+package gedoor.kunfei.lunarreminder.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,10 +8,11 @@ import android.widget.LinearLayout;
 
 import java.util.Calendar;
 
-import cn.carbs.android.gregorianlunarcalendar.library.R;
-import cn.carbs.android.gregorianlunarcalendar.library.data.ChineseCalendar;
-import cn.carbs.android.gregorianlunarcalendar.library.util.Util;
+
 import cn.carbswang.android.numberpickerview.library.NumberPickerView;
+import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.util.Util;
 
 public class GregorianLunarCalendarView extends LinearLayout implements NumberPickerView.OnValueChangeListener{
 
@@ -147,14 +148,19 @@ public class GregorianLunarCalendarView extends LinearLayout implements NumberPi
     }
 
     private void setConfigs(Calendar c, boolean isGregorian, boolean anim){
+        mIsGregorian = isGregorian;
         if(c == null){
             c = Calendar.getInstance();
         }
-        if(!checkCalendarAvailable(c, YEAR_START, YEAR_STOP, isGregorian)){
-            c = adjustCalendarByLimit(c, YEAR_START, YEAR_STOP, isGregorian);
-        }
-        mIsGregorian = isGregorian;
         ChineseCalendar cc;
+        if(c instanceof ChineseCalendar){
+            cc = (ChineseCalendar)c;
+        }else{
+            cc = new ChineseCalendar(c);
+        }
+        if(!checkCalendarAvailable(cc, YEAR_START, YEAR_STOP, isGregorian)){
+            c = adjustCalendarByLimit(cc, YEAR_START, YEAR_STOP, isGregorian);
+        }
         if(c instanceof ChineseCalendar){
             cc = (ChineseCalendar)c;
         }else{

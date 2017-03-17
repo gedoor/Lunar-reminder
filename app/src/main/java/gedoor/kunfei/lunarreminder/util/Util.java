@@ -1,10 +1,11 @@
-package cn.carbs.android.gregorianlunarcalendar.library.util;
+package gedoor.kunfei.lunarreminder.util;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-import cn.carbs.android.gregorianlunarcalendar.library.data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+
 
 public class Util {
 

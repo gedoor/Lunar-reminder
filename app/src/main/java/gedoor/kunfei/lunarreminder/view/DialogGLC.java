@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder;
+package gedoor.kunfei.lunarreminder.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Toast;
+
 
 import java.util.Calendar;
 
-import cn.carbs.android.gregorianlunarcalendar.library.data.ChineseCalendar;
-import cn.carbs.android.gregorianlunarcalendar.library.view.GregorianLunarCalendarView;
+
 import cn.carbs.android.indicatorview.library.IndicatorView;
+import gedoor.kunfei.lunarreminder.R;
 
 /**
  * Created by carbs on 2016/7/12.
@@ -66,9 +66,9 @@ public class DialogGLC extends Dialog implements View.OnClickListener, Indicator
     @Override
     public void onIndicatorChanged(int oldSelectedIndex, int newSelectedIndex) {
         if (newSelectedIndex == 0) {
-            toGregorianMode();
-        } else if (newSelectedIndex == 1) {
             toLunarMode();
+        } else if (newSelectedIndex == 1) {
+            toGregorianMode();
         }
     }
 

@@ -17,18 +17,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.CalendarProvider.initlunar;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -78,9 +79,16 @@ public class MainActivity extends AppCompatActivity {
             EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
         }
 
+        viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) ->{
+            Intent intent = new Intent(this, ReminderActivity.class);
+            intent.putExtra("id", id);
+            startActivityForResult(intent, REQUEST_REMINDER);
+        });
+
     }
 
     public void initActivity() {
+        //初始化列表
         if (accountName == null) {
             Map accounts = new initlunar().getCalendarsAccountNames();
             selectAccount(accounts);
@@ -91,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
             String accountType = sharedPreferences.getString("accountType", "LOCAL");
             new initlunar().addCalender(accountName, accountType);
         }
-
+        Calendar calendar = Calendar.getInstance();
         Uri uri = Events.CONTENT_URI;
         ContentResolver cr = mContext.getContentResolver();
+        String[] selectcol = new String[]{Events._ID, Events._COUNT, Events.TITLE};
         String selection = "(" + Events.CALENDAR_ID + " = ?)";
         String[] selectionArgs = new String[]{Long.toString(calenderID)};
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -101,13 +110,11 @@ public class MainActivity extends AppCompatActivity {
         }
         Cursor cursor = cr.query(uri, null, selection, selectionArgs, null);
 
-        if (cursor != null) {
-            Log.i("cth", cursor.getColumnIndex(Events.TITLE) + "");
-        }
-
-        ListAdapter listAdapter = new SimpleCursorAdapter(this, R.layout.main_reminder_item, cursor,
+        SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(this,
+                R.layout.item_reminder,
+                cursor,
                 new String[]{Events.TITLE},
-                new int[]{R.id.ltitle},
+                new int[]{R.id.reminder_list_item_nameTextView},
                 FLAG_REGISTER_CONTENT_OBSERVER);
         viewReminderList.setAdapter(listAdapter);
 
@@ -144,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         String[] accountNames = new String[set.size()];
         set.toArray(accountNames);
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("请选择日历账户");
+        builder.setTitle(R.string.selectCalendarAaccount);
         builder.setSingleChoiceItems(accountNames, 0, (DialogInterface dialog, int which) -> {
             index = which;
         });
@@ -168,5 +175,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
 
 }
