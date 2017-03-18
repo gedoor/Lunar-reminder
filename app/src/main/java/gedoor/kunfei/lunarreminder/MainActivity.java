@@ -22,15 +22,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.CalendarProvider.initlunar;
+import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
-                    Intent intent = new Intent(this, ReminderActivity.class);
+                    Intent intent = new Intent(this, ReminderEditActivity.class);
                     startActivityForResult(intent, REQUEST_REMINDER);
                 }
         );
@@ -80,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) ->{
-            Intent intent = new Intent(this, ReminderActivity.class);
-            intent.putExtra("id", id);
+            Intent intent = new Intent(this, ReminderEditActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", id);
+            intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
 
@@ -99,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             String accountType = sharedPreferences.getString("accountType", "LOCAL");
             new initlunar().addCalender(accountName, accountType);
         }
-        Calendar calendar = Calendar.getInstance();
         Uri uri = Events.CONTENT_URI;
         ContentResolver cr = mContext.getContentResolver();
         String[] selectcol = new String[]{Events._ID, Events._COUNT, Events.TITLE};
@@ -108,16 +113,37 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Cursor cursor = cr.query(uri, null, selection, selectionArgs, null);
-
+        Cursor cursor = cr.query(uri, null, selection, selectionArgs, Events.DTSTART);
         SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(this,
                 R.layout.item_reminder,
                 cursor,
-                new String[]{Events.TITLE},
-                new int[]{R.id.reminder_list_item_nameTextView},
+                new String[]{Events.DTSTART, Events.TITLE},
+                new int[]{R.id.reminder_item_date, R.id.reminder_item_title},
                 FLAG_REGISTER_CONTENT_OBSERVER);
+        listAdapter.setViewBinder(viewBinder);
         viewReminderList.setAdapter(listAdapter);
+    }
 
+    private SimpleCursorAdapter.ViewBinder viewBinder = (View view, Cursor cursor, int columnIndex)-> {
+            if(cursor.getColumnIndex(Events.DTSTART)==columnIndex){    //duration为数据库中对应的属性列
+                TextView textView=(TextView)view;
+                String std = cursor.getString(columnIndex);
+                Date dt = new Date(Long.parseLong(std));
+                Calendar c = Calendar.getInstance();
+                c.setTime(dt);
+                ChineseCalendar cc = new ChineseCalendar(c);
+                textView.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + "\n" + cc.getChinese(ChineseCalendar.CHINESE_DATE));  //显示
+                return true;
+            }
+            return false;
+    };
+
+    public static Date stringToDate(String strTime, String formatType)
+            throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat(formatType);
+        Date date = null;
+        date = formatter.parse(strTime);
+        return date;
     }
 
     @Override
@@ -141,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }

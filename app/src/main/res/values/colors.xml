@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorGregorian">#ff3388ff</color>
-    <color name="colorLunar">#ffee5544</color>
+    <color name="colorLunar">#ee5544</color>
     <color name="colorPickerTextNormal">#FF555555</color>
     <color name="colorPickerTextSelected">#FFF56313</color>
     <color name="colorIndicatorTextNormal">#FF555555</color>

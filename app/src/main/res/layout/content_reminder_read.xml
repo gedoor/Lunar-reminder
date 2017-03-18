@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="gedoor.kunfei.lunarreminder.ReminderActivity"
-    tools:showIn="@layout/activity_reminder">
+    tools:context="gedoor.kunfei.lunarreminder.ReminderEditActivity"
+    tools:showIn="@layout/activity_reminder_read">
 
     <ImageView
         android:id="@+id/ivwallday"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="15dp"
-        android:text="TextView"
+        android:text="@string/app_name"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="@+id/vwallday"
@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         android:layout_marginTop="0dp"
-        android:text="07.00"
+        android:text="@string/app_name"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintRight_toRightOf="parent"

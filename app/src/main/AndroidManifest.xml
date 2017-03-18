@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ReminderActivity"
+            android:name=".ReminderEditActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

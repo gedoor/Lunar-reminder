@@ -1,49 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:padding="2dp">
 
-    <TextView android:id="@+id/reminder_list_item_nameTextView"
-        android:layout_width="wrap_content"
+    <TextView android:id="@+id/reminder_item_date"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
-        android:textSize="22sp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="birthday name" />
+        android:textSize="16sp"
+        android:padding="4dp"
+        android:text="@string/app_name"
+        tools:ignore="RtlHardcoded" />
 
-    <TextView android:id="@+id/birthday_list_item_dateTextView"
+    <TextView
+        android:id="@+id/reminder_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/reminder_item_date"
+        android:background="@color/colorLunar"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
-        android:textSize="15sp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="2dp"
-        android:text="birthday date" />
+        android:padding="4dp"
+        android:text="@string/app_name"
+        android:textSize="16sp"
+        android:textColor="@color/colorWhite"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView android:id="@+id/birthday_list_item_dayLeftTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/birthday_list_item_dateTextView"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:ellipsize="marquee"
-        android:fadingEdge="horizontal"
-        android:textSize="15sp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="5dp"
-        android:text="@string/app_name" />
+
 </RelativeLayout>

@@ -14,6 +14,8 @@ import java.util.Calendar;
 
 
 import cn.carbs.android.indicatorview.library.IndicatorView;
+import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.ReminderEditActivity.DialogListener;
 import gedoor.kunfei.lunarreminder.R;
 
 /**
@@ -26,11 +28,12 @@ public class DialogGLC extends Dialog implements View.OnClickListener, Indicator
     private IndicatorView mIndicatorView;
     private GregorianLunarCalendarView mGLCView;
     private Button mButtonGetData;
-    OnMyDialogResult mDialogResult;
+    DialogListener dialogListener;
 
-    public DialogGLC(Context context) {
+    public DialogGLC(Context context, DialogListener dialogListener) {
         super(context, R.style.dialog);
         mContext = context;
+        this.dialogListener = dialogListener;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class DialogGLC extends Dialog implements View.OnClickListener, Indicator
             case R.id.button_get_data:
                 GregorianLunarCalendarView.CalendarData calendarData = mGLCView.getCalendarData();
                 Calendar calendar = calendarData.getCalendar();
-                mDialogResult.finish(calendar.toString());
+                dialogListener.getCalendar((ChineseCalendar)calendar);
                 dismiss();
         }
     }
@@ -103,11 +106,5 @@ public class DialogGLC extends Dialog implements View.OnClickListener, Indicator
         return (int) (dipValue * scale + 0.5f);
     }
 
-    public void setDialogResult(OnMyDialogResult dialogResult){
-        mDialogResult = dialogResult;
-    }
 
-    public interface OnMyDialogResult{
-        void finish(String result);
-    }
 }

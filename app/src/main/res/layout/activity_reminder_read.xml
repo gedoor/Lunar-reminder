@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gedoor.kunfei.lunarreminder.ReminderActivity">
+    tools:context="gedoor.kunfei.lunarreminder.ReminderEditActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -19,6 +19,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <EditText
+            android:id="@+id/text_reminder_me"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
@@ -27,6 +28,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_reminder" />
+    <include layout="@layout/content_reminder_read" />
 
 </android.support.design.widget.CoordinatorLayout>
