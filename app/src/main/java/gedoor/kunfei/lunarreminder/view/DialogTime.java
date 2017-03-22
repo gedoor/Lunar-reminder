@@ -1,5 +1,6 @@
 package gedoor.kunfei.lunarreminder.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import gedoor.kunfei.lunarreminder.R;
 /**
  * Created by GKF on 2017/3/18.
  */
-
+@SuppressLint("WrongConstant")
 public class DialogTime extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
@@ -34,11 +35,11 @@ public class DialogTime extends DialogFragment
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
-        TextView timevw = (TextView) getActivity().findViewById(R.id.vwtime);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("k:mm");
-        timevw.setText(dateFormat.format(calendar.getTime()));
+//        TextView timevw = (TextView) getActivity().findViewById(R.id.vwtime);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//        calendar.set(Calendar.MINUTE, minute);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("k:mm");
+//        timevw.setText(dateFormat.format(calendar.getTime()));
     }
 }

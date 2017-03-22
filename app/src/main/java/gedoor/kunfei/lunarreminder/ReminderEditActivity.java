@@ -1,6 +1,7 @@
 package gedoor.kunfei.lunarreminder;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,7 +28,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.view.DialogTime;
 
@@ -37,14 +38,10 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
  * Created by GKF on 2017/3/7.
  */
 
-public class ReminderEditActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+public class ReminderEditActivity extends AppCompatActivity {
 
-    @BindView(R.id.swallday)
-    Switch swallday;
     @BindView(R.id.vwchinesedate)
     TextView vwchinesedate;
-    @BindView(R.id.vwtime)
-    TextView vwtime;
     @BindView(R.id.text_reminder_me)
     EditText textReminderMe;
 
@@ -59,12 +56,10 @@ public class ReminderEditActivity extends AppCompatActivity implements CompoundB
         Toolbar toolbar = (Toolbar) findViewById(R.id.reminder_toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolbar.setNavigationOnClickListener((View view) -> {
             setResult(RESULT_CANCELED);
             finish();
         });
-        swallday.setOnCheckedChangeListener(this);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -87,16 +82,6 @@ public class ReminderEditActivity extends AppCompatActivity implements CompoundB
                 c.setTime(dt);
                 ChineseCalendar cc = new ChineseCalendar(c);
                 vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-                String allday = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.ALL_DAY));
-                if (allday.contains("0")) {
-                    swallday.setChecked(false);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("k:mm");
-                    vwtime.setText(dateFormat.format(c.getTime()));
-                } else {
-                    swallday.setChecked(true);
-                    vwtime.setVisibility(View.INVISIBLE);
-                    vwtime.setText("7:00");
-                }
 
             }
         } else {
@@ -108,7 +93,7 @@ public class ReminderEditActivity extends AppCompatActivity implements CompoundB
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_reminder, menu);
+        getMenuInflater().inflate(R.menu.menu_reminder_edit, menu);
         return true;
     }
 
@@ -129,27 +114,12 @@ public class ReminderEditActivity extends AppCompatActivity implements CompoundB
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.swallday:
-                if (isChecked) {
-                    vwtime.setVisibility(View.INVISIBLE);
-                } else {
-                    vwtime.setVisibility(View.VISIBLE);
-                }
-                break;
-        }
-    }
 
-    @OnClick({R.id.vwchinesedate, R.id.vwtime})
+    @OnClick({R.id.vwchinesedate})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.vwchinesedate:
                 selectDate();
-                break;
-            case R.id.vwtime:
-                selectTime(vwtime);
                 break;
         }
     }
@@ -178,12 +148,13 @@ public class ReminderEditActivity extends AppCompatActivity implements CompoundB
         DialogFragment newFragment = new DialogTime();
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
-
+    @SuppressLint("WrongConstant")
     private void initReminder() {
         cc = new ChineseCalendar(Calendar.getInstance());
-        swallday.setChecked(true);
-        vwtime.setVisibility(View.INVISIBLE);
-        vwtime.setText("7:00");
+        cc.set(Calendar.HOUR_OF_DAY, 0);
+        cc.set(Calendar.MINUTE, 0);
+        cc.set(Calendar.SECOND, 0);
+        cc.set(Calendar.MILLISECOND,0);
         vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
     }
 }

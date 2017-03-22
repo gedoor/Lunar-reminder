@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            app:navigationIcon="@drawable/ic_close_white_24dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <EditText
@@ -24,6 +25,7 @@
             android:layout_height="match_parent"
             android:background="@null"
             android:padding="10pt"
+            android:textSize="16sp"
             android:hint="@string/reminder_me"/>
 
     </android.support.design.widget.AppBarLayout>

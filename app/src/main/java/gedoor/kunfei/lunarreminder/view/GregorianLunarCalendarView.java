@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 
 import cn.carbswang.android.numberpickerview.library.NumberPickerView;
-import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.Util;
 

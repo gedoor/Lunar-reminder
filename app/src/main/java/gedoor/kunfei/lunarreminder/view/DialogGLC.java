@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 
 import cn.carbs.android.indicatorview.library.IndicatorView;
-import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.ReminderEditActivity.DialogListener;
 import gedoor.kunfei.lunarreminder.R;
 

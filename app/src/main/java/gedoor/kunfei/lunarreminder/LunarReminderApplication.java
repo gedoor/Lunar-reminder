@@ -9,7 +9,6 @@ import android.content.Context;
 
 public class LunarReminderApplication extends Application {
     public static Context mContext;
-    public static final String setingFile = "Setings";
 
     @Override
     public void onCreate() {

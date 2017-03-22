@@ -2,18 +2,14 @@ package gedoor.kunfei.lunarreminder;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract.Events;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,18 +29,18 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gedoor.kunfei.lunarreminder.CalendarProvider.initlunar;
-import gedoor.kunfei.lunarreminder.Data.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.CalendarProvider.initLunar;
+import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.setingFile;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.setingFile;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_REMINDER = 1;
-    private static final int REQUEST_PERMS = 2;
+    private static final int REQUEST_SETTINGS = 2;
+    private static final int REQUEST_PERMS = 3;
 
     int index;
 
@@ -84,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) ->{
-            Intent intent = new Intent(this, ReminderEditActivity.class);
+            Intent intent = new Intent(this, ReminderReadActivity.class);
             Bundle bundle = new Bundle();
             bundle.putLong("id", id);
             intent.putExtras(bundle);
@@ -95,25 +91,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void initActivity() {
         //初始化列表
+        initLunar initlunar = new initLunar();
         if (accountName == null) {
-            Map accounts = new initlunar().getCalendarsAccountNames();
+            Map accounts = initlunar.getCalendarsAccountNames();
             selectAccount(accounts);
         }
 
-        long calenderID = new initlunar().getCalenderID(accountName);
+        long calenderID = initlunar.getCalendarID(accountName);
         if (calenderID == 0) {
             String accountType = sharedPreferences.getString("accountType", "LOCAL");
-            new initlunar().addCalender(accountName, accountType);
+            new initLunar().addCalendar(accountName, accountType);
         }
-        Uri uri = Events.CONTENT_URI;
-        ContentResolver cr = mContext.getContentResolver();
-        String[] selectcol = new String[]{Events._ID, Events._COUNT, Events.TITLE};
-        String selection = "(" + Events.CALENDAR_ID + " = ?)";
-        String[] selectionArgs = new String[]{Long.toString(calenderID)};
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Cursor cursor = cr.query(uri, null, selection, selectionArgs, Events.DTSTART);
+
+        Cursor cursor = initlunar.getEvents();
         SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(this,
                 R.layout.item_reminder,
                 cursor,
@@ -158,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            this.startActivityForResult(intent,REQUEST_SETTINGS);
             return true;
         }
 
