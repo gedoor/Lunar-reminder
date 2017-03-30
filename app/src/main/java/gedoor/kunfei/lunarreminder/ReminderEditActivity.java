@@ -3,31 +3,33 @@ package gedoor.kunfei.lunarreminder;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import gedoor.kunfei.lunarreminder.CalendarProvider.LunarEvents;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.view.DialogTime;
@@ -37,7 +39,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 /**
  * Created by GKF on 2017/3/7.
  */
-
+@SuppressLint("WrongConstant")
 public class ReminderEditActivity extends AppCompatActivity {
 
     @BindView(R.id.vwchinesedate)
@@ -47,6 +49,8 @@ public class ReminderEditActivity extends AppCompatActivity {
 
     private DialogGLC mDialog;
     private ChineseCalendar cc;
+    int cyear;
+    long id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ public class ReminderEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            long id = bundle.getLong("id");
+            id = bundle.getLong("id");
             Uri uri = CalendarContract.Events.CONTENT_URI;
             ContentResolver cr = mContext.getContentResolver();
             String[] selectcol = new String[]{CalendarContract.Events._ID, CalendarContract.Events._COUNT, CalendarContract.Events.TITLE};
@@ -80,7 +84,8 @@ public class ReminderEditActivity extends AppCompatActivity {
                 Date dt = new Date(Long.parseLong(std));
                 Calendar c = Calendar.getInstance();
                 c.setTime(dt);
-                ChineseCalendar cc = new ChineseCalendar(c);
+                cc = new ChineseCalendar(c);
+                cyear = cc.get(ChineseCalendar.CHINESE_YEAR);
                 vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
 
             }
@@ -88,6 +93,29 @@ public class ReminderEditActivity extends AppCompatActivity {
             initReminder();
         }
 
+    }
+
+    public void saveEvent() {
+        String title = textReminderMe.getText().toString();
+        if (title.isEmpty()) {
+            Snackbar.make(textReminderMe, "提醒内容不能为空", Snackbar.LENGTH_LONG)
+            .show();
+            return;
+        }
+        cc.set(ChineseCalendar.CHINESE_YEAR, cyear);
+        cc.get(Calendar.YEAR);
+        long dtStart = cc.getTimeInMillis();
+        cc.add(Calendar.DATE,1);
+        cc.get(Calendar.DATE);
+        long dtEnd = cc.getTimeInMillis();
+
+        if (id == 0) {
+            new LunarEvents().addEvent(title, dtStart, dtEnd);
+        } else {
+            new LunarEvents().updateEvent(id, title, dtStart, dtEnd);
+        }
+        this.setResult(RESULT_OK);
+        finish();
     }
 
     @Override
@@ -99,15 +127,9 @@ public class ReminderEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            this.setResult(RESULT_OK);
-            finish();
+            saveEvent();
             return true;
         }
 
@@ -144,17 +166,30 @@ public class ReminderEditActivity extends AppCompatActivity {
         }
     }
 
-    public void selectTime(View v) {
-        DialogFragment newFragment = new DialogTime();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
-    @SuppressLint("WrongConstant")
     private void initReminder() {
         cc = new ChineseCalendar(Calendar.getInstance());
         cc.set(Calendar.HOUR_OF_DAY, 0);
         cc.set(Calendar.MINUTE, 0);
         cc.set(Calendar.SECOND, 0);
         cc.set(Calendar.MILLISECOND,0);
+        cyear = cc.get(Calendar.YEAR);
         vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            new AlertDialog.Builder(this)
+                .setTitle("退出")
+                .setMessage("是否保存")
+                .setPositiveButton("是", (DialogInterface di, int which)->{
+                    saveEvent();
+                })
+                .setNegativeButton("否", (DialogInterface di, int which)->{
+                    finish();
+                })
+                .show();
+        }
+        return false;
     }
 }

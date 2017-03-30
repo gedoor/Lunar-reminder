@@ -24,6 +24,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import gedoor.kunfei.lunarreminder.CalendarProvider.LunarEvents;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.view.DialogGLC;
 
@@ -42,7 +43,7 @@ public class ReminderReadActivity extends AppCompatActivity {
     TextView textReminderMe;
 
     private ChineseCalendar cc;
-    long id;
+    long eventID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class ReminderReadActivity extends AppCompatActivity {
         fab.setOnClickListener((View view) -> {
                     Intent intent = new Intent(this, ReminderEditActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putLong("id", id);
+                    bundle.putLong("id", eventID);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_REMINDER);
                 }
@@ -70,12 +71,12 @@ public class ReminderReadActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            id = bundle.getLong("id");
+            eventID = bundle.getLong("id");
             Uri uri = CalendarContract.Events.CONTENT_URI;
             ContentResolver cr = mContext.getContentResolver();
             String[] selectcol = new String[]{CalendarContract.Events._ID, CalendarContract.Events._COUNT, CalendarContract.Events.TITLE};
             String selection = "(" + CalendarContract.Events._ID + " = ?)";
-            String[] selectionArgs = new String[]{Long.toString(id)};
+            String[] selectionArgs = new String[]{Long.toString(eventID)};
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
@@ -105,13 +106,9 @@ public class ReminderReadActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
+            new LunarEvents().deleteEvent(eventID);
             this.setResult(RESULT_OK);
             finish();
             return true;
@@ -120,5 +117,14 @@ public class ReminderReadActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_REMINDER:
+                this.setResult(RESULT_OK);
+                finish();
+            }
+        }
+    }
 }

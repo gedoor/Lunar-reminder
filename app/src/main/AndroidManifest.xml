@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gedoor.kunfei.lunarreminder">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
 
     <application
         android:name=".LunarReminderApplication"
@@ -34,5 +38,6 @@
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme"></activity>
     </application>
+
 
 </manifest>

@@ -9,6 +9,7 @@ import android.content.Context;
 
 public class LunarReminderApplication extends Application {
     public static Context mContext;
+    public static String calendarID = null;
 
     @Override
     public void onCreate() {
