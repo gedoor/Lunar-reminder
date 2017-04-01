@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.view;
+package gedoor.kunfei.lunarreminder.UI.view;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;

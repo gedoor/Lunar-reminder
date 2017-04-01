@@ -6,7 +6,7 @@ import com.google.api.services.calendar.model.Calendar;
 
 import java.io.IOException;
 
-import gedoor.kunfei.lunarreminder.MainActivity;
+import gedoor.kunfei.lunarreminder.UI.MainActivity;
 
 public class InsertCalendar extends CalendarAsyncTask {
     private static final String TAG = "AsyncInsertCalendar";

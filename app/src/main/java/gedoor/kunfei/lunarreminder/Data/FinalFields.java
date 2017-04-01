@@ -10,11 +10,21 @@ import com.google.api.client.json.gson.GsonFactory;
  */
 
 public class FinalFields {
-    public static final String caledarName = "Lunar Reminder";
-    public static final String setingFile = "Setings";
+    public static final String CaledarName = "Lunar Reminder";
+    public static final String SetingFile = "Setings";
+
+    public static final String CalendarTypeGoogle = "Google";
+    public static final String CalendarTypeLocal = "Local";
+
+    public static final String LunarRepeatId = "LunarRepeatId";
+
+    public static final String PREF_CALENDAR_TYPE = "calendarType";
+
     public static final String PREF_GOOGLE_CALENDAR_ID = "gCalendarId";
     public static final String PREF_GOOGLE_CALENDAR_TIMEZONE = "gtimeZone";
     public static final String PREF_GOOGLE_ACCOUNT_NAME = "gAaccountName";
 
-
+    public static final String PREF_LOCAL_CALENDAR_ID = "lCalendarId";
+    public static final String PREF_LOCAL_CALENDAR_TIMEZONE = "ltimeZone";
+    public static final String PREF_LOCAL_ACCOUNT_NAME = "lAaccountName";
 }

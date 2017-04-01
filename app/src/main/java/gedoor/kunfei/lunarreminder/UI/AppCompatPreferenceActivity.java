@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder;
+package gedoor.kunfei.lunarreminder.UI;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

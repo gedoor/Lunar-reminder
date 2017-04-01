@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder;
+package gedoor.kunfei.lunarreminder.UI;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,9 +29,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.CalendarProvider.LunarEvents;
+import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
-import gedoor.kunfei.lunarreminder.view.DialogGLC;
-import gedoor.kunfei.lunarreminder.view.DialogTime;
+import gedoor.kunfei.lunarreminder.UI.view.DialogGLC;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
@@ -50,7 +49,7 @@ public class ReminderEditActivity extends AppCompatActivity {
     private DialogGLC mDialog;
     private ChineseCalendar cc;
     int cyear;
-    long id = 0;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +67,12 @@ public class ReminderEditActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            id = bundle.getLong("id");
+            id = bundle.getString("id");
             Uri uri = CalendarContract.Events.CONTENT_URI;
             ContentResolver cr = mContext.getContentResolver();
             String[] selectcol = new String[]{CalendarContract.Events._ID, CalendarContract.Events._COUNT, CalendarContract.Events.TITLE};
             String selection = "(" + CalendarContract.Events._ID + " = ?)";
-            String[] selectionArgs = new String[]{Long.toString(id)};
+            String[] selectionArgs = new String[]{id};
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
@@ -85,7 +84,6 @@ public class ReminderEditActivity extends AppCompatActivity {
                 Calendar c = Calendar.getInstance();
                 c.setTime(dt);
                 cc = new ChineseCalendar(c);
-                cyear = cc.get(ChineseCalendar.CHINESE_YEAR);
                 vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
 
             }
@@ -102,19 +100,14 @@ public class ReminderEditActivity extends AppCompatActivity {
             .show();
             return;
         }
-        cc.set(ChineseCalendar.CHINESE_YEAR, cyear);
-        cc.get(Calendar.YEAR);
-        long dtStart = cc.getTimeInMillis();
-        cc.add(Calendar.DATE,1);
-        cc.get(Calendar.DATE);
-        long dtEnd = cc.getTimeInMillis();
-
-        if (id == 0) {
-            new LunarEvents().addEvent(title, dtStart, dtEnd);
-        } else {
-            new LunarEvents().updateEvent(id, title, dtStart, dtEnd);
-        }
-        this.setResult(RESULT_OK);
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        bundle.putString("title", title);
+        bundle.putInt("cMonth", cc.get(ChineseCalendar.CHINESE_MONTH));
+        bundle.putInt("cDate", cc.get((ChineseCalendar.CHINESE_DATE)));
+        intent.putExtras(bundle);
+        this.setResult(RESULT_OK, intent);
         finish();
     }
 

@@ -21,15 +21,9 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 
 import java.io.IOException;
 
-import gedoor.kunfei.lunarreminder.MainActivity;
+import gedoor.kunfei.lunarreminder.UI.MainActivity;
 
 
-/**
- * Asynchronous task that also takes care of common needs, such as displaying progress,
- * authorization, exception handling, and notifying UI when operation succeeded.
- * 
- * @author Yaniv Inbar
- */
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
   MainActivity activity;
@@ -44,7 +38,7 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
   @Override
   protected void onPreExecute() {
-//    super.onPreExecute();
+    super.onPreExecute();
 //    activity.numAsyncTasks++;
 //    activity.mAyncTaskList.add(this);
 ////    progressBar.setVisibility(View.VISIBLE);
@@ -59,6 +53,7 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
       availabilityException.printStackTrace();
     } catch (UserRecoverableAuthIOException userRecoverableException) {
+      activity.swNoRefresh();
       activity.startActivityForResult(userRecoverableException.getIntent(), activity.REQUEST_AUTHORIZATION);
     } catch (IOException e) {
       e.printStackTrace();
@@ -69,30 +64,15 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
   @Override
   protected void onPostExecute(Boolean success) {
     super.onPostExecute(success);
-//    if (0 == --activity.numAsyncTasks) {
-////      progressBar.setVisibility(View.GONE);
-//    	if(activity != null) {
-//    		activity.setProgressBarIndeterminateVisibility(false);
-////    		activity.saveBirthdays();
-//    	}
-//    }
     if (success) {
       activity.refreshView();
     }
-//    activity.mAyncTaskList.remove(this);
   }
   
   @Override
   protected void onCancelled(Boolean success) {
 	  super.onCancelled(success);
-//	    if (0 == --activity.numAsyncTasks) {
-////	      progressBar.setVisibility(View.GONE);
-//	    	if(activity != null) {
-//                activity.setProgressBarIndeterminateVisibility(false);
-//	    		BirthdayLab.get(fragment.getActivity()).saveBirthdays();
-//	    	}
-//	    }
-//	    fragment.mAyncTaskList.remove(this);
+
   }
 
   abstract protected void doInBackground() throws IOException;

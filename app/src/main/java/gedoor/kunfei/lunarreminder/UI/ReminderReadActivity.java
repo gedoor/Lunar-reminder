@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder;
+package gedoor.kunfei.lunarreminder.UI;
 
 import android.Manifest;
 import android.content.ContentResolver;
@@ -15,18 +15,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.CalendarProvider.LunarEvents;
+import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.UI.ReminderEditActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
-import gedoor.kunfei.lunarreminder.view.DialogGLC;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 

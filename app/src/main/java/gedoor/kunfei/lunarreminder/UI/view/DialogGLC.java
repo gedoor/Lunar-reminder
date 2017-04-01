@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.view;
+package gedoor.kunfei.lunarreminder.UI.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 import cn.carbs.android.indicatorview.library.IndicatorView;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
-import gedoor.kunfei.lunarreminder.ReminderEditActivity.DialogListener;
+import gedoor.kunfei.lunarreminder.UI.ReminderEditActivity.DialogListener;
 import gedoor.kunfei.lunarreminder.R;
 
 /**

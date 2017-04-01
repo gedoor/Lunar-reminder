@@ -2,19 +2,15 @@ package gedoor.kunfei.lunarreminder.Async;
 
 import android.util.Log;
 
-import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.TimeZone;
 
-import gedoor.kunfei.lunarreminder.MainActivity;
+import gedoor.kunfei.lunarreminder.UI.MainActivity;
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.caledarName;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.CaledarName;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 
 public class LoadCalendars extends CalendarAsyncTask {
@@ -30,7 +26,7 @@ public class LoadCalendars extends CalendarAsyncTask {
         String timeZone = TimeZone.getDefault().toString();
         for (CalendarListEntry calendar : feed.getItems()) {
             Log.d(TAG, "return calendar summary:" + calendar.getSummary() + " timeZone:" + calendar.getTimeZone());
-            if (calendar.getSummary().equals(caledarName) && calendarID == null) {
+            if (calendar.getSummary().equals(CaledarName) && calendarID == null) {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
                 activity.setCalenderID(calendar.getId());
             }

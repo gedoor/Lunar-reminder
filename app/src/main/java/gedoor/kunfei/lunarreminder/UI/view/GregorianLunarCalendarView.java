@@ -1,5 +1,6 @@
-package gedoor.kunfei.lunarreminder.view;
+package gedoor.kunfei.lunarreminder.UI.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -13,7 +14,7 @@ import cn.carbswang.android.numberpickerview.library.NumberPickerView;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.LunarUtil;
-
+@SuppressLint("WrongConstant")
 public class GregorianLunarCalendarView extends LinearLayout implements NumberPickerView.OnValueChangeListener{
 
     private static final int DEFAULT_GREGORIAN_COLOR = 0xff3388ff;

@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder;
+package gedoor.kunfei.lunarreminder.UI;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -45,25 +45,30 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import gedoor.kunfei.lunarreminder.Async.DeleteEvents;
 import gedoor.kunfei.lunarreminder.Async.GetEvents;
 import gedoor.kunfei.lunarreminder.Async.InsertCalendar;
+import gedoor.kunfei.lunarreminder.Async.InsertEvents;
 import gedoor.kunfei.lunarreminder.Async.LoadCalendars;
 import gedoor.kunfei.lunarreminder.CalendarProvider.InitLunar;
+import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarTypeGoogle;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarTypeLocal;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_CALENDAR_TYPE;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_GOOGLE_ACCOUNT_NAME;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_GOOGLE_CALENDAR_ID;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.caledarName;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.setingFile;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.CaledarName;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.SetingFile;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
@@ -82,11 +87,15 @@ public class MainActivity extends AppCompatActivity {
     private String mTimeZone;
     public GoogleAccountCredential credential;
     public com.google.api.services.calendar.Calendar client;
-    public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();;
+    public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    ;
     private SimpleAdapter adapter;
+    public String calendarType;
     int index;
     long st;
     long et;
+
+    List<Event> eventsInsert = new ArrayList<Event>();
 
     String[] perms = {Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR, Manifest.permission.GET_ACCOUNTS};
 
@@ -116,9 +125,9 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        sharedPreferences = this.getSharedPreferences(setingFile, Context.MODE_PRIVATE);
+        sharedPreferences = this.getSharedPreferences(SetingFile, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        accountName = sharedPreferences.getString("accountName", null);
+        calendarType = sharedPreferences.getString(PREF_CALENDAR_TYPE, null);
 
         //get permission
         if (EasyPermissions.hasPermissions(this, perms)) {
@@ -130,21 +139,33 @@ public class MainActivity extends AppCompatActivity {
         viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             Intent intent = new Intent(this, ReminderReadActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putLong("id", id);
+            bundle.putString("id", list.get(position).get(LunarRepeatId));
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
-        swipeRefresh.setOnRefreshListener(()->{
-            refreshView();
+        viewReminderList.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            new DeleteEvents(this, calendarID, list.get(position).get(LunarRepeatId)).execute();
+            return false;
         });
-        swipeRefresh.setProgressViewOffset(false, 0, 52);
-        swipeRefresh.setRefreshing(true);
+        swipeRefresh.setOnRefreshListener(() -> {
+            if (calendarType.equals(CalendarTypeGoogle)) {
+                getGoogleEvents();
+            }
+
+        });
+
     }
 
     public void initActivity() {
         if (checkGooglePlayServicesAvailable()) {
+            calendarType = CalendarTypeGoogle;
+            editor.putString(PREF_CALENDAR_TYPE, calendarType);
+            editor.commit();
             initGoogleAccount();
         } else {
+            calendarType = CalendarTypeLocal;
+            editor.putString(PREF_CALENDAR_TYPE, calendarType);
+            editor.commit();
             loadLocalCalendar();
         }
     }
@@ -159,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         if (credential.getSelectedAccountName() == null) {
             startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
         } else {
+            swOnRefresh();
             loadGoogleCalendar();
         }
     }
@@ -178,12 +200,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadLocalCalendar() {
         //初始化列表
         InitLunar initlunar = new InitLunar();
-        if (accountName == null) {
-            Map accounts = initlunar.getCalendarsAccountNames();
-            selectAccount(accounts);
-        }
-
-        initlunar.getCalendarID(accountName);
+        initlunar.getCalendarID("Lunar-reminder");
         if (calendarID == null) {
             String accountType = sharedPreferences.getString("accountType", "LOCAL");
             initlunar.addCalendar(accountName, accountType);
@@ -214,9 +231,10 @@ public class MainActivity extends AppCompatActivity {
         return false;
     };
 
+
     public void createGoogleCalender() {
         com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
-        calendar.setSummary(caledarName);
+        calendar.setSummary(CaledarName);
         calendar.setTimeZone(mTimeZone);
         new InsertCalendar(this, calendar).execute();
     }
@@ -225,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         new GetEvents(this).execute();
     }
 
-    public String getAccountName(){
+    public String getAccountName() {
         return accountName;
     }
 
@@ -247,21 +265,12 @@ public class MainActivity extends AppCompatActivity {
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
-        int x = c.get(Calendar.YEAR)*10000+c.get(Calendar.MONTH)*100+c.get(Calendar.DAY_OF_MONTH);
+        c.get(Calendar.YEAR);
         st = c.getTimeInMillis();
         ChineseCalendar cc = new ChineseCalendar(c);
         cc.add(ChineseCalendar.CHINESE_YEAR, 1);
-        int y = (cc.get(Calendar.YEAR))*10000+cc.get(Calendar.MONTH)*100+cc.get(Calendar.DAY_OF_MONTH);
+        cc.get(Calendar.YEAR);
         et = cc.getTimeInMillis();
-        if (x+10000 < y) {
-            c.add(Calendar.YEAR,1);
-            c.get(Calendar.YEAR);
-            et = c.getTimeInMillis();
-            cc = new ChineseCalendar(c);
-            cc.add(ChineseCalendar.CHINESE_YEAR, -1);
-            cc.get(Calendar.YEAR);
-            st = cc.getTimeInMillis();
-        }
     }
 
     public void getLocalEvents() {
@@ -319,21 +328,17 @@ public class MainActivity extends AppCompatActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    public void selectAccount(Map accounts) {
-        Set set = accounts.keySet();
-        String[] accountNames = new String[set.size()];
-        set.toArray(accountNames);
+    public void selectCalendar() {
+        String[] calendars = new String[]{};
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(R.string.selectCalendarAaccount);
-        builder.setSingleChoiceItems(accountNames, 0, (DialogInterface dialog, int which) -> {
+        builder.setSingleChoiceItems(calendars, 0, (DialogInterface dialog, int which) -> {
             index = which;
         });
         builder.setPositiveButton("确定", (DialogInterface dialog, int which) -> {
-            accountName = accountNames[index];
-            editor.putString("accountName", accountNames[index]);
-            editor.putString("accountType", accounts.get(accountName).toString());
+            accountName = calendars[index];
+            editor.putString("calendar", calendars[index]);
             editor.commit();
-
         });
         builder.setNegativeButton("取消", (DialogInterface dialog, int which) -> {
             this.finish();
@@ -350,9 +355,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void swOnRefresh() {
+        swipeRefresh.setProgressViewOffset(false, 0, 52);
+        swipeRefresh.setRefreshing(true);
+    }
+
+    public void swNoRefresh() {
+        swipeRefresh.setRefreshing(false);
+    }
+
     public void refreshView() {
         adapter = new SimpleAdapter(this, list, R.layout.item_reminder,
-                new String[]{"start","summary"},
+                new String[]{"start", "summary"},
                 new int[]{R.id.reminder_item_date, R.id.reminder_item_title});
         viewReminderList.setAdapter(adapter);
         swipeRefresh.setRefreshing(false);
@@ -363,10 +377,21 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_REMINDER:
-                    cursor.close();
-                    getLocalEvents();
-                    listAdapter.swapCursor(cursor);
-                    listAdapter.notifyDataSetChanged();
+                    if (calendarType.equals(CalendarTypeGoogle)) {
+                        Bundle bundle = data.getExtras();
+                        if (bundle.getString("id", null) != null) {
+
+                        } else {
+                            new InsertEvents(this, calendarID, bundle.getString("title"), bundle.getInt("cMonth"), bundle.getInt("cDate")).execute();
+                        }
+
+                    } else {
+                        cursor.close();
+                        getLocalEvents();
+                        listAdapter.swapCursor(cursor);
+                        listAdapter.notifyDataSetChanged();
+                    }
+
                     break;
                 case REQUEST_ACCOUNT_PICKER:
                     if (data != null && data.getExtras() != null) {
@@ -384,6 +409,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     break;
                 case REQUEST_AUTHORIZATION:
+                    swOnRefresh();
                     new LoadCalendars(this).execute();
                     break;
             }

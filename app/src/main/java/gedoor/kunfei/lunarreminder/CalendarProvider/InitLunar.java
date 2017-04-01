@@ -7,22 +7,17 @@ import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.support.v4.app.ActivityCompat;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.caledarName;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.CaledarName;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
@@ -52,11 +47,11 @@ public class InitLunar {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Calendars.ACCOUNT_NAME, accountName);
         contentValues.put(Calendars.ACCOUNT_TYPE, accountType);
-        contentValues.put(Calendars.NAME, caledarName);
-        contentValues.put(Calendars.CALENDAR_DISPLAY_NAME, caledarName);
+        contentValues.put(Calendars.NAME, CaledarName);
+        contentValues.put(Calendars.CALENDAR_DISPLAY_NAME, CaledarName);
         contentValues.put(Calendars.CALENDAR_COLOR, R.color.colorLunar);
         contentValues.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
-        contentValues.put(Calendars.OWNER_ACCOUNT, accountName);
+        contentValues.put(Calendars.OWNER_ACCOUNT, "Locale");
         ContentResolver cr = mContext.getContentResolver();
         Uri uri = Calendars.CONTENT_URI;
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -72,7 +67,7 @@ public class InitLunar {
         Uri uri = Calendars.CONTENT_URI;
         String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
                 + Calendars.NAME + " = ?))";
-        String[] selectionArgs = new String[] {accountName, caledarName};
+        String[] selectionArgs = new String[] {accountName, CaledarName};
         // Submit the query and get a Cursor object back
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;

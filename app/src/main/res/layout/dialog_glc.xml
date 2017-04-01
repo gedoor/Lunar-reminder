@@ -19,7 +19,7 @@
         app:iv_IndicatorTextArray="@array/indicator_string_array"
         app:iv_IndicatorTextSize="16dp" />
 
-    <gedoor.kunfei.lunarreminder.view.GregorianLunarCalendarView
+    <gedoor.kunfei.lunarreminder.UI.view.GregorianLunarCalendarView
         android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="160dp"
