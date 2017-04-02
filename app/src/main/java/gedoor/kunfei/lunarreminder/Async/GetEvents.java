@@ -43,6 +43,7 @@ public class GetEvents extends CalendarAsyncTask {
             cc.add(Calendar.DATE, 1);
             DateTime startDT = new DateTime(new EventTimeUtil(cc).getDateTime());
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
+            cc.add(Calendar.DATE, -1);
             DateTime endDT = new DateTime(new EventTimeUtil(cc).getDateTime());
             googleEvents = client.events().list(calendarID).setSingleEvents(true).setOrderBy("startTime")
                     .setTimeMin(startDT).setTimeMax(endDT).execute();
