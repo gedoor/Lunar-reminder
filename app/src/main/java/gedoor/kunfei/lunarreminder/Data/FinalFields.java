@@ -27,4 +27,9 @@ public class FinalFields {
     public static final String PREF_LOCAL_CALENDAR_ID = "lCalendarId";
     public static final String PREF_LOCAL_CALENDAR_TIMEZONE = "ltimeZone";
     public static final String PREF_LOCAL_ACCOUNT_NAME = "lAaccountName";
+
+    public static final String OPERATION = "operation";
+    public static final int OPERATION_INSERT = 1;
+    public static final int OPERATION_UPDATE = 2;
+    public static final int OPERATION_DELETE = 3;
 }

@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -37,14 +36,12 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,16 +50,21 @@ import gedoor.kunfei.lunarreminder.Async.GetEvents;
 import gedoor.kunfei.lunarreminder.Async.InsertCalendar;
 import gedoor.kunfei.lunarreminder.Async.InsertEvents;
 import gedoor.kunfei.lunarreminder.Async.LoadCalendars;
+import gedoor.kunfei.lunarreminder.Async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.CalendarProvider.InitLunar;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
+import gedoor.kunfei.lunarreminder.UI.view.MySimpleAdapter;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.widget.CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarTypeGoogle;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarTypeLocal;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_DELETE;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_INSERT;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_UPDATE;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_CALENDAR_TYPE;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_GOOGLE_ACCOUNT_NAME;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_GOOGLE_CALENDAR_ID;
@@ -70,6 +72,8 @@ import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_GOOGLE_CALENDAR_
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.CaledarName;
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.SetingFile;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 @SuppressLint("WrongConstant")
@@ -88,14 +92,13 @@ public class MainActivity extends AppCompatActivity {
     public GoogleAccountCredential credential;
     public com.google.api.services.calendar.Calendar client;
     public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    public boolean showAllEvents = false;
+    public int numAsyncTasks = 0;
     ;
-    private SimpleAdapter adapter;
-    public String calendarType;
+    private MySimpleAdapter adapter;
     int index;
     long st;
     long et;
-
-    List<Event> eventsInsert = new ArrayList<Event>();
 
     String[] perms = {Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR, Manifest.permission.GET_ACCOUNTS};
 
@@ -120,14 +123,13 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
-                    Intent intent = new Intent(this, ReminderEditActivity.class);
-                    startActivityForResult(intent, REQUEST_REMINDER);
-                }
-        );
+            googleEvent = null;
+            Intent intent = new Intent(this, ReminderEditActivity.class);
+            startActivityForResult(intent, REQUEST_REMINDER);
+        });
 
         sharedPreferences = this.getSharedPreferences(SetingFile, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        calendarType = sharedPreferences.getString(PREF_CALENDAR_TYPE, null);
 
         //get permission
         if (EasyPermissions.hasPermissions(this, perms)) {
@@ -137,14 +139,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            String mId = list.get(position).get("id");
+            if (mId == "") {
+                return;
+            }
             Intent intent = new Intent(this, ReminderReadActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("id", list.get(position).get(LunarRepeatId));
+            bundle.putInt("position", Integer.parseInt(mId));
+            bundle.putLong("id", position);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
         viewReminderList.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            new DeleteEvents(this, calendarID, list.get(position).get(LunarRepeatId)).execute();
+//            new DeleteEvents(this, calendarID, list.get(position).get(LunarRepeatId)).execute();
             return false;
         });
         swipeRefresh.setOnRefreshListener(() -> {
@@ -311,11 +318,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            this.startActivityForResult(intent, REQUEST_SETTINGS);
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                this.startActivityForResult(intent, REQUEST_SETTINGS);
+                return true;
+            case R.id.action_showAllEvents:
+                showAllEvents = showAllEvents ? false : true;
+                swOnRefresh();
+                new GetEvents(this).execute();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -365,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refreshView() {
-        adapter = new SimpleAdapter(this, list, R.layout.item_reminder,
+        adapter = new MySimpleAdapter(this, list, R.layout.item_reminder,
                 new String[]{"start", "summary"},
                 new int[]{R.id.reminder_item_date, R.id.reminder_item_title});
         viewReminderList.setAdapter(adapter);
@@ -378,11 +390,18 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode) {
                 case REQUEST_REMINDER:
                     if (calendarType.equals(CalendarTypeGoogle)) {
+                        swOnRefresh();
                         Bundle bundle = data.getExtras();
-                        if (bundle.getString("id", null) != null) {
-
-                        } else {
-                            new InsertEvents(this, calendarID, bundle.getString("title"), bundle.getInt("cMonth"), bundle.getInt("cDate")).execute();
+                        switch (bundle.getInt(OPERATION)) {
+                            case OPERATION_INSERT:
+                                new InsertEvents(this, calendarID, googleEvent).execute();
+                                break;
+                            case OPERATION_UPDATE:
+                                new UpdateEvents(this, calendarID, googleEvent).execute();
+                                break;
+                            case OPERATION_DELETE:
+                                new DeleteEvents(this, calendarID, googleEvent).execute();
+                                break;
                         }
 
                     } else {

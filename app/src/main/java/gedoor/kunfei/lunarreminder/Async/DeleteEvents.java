@@ -17,20 +17,28 @@ import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
 
 public class DeleteEvents extends CalendarAsyncTask {
     String calendarId;
-    String lunarRepeatid;
+    Event event;
+    String lunarRepeatId;
 
-    public DeleteEvents(MainActivity activity, String calendarId, String lunarRepeatid) {
+    public DeleteEvents(MainActivity activity, String calendarId, Event event) {
         super(activity);
-        this.lunarRepeatid = lunarRepeatid;
+        this.event = event;
         this.calendarId = calendarId;
     }
 
     @Override
     protected void doInBackground() throws IOException {
-        Events events = client.events().list(calendarId).setPrivateExtendedProperty(Arrays.asList(LunarRepeatId + "=" + lunarRepeatid)).execute();
-        List<Event> items = events.getItems();
-        for (Event event : items) {
+        Event.ExtendedProperties properties = event.getExtendedProperties();
+        if (properties != null) {
+            lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
+            Events events = client.events().list(calendarId).setFields("items(id)").setPrivateExtendedProperty(Arrays.asList(LunarRepeatId + "=" + lunarRepeatId)).execute();
+            List<Event> items = events.getItems();
+            for (Event event : items) {
+                client.events().delete(calendarId, event.getId()).execute();
+            }
+        } else {
             client.events().delete(calendarId, event.getId()).execute();
         }
+        activity.getGoogleEvents();
     }
 }

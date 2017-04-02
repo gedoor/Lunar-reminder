@@ -2,9 +2,11 @@ package gedoor.kunfei.lunarreminder.Async;
 
 import android.annotation.SuppressLint;
 
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -22,37 +24,30 @@ public class InsertEvents extends CalendarAsyncTask{
     ChineseCalendar cc = new ChineseCalendar(Calendar.getInstance());
     String lunarRepeatId = String.valueOf(cc.getTimeInMillis());
     String calendarid;
-    String title;
-    int cMonth;
-    int cDate;
+    Event event;
 
-    public InsertEvents(MainActivity activity,String calendarid, String title, int cMonth, int cDate) {
+    public InsertEvents(MainActivity activity,String calendarid, Event event) {
         super(activity);
         this.calendarid = calendarid;
-        this.title  = title;
-        cc.set(ChineseCalendar.CHINESE_MONTH, cMonth);
-        cc.set(ChineseCalendar.CHINESE_DATE, cDate);
-        cc.set(Calendar.HOUR_OF_DAY, 0);
-        cc.set(Calendar.MINUTE, 0);
-        cc.set(Calendar.SECOND, 0);
-        cc.set(Calendar.MILLISECOND, 0);
+        this.event  = event;
+        DateTime start = event.getStart().getDate() == null ? event.getStart().getDateTime() : event.getStart().getDate();
+        cc = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
+
     }
 
     @Override
     protected void doInBackground() throws IOException {
         Event.ExtendedProperties properties = getproperties();
         for (int i = 1; i < 10; i++) {
-            Event event = new Event();
-            event.setSummary(title);
+            Event event = this.event;
             event.setStart(new EventTimeUtil(cc).getEventStartDT());
             event.setEnd(new EventTimeUtil(cc).getEventEndDT());
-            event.setExtendedProperties(properties);
-            event.setDescription(title + "(农历)");
+            event.setExtendedProperties(getproperties());
 
             client.events().insert(calendarid, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
         }
-
+        activity.getGoogleEvents();
     }
 
     private Event.ExtendedProperties getproperties() {

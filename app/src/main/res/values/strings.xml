@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">农历提醒</string>
     <string name="action_settings">设置</string>
+    <string name="action_showAllEvents">显示全部事件</string>
     <string name="action_save">保存</string>
     <string name="action_del">删除</string>
     <string name="reminder_me">提醒我</string>
