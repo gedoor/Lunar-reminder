@@ -6,7 +6,6 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -23,28 +22,29 @@ import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
 public class InsertEvents extends CalendarAsyncTask{
     ChineseCalendar cc = new ChineseCalendar(Calendar.getInstance());
     String lunarRepeatId = String.valueOf(cc.getTimeInMillis());
-    String calendarid;
+    String calendarId;
     Event event;
+    int repeatNum;
 
-    public InsertEvents(MainActivity activity,String calendarid, Event event) {
+    public InsertEvents(MainActivity activity,String calendarid, Event event, int repeatNum) {
         super(activity);
-        this.calendarid = calendarid;
+        this.calendarId = calendarid;
         this.event  = event;
         DateTime start = event.getStart().getDate() == null ? event.getStart().getDateTime() : event.getStart().getDate();
         cc = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
-
+        this.repeatNum = repeatNum;
     }
 
     @Override
     protected void doInBackground() throws IOException {
         Event.ExtendedProperties properties = getproperties();
-        for (int i = 1; i < 10; i++) {
+        for (int i = 1; i <= repeatNum; i++) {
             Event event = this.event;
             event.setStart(new EventTimeUtil(cc).getEventStartDT());
             event.setEnd(new EventTimeUtil(cc).getEventEndDT());
             event.setExtendedProperties(getproperties());
 
-            client.events().insert(calendarid, event).execute();
+            client.events().insert(calendarId, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
         }
         activity.getGoogleEvents();
@@ -54,6 +54,7 @@ public class InsertEvents extends CalendarAsyncTask{
         Event.ExtendedProperties properties = new Event.ExtendedProperties();
         HashMap<String, String> map = new HashMap<>();
         map.put(LunarRepeatId, lunarRepeatId);
+
         properties.setPrivate(map);
 
         return properties;

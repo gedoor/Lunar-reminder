@@ -1,6 +1,5 @@
 package gedoor.kunfei.lunarreminder.UI;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -33,17 +32,15 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.UI.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarTypeGoogle;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_INSERT;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_UPDATE;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 /**
@@ -81,13 +78,12 @@ public class ReminderEditActivity extends AppCompatActivity {
         if (bundle != null) {
             id = bundle.getLong("id");
             position = bundle.getInt("position");
-            if (calendarType.equals(CalendarTypeGoogle)) {
+            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
+                googleEvent = googleEvents.getItems().get(position);
                 initGoogleEvent();
-            } else {
-                initLocalEvent();
             }
         } else {
-            if (calendarType.equals(CalendarTypeGoogle)) {
+            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
                 googleEvent = new Event();
             }
             initEvent();
@@ -97,6 +93,7 @@ public class ReminderEditActivity extends AppCompatActivity {
 
     private void initGoogleEvent() {
         textReminderMe.setText(googleEvent.getSummary());
+        textReminderMe.setSelection(googleEvent.getSummary().length());
         DateTime start = googleEvent.getStart().getDate();
         if (start==null) start = googleEvent.getStart().getDateTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -106,28 +103,6 @@ public class ReminderEditActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-    }
-
-    private void initLocalEvent() {
-        Uri uri = CalendarContract.Events.CONTENT_URI;
-        ContentResolver cr = mContext.getContentResolver();
-        String[] selectcol = new String[]{CalendarContract.Events._ID, CalendarContract.Events._COUNT, CalendarContract.Events.TITLE};
-        String selection = "(" + CalendarContract.Events._ID + " = ?)";
-        String[] selectionArgs = new String[]{String.valueOf(id)};
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Cursor cursor = cr.query(uri, null, selection, selectionArgs, null);
-        while (cursor.moveToNext()) {
-            textReminderMe.setText(cursor.getString(cursor.getColumnIndex(CalendarContract.Events.TITLE)));
-            String std = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.DTSTART));
-            Date dt = new Date(Long.parseLong(std));
-            Calendar c = Calendar.getInstance();
-            c.setTime(dt);
-            cc = new ChineseCalendar(c);
-            vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-
-        }
     }
 
     private void initEvent() {
@@ -147,10 +122,8 @@ public class ReminderEditActivity extends AppCompatActivity {
                     .show();
             return;
         }
-        if (calendarType.equals(CalendarTypeGoogle)) {
+        if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
             saveGoogleEvent();
-        } else {
-            saveLocalEvent();
         }
     }
 
@@ -161,20 +134,8 @@ public class ReminderEditActivity extends AppCompatActivity {
         googleEvent.setDescription(textReminderMe.getText().toString() + "(农历)");
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        int operation = googleEvent.getId() == null ? OPERATION_INSERT : OPERATION_UPDATE;
-        bundle.putInt(OPERATION,operation);
-        intent.putExtras(bundle);
-        this.setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    private void saveLocalEvent() {
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString("id", String.valueOf(id));
-        bundle.putString("title", textReminderMe.getText().toString());
-        bundle.putInt("cMonth", cc.get(ChineseCalendar.CHINESE_MONTH));
-        bundle.putInt("cDate", cc.get((ChineseCalendar.CHINESE_DATE)));
+        int operation = googleEvent.getId() == null ? FinalFields.OPERATION_INSERT : FinalFields.OPERATION_UPDATE;
+        bundle.putInt(FinalFields.OPERATION,operation);
         intent.putExtras(bundle);
         this.setResult(RESULT_OK, intent);
         finish();
@@ -227,7 +188,6 @@ public class ReminderEditActivity extends AppCompatActivity {
             mDialog.initCalendar(cc, false);
         }
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {

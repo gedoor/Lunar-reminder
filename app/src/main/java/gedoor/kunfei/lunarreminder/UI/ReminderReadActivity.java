@@ -26,14 +26,10 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gedoor.kunfei.lunarreminder.CalendarProvider.LunarEvents;
+import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarTypeGoogle;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_DELETE;
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.OPERATION_INSERT;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
@@ -84,12 +80,9 @@ public class ReminderReadActivity extends AppCompatActivity {
         if (bundle != null) {
             eventID = bundle.getLong("id");
             position = bundle.getInt("position");
-            if (calendarType.equals(CalendarTypeGoogle)) {
+            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
                 InitGoogleEvent();
-            } else {
-                InitLocalEvent();
             }
-
         } else {
             finish();
         }
@@ -110,28 +103,6 @@ public class ReminderReadActivity extends AppCompatActivity {
         vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
     }
 
-    private void InitLocalEvent() {
-        Uri uri = CalendarContract.Events.CONTENT_URI;
-        ContentResolver cr = mContext.getContentResolver();
-        String[] selectcol = new String[]{CalendarContract.Events._ID, CalendarContract.Events._COUNT, CalendarContract.Events.TITLE};
-        String selection = "(" + CalendarContract.Events._ID + " = ?)";
-        String[] selectionArgs = new String[]{Long.toString(eventID)};
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Cursor cursor = cr.query(uri, null, selection, selectionArgs, null);
-        while (cursor.moveToNext()) {
-            textReminderMe.setText(cursor.getString(cursor.getColumnIndex(CalendarContract.Events.TITLE)));
-            String std = cursor.getString(cursor.getColumnIndex(CalendarContract.Events.DTSTART));
-            Date dt = new Date(Long.parseLong(std));
-            Calendar c = Calendar.getInstance();
-            c.setTime(dt);
-            cc = new ChineseCalendar(c);
-            vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this  adds items to the action bar if it is present.
@@ -143,16 +114,12 @@ public class ReminderReadActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            if (calendarType.equals(CalendarTypeGoogle)) {
+            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putInt(OPERATION, OPERATION_DELETE);
+                bundle.putInt(FinalFields.OPERATION, FinalFields.OPERATION_DELETE);
                 intent.putExtras(bundle);
                 this.setResult(RESULT_OK, intent);
-                finish();
-            } else {
-                new LunarEvents().deleteEvent(eventID);
-                this.setResult(RESULT_OK);
                 finish();
             }
             return true;

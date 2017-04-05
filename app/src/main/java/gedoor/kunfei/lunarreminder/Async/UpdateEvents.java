@@ -26,14 +26,15 @@ public class UpdateEvents extends CalendarAsyncTask {
     Event event;
     String lunarRepeatId;
     ChineseCalendar cc;
+    int repeatNum;
 
-    public UpdateEvents(MainActivity activity, String calendarId, Event event) {
+    public UpdateEvents(MainActivity activity, String calendarId, Event event, int repeatNum) {
         super(activity);
         this.calendarId = calendarId;
         this.event = event;
         DateTime start = event.getStart().getDate() == null ? event.getStart().getDateTime() : event.getStart().getDate();
         cc = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
-
+        this.repeatNum = repeatNum;
     }
 
     @Override
@@ -43,20 +44,35 @@ public class UpdateEvents extends CalendarAsyncTask {
             lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
             Events events = client.events().list(calendarID).setFields("items(id)").setPrivateExtendedProperty(Arrays.asList(LunarRepeatId + "=" + lunarRepeatId)).execute();
             List<Event> items = events.getItems();
-            for (Event event : items) {
-                String eventId = event.getId();
-                event = this.event;
-                event.setStart(new EventTimeUtil(cc).getEventStartDT());
-                event.setEnd(new EventTimeUtil(cc).getEventEndDT());
-                event.setId(eventId);
+            int i = repeatNum > items.size() ? repeatNum : items.size();
+            for (int j=1; j<=i; j++) {
+                if (j <= repeatNum && j <= items.size()) {
+                    Event event = items.get(j-1);
+                    String eventId = event.getId();
+                    event = this.event;
+                    event.setStart(new EventTimeUtil(cc).getEventStartDT());
+                    event.setEnd(new EventTimeUtil(cc).getEventEndDT());
+                    event.setId(eventId);
+                    client.events().update(calendarId, eventId, event).execute();
 
-                client.events().update(calendarId, eventId, event).execute();
+                } else if (j > repeatNum && j <= items.size()) {
+                    Event event = items.get(j - 1);
+                    client.events().delete(calendarId, event.getId()).execute();
+                } else {
+                    Event event = new Event();
+                    event.setSummary(this.event.getSummary());
+                    event.setDescription(this.event.getDescription());
+                    event.setExtendedProperties(this.event.getExtendedProperties());
+                    event.setStart(new EventTimeUtil(cc).getEventStartDT());
+                    event.setEnd(new EventTimeUtil(cc).getEventEndDT());
+                    client.events().insert(calendarId, event).execute();
+                }
                 cc.add(ChineseCalendar.CHINESE_YEAR, 1);
             }
         } else {
             client.events().update(calendarId, event.getId(), event).execute();
         }
-
         activity.getGoogleEvents();
     }
+
 }

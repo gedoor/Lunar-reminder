@@ -9,7 +9,7 @@ import com.google.api.client.json.gson.GsonFactory;
  * Created by GKF on 2017/3/19.
  */
 
-public class FinalFields {
+public final class FinalFields {
     public static final String CaledarName = "Lunar Reminder";
     public static final String SetingFile = "Setings";
 
@@ -32,4 +32,8 @@ public class FinalFields {
     public static final int OPERATION_INSERT = 1;
     public static final int OPERATION_UPDATE = 2;
     public static final int OPERATION_DELETE = 3;
+
+    FinalFields() {
+
+    }
 }

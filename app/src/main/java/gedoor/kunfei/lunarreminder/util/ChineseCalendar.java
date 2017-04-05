@@ -26,6 +26,7 @@ public final class ChineseCalendar extends GregorianCalendar {
     public static final int CHINESE_HEAVENLY_STEM = 806;
     public static final int CHINESE_EARTHLY_BRANCH = 807;
     public static final int CHINESE_ZODIAC = 808;
+    public static final int CHINESE_ZODIAC_EMOJI = 809;
     public static final int CHINESE_TERM_OR_DATE = 888;
 
     private int chineseYear;
@@ -114,6 +115,8 @@ public final class ChineseCalendar extends GregorianCalendar {
             return (chineseYear - 4) % 10 + 1;
         case CHINESE_EARTHLY_BRANCH:
         case CHINESE_ZODIAC:
+            return (chineseYear - 4) % 12 + 1;
+        case CHINESE_ZODIAC_EMOJI:
             return (chineseYear - 4) % 12 + 1;
         case CHINESE_TERM_OR_DATE:
             int option;
@@ -240,6 +243,8 @@ public final class ChineseCalendar extends GregorianCalendar {
             return branchNames[get(field)];
         case CHINESE_ZODIAC:
             return animalNames[get(field)];
+        case CHINESE_ZODIAC_EMOJI:
+            return animalEmoji[get(field)];
         case Calendar.DAY_OF_WEEK:
             return chineseWeekNames[get(field)];
         case CHINESE_TERM_OR_DATE:
@@ -293,6 +298,7 @@ public final class ChineseCalendar extends GregorianCalendar {
         case CHINESE_HEAVENLY_STEM:
         case CHINESE_EARTHLY_BRANCH:
         case CHINESE_ZODIAC:
+        case CHINESE_ZODIAC_EMOJI:
         case CHINESE_TERM_OR_DATE:
             return true;
         default:
@@ -650,6 +656,9 @@ public final class ChineseCalendar extends GregorianCalendar {
             "巳", "午", "未", "申", "酉", "戌", "亥" };
     private static final String[] animalNames = { "", "鼠", "牛", "虎", "兔", "龙",
             "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
+    private static final String[] animalEmoji = {"", "\uD83D\uDC00", "\uD83D\uDC02", "\uD83D\uDC05",
+            "\uD83D\uDC30", "\uD83D\uDC09", "\uD83D\uDC0D", "\uD83D\uDC0E", "\uD83D\uDC0F",
+            "\uD83D\uDC12", "\uD83D\uDC13", "\uD83D\uDC15", "\uD83D\uDC16"};
 
     private static final int[] bigLeapMonthYears = { 6, 14, 19, 25, 33, 36, 38,
             41, 44, 52, 55, 79, 117, 136, 147, 150, 155, 158, 185, 193 };

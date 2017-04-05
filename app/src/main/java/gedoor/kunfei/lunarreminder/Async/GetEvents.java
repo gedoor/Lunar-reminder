@@ -66,7 +66,7 @@ public class GetEvents extends CalendarAsyncTask {
                 ccYear = eventCC.getChinese(ChineseCalendar.CHINESE_YEAR);
                 HashMap<String, String> titleMap = new HashMap<String, String>();
                 titleMap.put("summary", ccYear);
-                titleMap.put("start", "");
+                titleMap.put("start", eventCC.getChinese(ChineseCalendar.CHINESE_ZODIAC_EMOJI));
                 titleMap.put("id", "");
                 activity.list.add(titleMap);
             }

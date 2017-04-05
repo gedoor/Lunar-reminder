@@ -24,17 +24,16 @@ import java.io.IOException;
 
 import gedoor.kunfei.lunarreminder.UI.MainActivity;
 
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     MainActivity activity;
     final com.google.api.services.calendar.Calendar client;
-//  private final View progressBar;
 
     CalendarAsyncTask(MainActivity activity) {
         this.activity = activity;
         client = activity.client;
-//    progressBar = fragment.getListView().findViewById(R.id.title_refresh_progress);
     }
 
     @Override
@@ -49,14 +48,14 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
             doInBackground();
             return true;
         } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
-            Toast.makeText(activity, availabilityException.getMessage(),Toast.LENGTH_LONG).show();
             availabilityException.printStackTrace();
+            showMassage(availabilityException.getMessage());
         } catch (UserRecoverableAuthIOException userRecoverableException) {
             activity.swNoRefresh();
             activity.startActivityForResult(userRecoverableException.getIntent(), activity.REQUEST_AUTHORIZATION);
         } catch (IOException e) {
-            Toast.makeText(activity, e.getMessage(),Toast.LENGTH_LONG).show();
             e.printStackTrace();
+            showMassage(e.getMessage());
         }
         return false;
     }
@@ -76,4 +75,11 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     abstract protected void doInBackground() throws IOException;
+
+    private void showMassage(String massage) {
+        if (activity.isFinishing()) return;
+        activity.runOnUiThread(()->{
+            Toast.makeText(activity, massage, Toast.LENGTH_LONG).show();
+        });
+    }
 }

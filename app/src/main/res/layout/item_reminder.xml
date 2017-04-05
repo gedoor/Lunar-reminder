@@ -9,6 +9,7 @@
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:ellipsize="marquee"

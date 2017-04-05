@@ -2,7 +2,6 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-
     <header
         android:fragment="gedoor.kunfei.lunarreminder.UI.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"

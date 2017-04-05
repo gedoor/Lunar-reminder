@@ -2,6 +2,7 @@
     <string name="app_name">农历提醒</string>
     <string name="action_settings">设置</string>
     <string name="action_showAllEvents">显示全部事件</string>
+    <string name="action_about">关于</string>
     <string name="action_save">保存</string>
     <string name="action_del">删除</string>
     <string name="reminder_me">提醒我</string>
@@ -10,6 +11,7 @@
     <string name="all_day">全天</string>
     <string name="ok">确定</string>
     <string name="selectCalendarAaccount">请选择日历账户</string>
+    <string name="title_activity_settings">设置</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>
@@ -19,6 +21,7 @@
     <string name="year">年</string>
     <string name="month">月</string>
     <string name="day">日</string>
+    <string name="title_activity_about">关于</string>
 
     <string-array name="npv_lunar_year_without_measure_hint">
         <item>二零一六</item>
@@ -29,7 +32,14 @@
     <string-array name="npv_lunar_day_with_measure_hint">
         <item>初一</item>
     </string-array>
-    <string name="title_activity_settings">Settings</string>
+
+    <string name="about_description">说明</string>
+    <string name="about_description_body">农历提醒是一个在google日历中新建按农历重复事件的应用，该应用可以实现新建,修改,删除农历事件，且该应用不存储日历数据，实时读取google日历数据。</string>
+    <string name="about_author">作者</string>
+    <string name="about_author_name">kunfei</string>
+    <string name="about_donate">捐赠</string>
+    <string name="about_donate_zfb">支付宝:gekunfei@qq.com</string>
+    <string name="about_donate_wexin">微信:kunfei_ge</string>
 
     <!-- Strings related to Settings -->
 

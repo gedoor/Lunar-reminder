@@ -23,6 +23,7 @@ public class LunarReminderApplication extends Application {
     public static String calendarType;
     public static Events googleEvents;
     public static Event googleEvent;
+    public static int eventRepeat = 12;
 
     @Override
     public void onCreate() {
