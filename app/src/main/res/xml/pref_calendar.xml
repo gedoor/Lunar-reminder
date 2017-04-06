@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="@string/lunar_display_name"
+        android:title="Lunar calendar display name"
+        android:summary="@string/lunar_calendar_name"/>
+
+    <Preference
+        android:key="@string/lunar_calendar_id"
+        android:title="Lunar calendar id"
+        android:summary=""/>
+
+    <Preference
+        android:key="@string/lunar_calendar_color"
+        android:title="Calendar color"
+        android:summary="@string/app_name" />
+
+</PreferenceScreen>

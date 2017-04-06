@@ -1,0 +1,12 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="default_repeat_year"
+        android:title="@string/default_repeat_year"
+        android:summary="" />
+
+    <ListPreference
+        android:key="default_reminder"
+        android:title="@string/default_reminder" />
+
+</PreferenceScreen>

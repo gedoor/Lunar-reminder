@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.design.widget.FloatingActionButton;
@@ -91,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
     String[] perms = {Manifest.permission.GET_ACCOUNTS};
 
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    SharedPreferences.Editor editor = sharedPreferences.edit();;
     String accountName;
 
     @BindView(R.id.view_reminder_list)
@@ -114,9 +115,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ReminderEditActivity.class);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
-
-        sharedPreferences = this.getSharedPreferences(FinalFields.SetingFile, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
 
         //get permission
         if (EasyPermissions.hasPermissions(this, perms)) {
@@ -190,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
         //初始化Google账号
         mGoogleAccount = sharedPreferences.getString(FinalFields.PREF_GOOGLE_ACCOUNT_NAME, null);
         mTimeZone = sharedPreferences.getString(FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE, null);
-        calendarID = sharedPreferences.getString(FinalFields.PREF_GOOGLE_CALENDAR_ID, null);
         credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
         if (credential.getSelectedAccountName() == null) {
@@ -228,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     };
 
-
+    //插入农历提醒日历
     public void createGoogleCalender() {
         com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
         calendar.setSummary(FinalFields.CaledarName);
@@ -242,12 +239,6 @@ public class MainActivity extends AppCompatActivity {
 
     public String getAccountName() {
         return accountName;
-    }
-
-    public void setCalenderID(String cid) {
-        editor.putString(FinalFields.PREF_GOOGLE_CALENDAR_ID, cid);
-        editor.commit();
-        calendarID = cid;
     }
 
     public void setTimeZone(String timeZone) {
