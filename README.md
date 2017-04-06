@@ -4,6 +4,9 @@ Lunar reminder for google calendar
 是一款可以在google日历里创建按农历重复事件的应用,本身并没有提醒功能.
 界面跟google日历差不多
 
+## 应用下载
+https://github.com/gedoor/Lunar-reminder/releases/latest
+
 ## 应用截图
 ![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154358.png)
 ![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154404.png)
