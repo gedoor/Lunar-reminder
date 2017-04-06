@@ -5,3 +5,8 @@ Lunar reminder for google calendar
 界面跟google日历差不多
 
 ## 应用截图
+![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154358.png)
+![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154404.png)
+![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154416.png)
+![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154427.png)
+![image](https://github.com/gedoor/Lunar-reminder/raw/master/image/Screenshot_20170406-154432.png)
