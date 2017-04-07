@@ -222,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
         com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
         calendar.setSummary(FinalFields.CalendarName);
         calendar.setTimeZone(mTimeZone);
+
         new InsertCalendar(this, calendar).execute();
     }
 

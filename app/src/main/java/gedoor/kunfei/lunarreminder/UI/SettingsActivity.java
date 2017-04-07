@@ -178,6 +178,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_calendar_id)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_lunar_calendar_color)));
         }
 
         @Override
