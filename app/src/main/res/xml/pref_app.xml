@@ -6,7 +6,7 @@
         android:title="@string/pref_title_theme" />
 
     <SwitchPreference
-        android:key="@string/pref_cache_events"
+        android:key="@string/pref_key_cache_events"
         android:summary="@string/pref_description_cache_data"
         android:title="@string/pref_title_cache_data"
         android:defaultValue="true"/>

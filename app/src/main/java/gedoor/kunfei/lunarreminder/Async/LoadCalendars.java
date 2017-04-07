@@ -35,7 +35,7 @@ public class LoadCalendars extends CalendarAsyncTask {
             if (calendar.getSummary().equals(CaledarName)) {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
                 calendarID = calendar.getId();
-                editor.putString(mContext.getString(R.string.lunar_calendar_id), calendarID);
+                editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
                 editor.commit();
             }
             if (calendar.getSummary().equals(activity.getAccountName())) {

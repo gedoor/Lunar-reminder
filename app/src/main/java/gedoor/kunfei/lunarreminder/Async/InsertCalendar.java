@@ -30,7 +30,7 @@ public class InsertCalendar extends CalendarAsyncTask {
         Calendar calendar = client.calendars().insert(mCalendar).execute();
         Log.d(TAG, "calendar timeZone:" + calendar.getTimeZone());
         calendarID = calendar.getId();
-        editor.putString(mContext.getString(R.string.lunar_calendar_id), calendarID);
+        editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
         editor.commit();
 
         activity.getGoogleEvents();

@@ -1,8 +1,9 @@
 <resources>
-    <string name="lunar_calendar_id">glCalendarId</string>
-    <string name="lunar_display_name">glDisplayName</string>
-    <string name="lunar_calendar_color">glCalendarColor</string>
-    <string name="pref_cache_events">cacheEvents</string>
+    <string name="pref_key_calendar_id">glCalendarId</string>
+    <string name="pref_key_lunar_display_name">glDisplayName</string>
+    <string name="pref_key_lunar_calendar_color">glCalendarColor</string>
+    <string name="pref_key_cache_events">cacheEvents</string>
+    <string name="pref_key_repeat_year">repeatYear</string>
 
     <string name="lunar_calendar_name">Lunar Reminder</string>
 </resources>

@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -135,8 +134,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * This fragment shows general preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
+     * 应用设置
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class AppPreferenceFragment extends PreferenceFragment {
@@ -160,8 +158,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * This fragment shows notification preferences only. It is used when the
-     * activity is showing a two-pane settings UI.
+     * Calendar设置
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class CalendarPreferenceFragment extends PreferenceFragment {
@@ -171,7 +168,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_calendar);
             setHasOptionsMenu(true);
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.lunar_calendar_id)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_calendar_id)));
         }
 
         @Override
@@ -186,7 +183,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     }
 
     /**
-     * activity is showing a two-pane settings UI.
+     * Event设置
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EventPreferenceFragment extends PreferenceFragment {
@@ -196,11 +193,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_event);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-//            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_repeat_year)));
         }
 
         @Override
