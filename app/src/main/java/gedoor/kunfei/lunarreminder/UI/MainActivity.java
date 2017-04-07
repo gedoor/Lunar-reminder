@@ -3,21 +3,13 @@ package gedoor.kunfei.lunarreminder.UI;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -228,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
     //插入农历提醒日历
     public void createGoogleCalender() {
         com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
-        calendar.setSummary(FinalFields.CaledarName);
+        calendar.setSummary(FinalFields.CalendarName);
         calendar.setTimeZone(mTimeZone);
         new InsertCalendar(this, calendar).execute();
     }

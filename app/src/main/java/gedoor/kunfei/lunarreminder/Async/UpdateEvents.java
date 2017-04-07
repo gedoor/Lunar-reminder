@@ -42,6 +42,7 @@ public class UpdateEvents extends CalendarAsyncTask {
         Event.ExtendedProperties properties = event.getExtendedProperties();
         if (properties != null) {
             lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
+            Event.ExtendedProperties nProperties = new Properties(lunarRepeatId, repeatNum).getProperties();
             Events events = client.events().list(calendarID).setFields("items(id)").setPrivateExtendedProperty(Arrays.asList(LunarRepeatId + "=" + lunarRepeatId)).execute();
             List<Event> items = events.getItems();
             int i = repeatNum > items.size() ? repeatNum : items.size();
@@ -53,6 +54,7 @@ public class UpdateEvents extends CalendarAsyncTask {
                     event.setStart(new EventTimeUtil(cc).getEventStartDT());
                     event.setEnd(new EventTimeUtil(cc).getEventEndDT());
                     event.setId(eventId);
+                    event.setExtendedProperties(nProperties);
                     client.events().update(calendarId, eventId, event).execute();
 
                 } else if (j > repeatNum && j <= items.size()) {
@@ -65,6 +67,7 @@ public class UpdateEvents extends CalendarAsyncTask {
                     event.setExtendedProperties(this.event.getExtendedProperties());
                     event.setStart(new EventTimeUtil(cc).getEventStartDT());
                     event.setEnd(new EventTimeUtil(cc).getEventEndDT());
+                    event.setExtendedProperties(nProperties);
                     client.events().insert(calendarId, event).execute();
                 }
                 cc.add(ChineseCalendar.CHINESE_YEAR, 1);

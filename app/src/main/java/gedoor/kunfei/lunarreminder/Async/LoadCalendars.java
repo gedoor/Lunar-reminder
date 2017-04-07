@@ -13,7 +13,7 @@ import java.util.TimeZone;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.UI.MainActivity;
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.CaledarName;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.CalendarName;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
@@ -32,7 +32,7 @@ public class LoadCalendars extends CalendarAsyncTask {
         String timeZone = TimeZone.getDefault().toString();
         for (CalendarListEntry calendar : feed.getItems()) {
             Log.d(TAG, "return calendar summary:" + calendar.getSummary() + " timeZone:" + calendar.getTimeZone());
-            if (calendar.getSummary().equals(CaledarName)) {
+            if (calendar.getSummary().equals(CalendarName)) {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
                 calendarID = calendar.getId();
                 editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);

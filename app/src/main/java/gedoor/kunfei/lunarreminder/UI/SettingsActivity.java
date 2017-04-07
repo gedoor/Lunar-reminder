@@ -3,7 +3,9 @@ package gedoor.kunfei.lunarreminder.UI;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,16 +14,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.NumberPicker;
 
 import gedoor.kunfei.lunarreminder.R;
 
 import java.util.List;
+
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
@@ -187,6 +196,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EventPreferenceFragment extends PreferenceFragment {
+        int intTemp;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -205,5 +217,40 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
+        @Override
+        public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference){
+            if (preference.getKey() == getString(R.string.pref_key_repeat_year)) {
+                selectRepeatYear(preference);
+            }
+
+            return true;
+        }
+
+        private void selectRepeatYear(Preference preference) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+            builder.setTitle("选择重复年数");
+            View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
+            NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
+            numberPicker.setMaxValue(36);
+            numberPicker.setMinValue(0);
+            numberPicker.setValue(Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_repeat_year), "12")));
+            numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal)->{
+                intTemp = newVal;
+            });
+            builder.setView(view);
+            builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
+                editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(intTemp));
+                editor.commit();
+                preference.setSummary(String.valueOf(intTemp));
+            });
+            builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{
+
+            });
+            builder.create();
+            builder.show();
+        }
+
     }
+
 }

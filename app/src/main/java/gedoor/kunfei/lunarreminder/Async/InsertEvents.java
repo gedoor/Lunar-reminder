@@ -14,6 +14,7 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatYear;
 
 /**
  * Created by GKF on 2017/3/31.
@@ -37,12 +38,12 @@ public class InsertEvents extends CalendarAsyncTask{
 
     @Override
     protected void doInBackground() throws IOException {
-        Event.ExtendedProperties properties = getproperties();
+        Event.ExtendedProperties properties = new Properties(lunarRepeatId, repeatNum).getProperties();
         for (int i = 1; i <= repeatNum; i++) {
             Event event = this.event;
             event.setStart(new EventTimeUtil(cc).getEventStartDT());
             event.setEnd(new EventTimeUtil(cc).getEventEndDT());
-            event.setExtendedProperties(getproperties());
+            event.setExtendedProperties(properties);
 
             client.events().insert(calendarId, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
@@ -50,13 +51,4 @@ public class InsertEvents extends CalendarAsyncTask{
         activity.getGoogleEvents();
     }
 
-    private Event.ExtendedProperties getproperties() {
-        Event.ExtendedProperties properties = new Event.ExtendedProperties();
-        HashMap<String, String> map = new HashMap<>();
-        map.put(LunarRepeatId, lunarRepeatId);
-
-        properties.setPrivate(map);
-
-        return properties;
-    }
 }

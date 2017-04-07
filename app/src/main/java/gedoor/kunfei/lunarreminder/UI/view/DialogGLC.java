@@ -32,7 +32,7 @@ public class DialogGLC extends Dialog implements View.OnClickListener, Indicator
 
     public DialogGLC(Context context, DialogListener dialogListener) {
         super(context, R.style.dialog);
-        mContext = context;
+        this.mContext = context;
         this.dialogListener = dialogListener;
     }
 

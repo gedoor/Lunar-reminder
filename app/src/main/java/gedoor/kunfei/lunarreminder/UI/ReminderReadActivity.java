@@ -1,15 +1,10 @@
 package gedoor.kunfei.lunarreminder.UI;
 
-import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.CalendarContract;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -18,11 +13,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,9 +24,9 @@ import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
+import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatYear;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 /**
@@ -42,14 +36,17 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 public class ReminderReadActivity extends AppCompatActivity {
     private static final int REQUEST_REMINDER = 1;
 
-    @BindView(R.id.vwchinesedate)
-    TextView vwchinesedate;
-    @BindView(R.id.text_reminder_me)
-    TextView textReminderMe;
-
     ChineseCalendar cc = new ChineseCalendar();
     long eventID;
     int position;
+    String lunarRepeatNum;
+
+    @BindView(R.id.vw_chinese_date)
+    TextView vwChineseDate;
+    @BindView(R.id.text_reminder_me)
+    TextView textReminderMe;
+    @BindView(R.id.vw_repeat)
+    TextView vwRepeat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +90,21 @@ public class ReminderReadActivity extends AppCompatActivity {
         googleEvent = googleEvents.getItems().get(position);
         textReminderMe.setText(googleEvent.getSummary());
         DateTime start = googleEvent.getStart().getDate();
-        if (start==null) start = googleEvent.getStart().getDateTime();
+        if (start == null) start = googleEvent.getStart().getDateTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             cc.setTime(dateFormat.parse(start.toStringRfc3339()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        vwchinesedate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        Event.ExtendedProperties properties = googleEvent.getExtendedProperties();
+        lunarRepeatNum = properties.getPrivate().get(LunarRepeatYear);
+        if (lunarRepeatNum == null) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
+        }
+        vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
     }
 
     @Override

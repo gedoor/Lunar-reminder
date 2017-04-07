@@ -11,5 +11,6 @@
     <color name="colorIndicatorTextNormal">#FF555555</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorWhite">#ffffffff</color>
-    <color name="black">#ff000000</color>
+    <color name="colorBlack">#ff000000</color>
+    <color name="colorLightGrey">#ffcccccc</color>
 </resources>

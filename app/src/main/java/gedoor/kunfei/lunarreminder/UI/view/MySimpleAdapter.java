@@ -35,7 +35,7 @@ public class MySimpleAdapter extends SimpleAdapter {
         if (mId == "") {
             start.setTextSize(30);
             title.setBackground(mContext.getResources().getDrawable(R.color.colorTransparent));
-            title.setTextColor(mContext.getResources().getColor(R.color.black));
+            title.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
             title.setTextSize(30);
         } else {
             start.setTextSize(16);

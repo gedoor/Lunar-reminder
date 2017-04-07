@@ -10,12 +10,13 @@ import com.google.api.client.json.gson.GsonFactory;
  */
 
 public final class FinalFields {
-    public static final String CaledarName = "Lunar Reminder";
+    public static final String CalendarName = "Lunar Reminder";
 
     public static final String CalendarTypeGoogle = "Google";
     public static final String CalendarTypeLocal = "Local";
 
     public static final String LunarRepeatId = "LunarRepeatId";
+    public static final String LunarRepeatYear = "LunarRepeatYear";
 
     public static final String PREF_CALENDAR_TYPE = "calendarType";
 
