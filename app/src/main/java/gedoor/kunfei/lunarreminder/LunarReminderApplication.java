@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
+import java.util.List;
+
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_CALENDAR_TYPE;
 
 
@@ -19,7 +21,7 @@ public class LunarReminderApplication extends Application {
     public static Context mContext;
     public static String calendarID = null;
     public static String calendarType;
-    public static Events googleEvents;
+    public static List<Event> googleEvents;
     public static Event googleEvent;
     public static int eventRepeat = 12;
 

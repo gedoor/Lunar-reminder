@@ -87,7 +87,7 @@ public class ReminderReadActivity extends AppCompatActivity {
     }
 
     private void InitGoogleEvent() {
-        googleEvent = googleEvents.getItems().get(position);
+        googleEvent = googleEvents.get(position);
         textReminderMe.setText(googleEvent.getSummary());
         DateTime start = googleEvent.getStart().getDate();
         if (start == null) start = googleEvent.getStart().getDateTime();

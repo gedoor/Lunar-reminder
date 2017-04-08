@@ -31,12 +31,18 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +51,7 @@ import gedoor.kunfei.lunarreminder.Async.GetEvents;
 import gedoor.kunfei.lunarreminder.Async.InsertCalendar;
 import gedoor.kunfei.lunarreminder.Async.InsertEvents;
 import gedoor.kunfei.lunarreminder.Async.LoadCalendars;
+import gedoor.kunfei.lunarreminder.Async.LoadEventsList;
 import gedoor.kunfei.lunarreminder.Async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
@@ -147,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivityForResult(intent, REQUEST_REMINDER);
                         return true;
                     case Menu.FIRST+1:
-                        new DeleteEvents(this, calendarID, googleEvents.getItems().get(Integer.parseInt(mId))).execute();
+                        new DeleteEvents(this, calendarID, googleEvents.get(Integer.parseInt(mId))).execute();
                         return true;
                 }
                 return true;
@@ -191,11 +198,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadGoogleCalendar() {
+        String json = sharedPreferences.getString(getString(R.string.pref_key_google_events), null);
         client = new com.google.api.services.calendar.Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
                 .build();
         if (calendarID == null) {
             new LoadCalendars(this).execute();
+        } else if (json != null) {
+            googleEvents = new Gson().fromJson(json, (Type) new TypeToken<List<Map<String, ?>>>(){}.getRawType());
+            new LoadEventsList(this).execute();
         } else {
             getGoogleEvents();
         }

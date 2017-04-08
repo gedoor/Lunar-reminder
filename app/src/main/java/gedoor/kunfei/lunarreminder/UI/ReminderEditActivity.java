@@ -82,7 +82,7 @@ public class ReminderEditActivity extends AppCompatActivity {
             id = bundle.getLong("id");
             position = bundle.getInt("position");
             if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                googleEvent = googleEvents.getItems().get(position);
+                googleEvent = googleEvents.get(position);
                 initGoogleEvent();
             }
         } else {
