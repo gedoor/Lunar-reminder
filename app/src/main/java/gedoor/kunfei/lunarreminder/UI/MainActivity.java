@@ -216,21 +216,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private SimpleCursorAdapter.ViewBinder viewBinder = (View view, Cursor cursor, int columnIndex) -> {
-        if (cursor.getColumnIndex(Events.DTSTART) == columnIndex) {    //duration为数据库中对应的属性列
-            TextView textView = (TextView) view;
-            String std = cursor.getString(columnIndex);
-            Date dt = new Date(Long.parseLong(std));
-            Calendar c = Calendar.getInstance();
-            c.setTime(dt);
-            ChineseCalendar cc = new ChineseCalendar(c);
-            textView.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + "\n" + cc.getChinese(ChineseCalendar.CHINESE_DATE));  //显示
-            return true;
-        }
-        return false;
-    };
-
     //插入农历提醒日历
     public void createGoogleCalender() {
         com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
