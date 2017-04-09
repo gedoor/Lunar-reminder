@@ -286,29 +286,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @AfterPermissionGranted(REQUEST_PERMS)
-    private void methodRequiresTwoPermission() {
+    private void methodRequiresPermission() {
         if (EasyPermissions.hasPermissions(this, perms)) {
             initActivity();
         } else {
             finish();
         }
     }
-
+    //刷新动画开始
     public void swOnRefresh() {
         swipeRefresh.setProgressViewOffset(false, 0, 52);
         swipeRefresh.setRefreshing(true);
     }
-
+    //刷新动画停止
     public void swNoRefresh() {
         swipeRefresh.setRefreshing(false);
     }
-
+    //刷新事件列表
     public void refreshView() {
         adapter = new MySimpleAdapter(this, list, R.layout.item_reminder,
                 new String[]{"start", "summary"},
                 new int[]{R.id.reminder_item_date, R.id.reminder_item_title});
         viewReminderList.setAdapter(adapter);
-        swipeRefresh.setRefreshing(false);
+        swNoRefresh();
     }
 
     @Override
