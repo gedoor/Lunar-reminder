@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     public boolean showAllEvents = false;
     public int numAsyncTasks = 0;
-    ;
     private MySimpleAdapter adapter;
 
     String[] perms = {Manifest.permission.GET_ACCOUNTS};

@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
@@ -26,8 +27,11 @@ import com.google.api.services.calendar.model.EventReminder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +59,7 @@ public class ReminderEditActivity extends AppCompatActivity {
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
     List<EventReminder> listReminder;
+    ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
     int cYear;
     long id;
     int position;
@@ -118,12 +123,30 @@ public class ReminderEditActivity extends AppCompatActivity {
             lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
-        //提醒
         reminders = googleEvent.getReminders();
         listReminder = reminders.getOverrides();
-        for (EventReminder reminder : listReminder) {
+        refreshReminders();
+    }
 
+    private void refreshReminders() {
+        //提醒
+        listReminderDis.clear();
+        for (EventReminder reminder : listReminder) {
+            HashMap<String, String> listMap = new HashMap<String, String>();
+            String txType = reminder.getMethod();
+            int tqMinutes = reminder.getMinutes();
+            int tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
+            int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
+            int txHour = txMinutes/60;
+            int txMinutesByHour = txMinutes%60;
+            String txTime = "提前" + tqDay + "天" + txHour + ":" + txMinutesByHour;
+            listMap.put("txTitle", txTime);
+            listReminderDis.add(listMap);
         }
+        HashMap<String, String> listMap = new HashMap<String, String>();
+        listMap.put("txTitle", "添加提醒");
+        listReminderDis.add(listMap);
+
     }
 
     private void initEvent() {
