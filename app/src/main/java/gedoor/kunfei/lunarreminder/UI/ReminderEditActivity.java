@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -52,6 +53,8 @@ public class ReminderEditActivity extends AppCompatActivity {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
+    Event.Reminders reminders;
+    List<EventReminder> listReminder;
     int cYear;
     long id;
     int position;
@@ -63,6 +66,8 @@ public class ReminderEditActivity extends AppCompatActivity {
     EditText textReminderMe;
     @BindView(R.id.vw_repeat)
     TextView vwRepeat;
+    @BindView(R.id.list_vw_reminder)
+    ListView listViewReminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +119,8 @@ public class ReminderEditActivity extends AppCompatActivity {
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         //提醒
-        Event.Reminders reminders = googleEvent.getReminders();
-        List<EventReminder> listReminder = reminders.getOverrides();
+        reminders = googleEvent.getReminders();
+        listReminder = reminders.getOverrides();
         for (EventReminder reminder : listReminder) {
 
         }
@@ -233,10 +238,10 @@ public class ReminderEditActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("退出")
                     .setMessage("是否保存")
-                    .setPositiveButton("是", (DialogInterface di, int which) -> {
+                    .setPositiveButton("是", (DialogInterface dialogInterface, int which) -> {
                         saveEvent();
                     })
-                    .setNegativeButton("否", (DialogInterface di, int which) -> {
+                    .setNegativeButton("否", (DialogInterface dialogInterface, int which) -> {
                         finish();
                     })
                     .show();

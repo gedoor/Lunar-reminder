@@ -5,12 +5,9 @@ import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.CalendarContract.Events;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -31,15 +27,11 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +47,6 @@ import gedoor.kunfei.lunarreminder.Async.LoadEventsList;
 import gedoor.kunfei.lunarreminder.Async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.UI.view.MySimpleAdapter;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -95,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences.Editor editor = sharedPreferences.edit();;
     String accountName;
 
-    @BindView(R.id.view_reminder_list)
-    ListView viewReminderList;
+    @BindView(R.id.list_view_events)
+    ListView listViewEvents;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
 
@@ -122,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
             EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
         }
         //列表点击
-        viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+        listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
-            if (mId == "") {
+            if (mId.equals("")) {
                 return;
             }
             Intent intent = new Intent(this, ReminderReadActivity.class);
@@ -135,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_REMINDER);
         });
         //列表长按
-        viewReminderList.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+        listViewEvents.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
-            if (mId == "") {
+            if (mId.equals("")) {
                 return true;
             }
             PopupMenu popupMenu = new PopupMenu(this, view);
@@ -307,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MySimpleAdapter(this, list, R.layout.item_reminder,
                 new String[]{"start", "summary"},
                 new int[]{R.id.reminder_item_date, R.id.reminder_item_title});
-        viewReminderList.setAdapter(adapter);
+        listViewEvents.setAdapter(adapter);
         swNoRefresh();
     }
 
