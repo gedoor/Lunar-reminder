@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
         }
-
+        //列表点击
         viewReminderList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
             if (mId == "") {
@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
+        //列表长按
         viewReminderList.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
             if (mId == "") {
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
             popupMenu.show();
             return true;
         });
+        //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
             if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
                 getGoogleEvents();
@@ -196,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             loadGoogleCalendar();
         }
     }
-
+    //载入事件
     public void loadGoogleCalendar() {
         String json = sharedPreferences.getString(getString(R.string.pref_key_google_events), null);
         client = new com.google.api.services.calendar.Calendar.Builder(
@@ -205,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         if (calendarID == null) {
             new LoadCalendars(this).execute();
         } else if (json != null) {
-            googleEvents = new Gson().fromJson(json, (Type) new TypeToken<List<Map<String, ?>>>(){}.getRawType());
+            googleEvents = new Gson().fromJson(json, new TypeToken<List<Map<String, ?>>>(){}.getType());
             new LoadEventsList(this).execute();
         } else {
             getGoogleEvents();
