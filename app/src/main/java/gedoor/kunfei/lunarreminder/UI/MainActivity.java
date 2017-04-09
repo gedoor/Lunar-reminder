@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
     public void refreshView() {
         adapter = new MySimpleAdapter(this, list, R.layout.item_event,
                 new String[]{"start", "summary"},
-                new int[]{R.id.reminder_item_date, R.id.reminder_item_title});
+                new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
         swNoRefresh();
     }

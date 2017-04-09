@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="2dp">
 
-    <TextView android:id="@+id/reminder_item_date"
+    <TextView android:id="@+id/event_item_date"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -20,12 +20,12 @@
         tools:ignore="RtlHardcoded" />
 
     <TextView
-        android:id="@+id/reminder_item_title"
+        android:id="@+id/event_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/reminder_item_date"
+        android:layout_toEndOf="@+id/event_item_date"
         android:background="@color/colorLunar"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"

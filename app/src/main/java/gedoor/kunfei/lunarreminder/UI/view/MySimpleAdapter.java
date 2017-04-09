@@ -30,8 +30,8 @@ public class MySimpleAdapter extends SimpleAdapter {
         View view = super.getView(position, convertView, parent);
 
         String mId = listitem.get(position).get("id");
-        TextView start = (TextView) view.findViewById(R.id.reminder_item_date);
-        TextView title = (TextView) view.findViewById(R.id.reminder_item_title);
+        TextView start = (TextView) view.findViewById(R.id.event_item_date);
+        TextView title = (TextView) view.findViewById(R.id.event_item_title);
         if (mId == "") {
             start.setTextSize(30);
             title.setBackground(mContext.getResources().getDrawable(R.color.colorTransparent));
