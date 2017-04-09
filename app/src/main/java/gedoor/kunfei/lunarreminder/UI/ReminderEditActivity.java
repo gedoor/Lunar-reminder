@@ -21,10 +21,12 @@ import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventReminder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,8 +113,12 @@ public class ReminderEditActivity extends AppCompatActivity {
             lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        //提醒
         Event.Reminders reminders = googleEvent.getReminders();
+        List<EventReminder> listReminder = reminders.getOverrides();
+        for (EventReminder reminder : listReminder) {
 
+        }
     }
 
     private void initEvent() {
