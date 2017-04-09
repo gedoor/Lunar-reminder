@@ -17,10 +17,10 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
  * Created by GKF on 2017/4/2.
  */
 
-public class MySimpleAdapter extends SimpleAdapter {
+public class SimpleAdapterEvent extends SimpleAdapter {
     ArrayList<HashMap<String, String>> listitem;
 
-    public MySimpleAdapter(Context context, ArrayList<HashMap<String, String>> data, int resource, String[] from, int[] to) {
+    public SimpleAdapterEvent(Context context, ArrayList<HashMap<String, String>> data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
         this.listitem = data;
     }

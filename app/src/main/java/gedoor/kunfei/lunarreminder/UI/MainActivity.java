@@ -47,7 +47,7 @@ import gedoor.kunfei.lunarreminder.Async.LoadEventsList;
 import gedoor.kunfei.lunarreminder.Async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.UI.view.MySimpleAdapter;
+import gedoor.kunfei.lunarreminder.UI.view.SimpleAdapterEvent;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     public boolean showAllEvents = false;
     public int numAsyncTasks = 0;
-    private MySimpleAdapter adapter;
+    private SimpleAdapterEvent adapter;
 
     String[] perms = {Manifest.permission.GET_ACCOUNTS};
 
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //刷新事件列表
     public void refreshView() {
-        adapter = new MySimpleAdapter(this, list, R.layout.item_event,
+        adapter = new SimpleAdapterEvent(this, list, R.layout.item_event,
                 new String[]{"start", "summary"},
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
