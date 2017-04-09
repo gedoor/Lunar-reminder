@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE, timeZone);
         editor.commit();
     }
-
+    //检测google服务
     private boolean checkGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
                 GoogleApiAvailability.getInstance();
