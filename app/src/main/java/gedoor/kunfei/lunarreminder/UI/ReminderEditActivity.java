@@ -146,7 +146,8 @@ public class ReminderEditActivity extends AppCompatActivity {
         HashMap<String, String> listMap = new HashMap<String, String>();
         listMap.put("txTitle", "添加提醒");
         listReminderDis.add(listMap);
-
+        SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new  int[]{R.id.reminder_item_title});
+        listViewReminder.setAdapter(adapter);
     }
 
     private void initEvent() {
@@ -159,6 +160,7 @@ public class ReminderEditActivity extends AppCompatActivity {
         vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
         lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        refreshReminders();
     }
 
     private void saveEvent() {
