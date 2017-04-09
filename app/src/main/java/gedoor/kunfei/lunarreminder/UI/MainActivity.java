@@ -201,12 +201,13 @@ public class MainActivity extends AppCompatActivity {
     //载入事件
     public void loadGoogleCalendar() {
         String json = sharedPreferences.getString(getString(R.string.pref_key_google_events), null);
+        Boolean cacheEvents = sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true);
         client = new com.google.api.services.calendar.Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
                 .build();
         if (calendarID == null) {
             new LoadCalendars(this).execute();
-        } else if (json != null) {
+        } else if (json != null && cacheEvents) {
             googleEvents = new Gson().fromJson(json, new TypeToken<List<Map<String, ?>>>(){}.getType());
             new LoadEventsList(this).execute();
         } else {
