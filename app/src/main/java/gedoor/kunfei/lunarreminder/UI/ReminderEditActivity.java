@@ -54,7 +54,6 @@ public class ReminderEditActivity extends AppCompatActivity {
     long id;
     int position;
     String lunarRepeatNum;
-    int intTemp;
 
     @BindView(R.id.vw_chinese_date)
     TextView vwChineseDate;
@@ -112,6 +111,8 @@ public class ReminderEditActivity extends AppCompatActivity {
             lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        Event.Reminders reminders = googleEvent.getReminders();
+
     }
 
     private void initEvent() {
@@ -189,17 +190,12 @@ public class ReminderEditActivity extends AppCompatActivity {
         numberPicker.setMaxValue(36);
         numberPicker.setMinValue(1);
         numberPicker.setValue(Integer.parseInt(lunarRepeatNum));
-        numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal)->{
-//            intTemp = newVal;
-        });
         builder.setView(view);
         builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
-
             lunarRepeatNum = String.valueOf(numberPicker.getValue());
             vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         });
         builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{
-
         });
         builder.create();
         builder.show();
