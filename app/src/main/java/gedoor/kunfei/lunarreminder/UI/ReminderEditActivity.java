@@ -187,14 +187,15 @@ public class ReminderEditActivity extends AppCompatActivity {
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_repeat_year, null);
         NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
         numberPicker.setMaxValue(36);
-        numberPicker.setMinValue(0);
+        numberPicker.setMinValue(1);
         numberPicker.setValue(Integer.parseInt(lunarRepeatNum));
         numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal)->{
-            intTemp = newVal;
+//            intTemp = newVal;
         });
         builder.setView(view);
         builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
-            lunarRepeatNum = String.valueOf(intTemp);
+
+            lunarRepeatNum = String.valueOf(numberPicker.getValue());
             vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         });
         builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{

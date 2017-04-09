@@ -114,17 +114,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     public boolean onIsMultiPane() {
         return isXLargeTablet(this);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
@@ -198,7 +202,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EventPreferenceFragment extends PreferenceFragment {
-        int intTemp;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         @Override
@@ -235,16 +238,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
             NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
             numberPicker.setMaxValue(36);
-            numberPicker.setMinValue(0);
+            numberPicker.setMinValue(1);
             numberPicker.setValue(Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_repeat_year), "12")));
-            numberPicker.setOnValueChangedListener((NumberPicker picker, int oldVal, int newVal)->{
-                intTemp = newVal;
-            });
             builder.setView(view);
             builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
-                editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(intTemp));
+                editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(numberPicker.getValue()));
                 editor.commit();
-                preference.setSummary(String.valueOf(intTemp));
+                preference.setSummary(String.valueOf(numberPicker.getValue()));
             });
             builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{
 
