@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
 
@@ -52,11 +53,7 @@ public class EventTimeUtil {
     }
 
     public String getDate(){
-        int m = cc.get(Calendar.MONTH)+1;
-        String month = m<10 ? "0" + m : String.valueOf(m);
-        int d = cc.get(Calendar.DATE);
-        String date = d<10 ? "0" + d : String.valueOf(d);
-        String dt = cc.get(Calendar.YEAR) + "-" + month + "-" + date;
+        String dt = String.format(Locale.CHINA, "%04d-%02d-%02d", cc.get(Calendar.YEAR), cc.get(Calendar.MONTH)+1, cc.get(Calendar.DATE));
         return dt;
     }
 
