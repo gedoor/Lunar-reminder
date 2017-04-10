@@ -9,8 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/appBarLayout">
+        android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/reminder_toolbar"
@@ -20,28 +19,17 @@
             app:navigationIcon="@drawable/ic_close_white_24dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <TextView
+        <EditText
             android:id="@+id/text_reminder_me"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:paddingStart="80dp"
-            android:paddingEnd="30dp"
-            android:padding="20dp"
-            android:textSize="22sp"
+            android:padding="10pt"
+            android:textSize="16sp"
             android:hint="@string/reminder_me"/>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_reminder_read" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@+id/appBarLayout"
-        app:layout_anchorGravity="bottom"
-        app:srcCompat="@drawable/ic_mode_edit_white_24dp" />
+    <include layout="@layout/content_event_edit" />
 
 </android.support.design.widget.CoordinatorLayout>

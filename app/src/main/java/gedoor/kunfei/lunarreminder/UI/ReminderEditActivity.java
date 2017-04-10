@@ -80,7 +80,7 @@ public class ReminderEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reminder_edit);
+        setContentView(R.layout.activity_event_edit);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);

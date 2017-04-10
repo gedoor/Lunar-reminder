@@ -65,7 +65,7 @@ public class ReminderReadActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reminder_read);
+        setContentView(R.layout.activity_event_read);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
