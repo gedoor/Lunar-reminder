@@ -40,7 +40,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  * Created by GKF on 2017/3/18.
  */
 
-public class ReminderReadActivity extends AppCompatActivity {
+public class EventReadActivity extends AppCompatActivity {
     private static final int REQUEST_REMINDER = 1;
 
     ChineseCalendar cc = new ChineseCalendar();
@@ -77,7 +77,7 @@ public class ReminderReadActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
-                    Intent intent = new Intent(this, ReminderEditActivity.class);
+                    Intent intent = new Intent(this, EventEditActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putLong("id", eventID);
                     bundle.putInt("position", position);
@@ -141,7 +141,7 @@ public class ReminderReadActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this  adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_reminder_read, menu);
+        getMenuInflater().inflate(R.menu.menu_event_read, menu);
         return true;
     }
 

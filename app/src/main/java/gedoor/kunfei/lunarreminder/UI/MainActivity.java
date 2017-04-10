@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
-            Intent intent = new Intent(this, ReminderEditActivity.class);
+            Intent intent = new Intent(this, EventEditActivity.class);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
 
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             if (mId.equals("")) {
                 return;
             }
-            Intent intent = new Intent(this, ReminderReadActivity.class);
+            Intent intent = new Intent(this, EventReadActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("position", Integer.parseInt(mId));
             bundle.putLong("id", position);
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
                 switch (item.getItemId()) {
                     case Menu.FIRST:
-                        Intent intent = new Intent(this, ReminderEditActivity.class);
+                        Intent intent = new Intent(this, EventEditActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("position", Integer.parseInt(mId));
                         bundle.putLong("id", position);

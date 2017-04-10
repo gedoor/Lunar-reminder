@@ -25,10 +25,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.ReminderEditActivity"
+            android:name=".UI.EventEditActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UI.ReminderReadActivity"
+            android:name=".UI.EventReadActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".UI.AboutActivity"

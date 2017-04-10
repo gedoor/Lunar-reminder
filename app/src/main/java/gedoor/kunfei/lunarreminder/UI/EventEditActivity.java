@@ -54,7 +54,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
  * Created by GKF on 2017/3/7.
  */
 @SuppressLint("WrongConstant")
-public class ReminderEditActivity extends AppCompatActivity {
+public class EventEditActivity extends AppCompatActivity {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
@@ -208,7 +208,7 @@ public class ReminderEditActivity extends AppCompatActivity {
     //菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_reminder_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_event_edit, menu);
         return true;
     }
 
