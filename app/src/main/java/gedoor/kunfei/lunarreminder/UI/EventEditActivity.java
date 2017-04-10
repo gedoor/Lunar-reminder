@@ -58,7 +58,7 @@ public class EventEditActivity extends AppCompatActivity {
     DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
-    List<EventReminder> listReminder;
+    List<EventReminder> listReminder = new ArrayList<>();
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
     int cYear;
     long id;
@@ -133,12 +133,10 @@ public class EventEditActivity extends AppCompatActivity {
     private void refreshReminders() {
         //提醒
         listReminderDis.clear();
-        if (listReminder != null) {
-            for (EventReminder reminder : listReminder) {
-                HashMap<String, String> listMap = new HashMap<>();
-                listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
-                listReminderDis.add(listMap);
-            }
+        for (EventReminder reminder : listReminder) {
+            HashMap<String, String> listMap = new HashMap<>();
+            listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
+            listReminderDis.add(listMap);
         }
         HashMap<String, String> listMap = new HashMap<String, String>();
         listMap.put("txTitle", getString(R.string.create_reminder));
@@ -149,17 +147,18 @@ public class EventEditActivity extends AppCompatActivity {
 
     private void editReminder(int position) {
         int checkedItem = 1;
-        int[] reminderMinutes = new int[]{0, 900, 900, 9580, 9580};
+        int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
         String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
         String[] reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
                 getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.customize)};
-        if (!listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder))) {
+        boolean isCreateReminder = listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder));
+        if (!isCreateReminder) {
             EventReminder reminder = listReminder.get(position);
-            if (reminder.getMinutes() == 900) {
+            if (reminder.getMinutes() == reminderMinutes[1]) {
                 if (reminder.getMethod().equals("email")) {
                     checkedItem = 2;
                 }
-            } else if (reminder.getMinutes() == 9580) {
+            } else if (reminder.getMinutes() == reminderMinutes[3]) {
                 if (reminder.getMethod().equals("email")) {
                     checkedItem = 4;
                 } else {
@@ -168,25 +167,32 @@ public class EventEditActivity extends AppCompatActivity {
             } else {
                 checkedItem = 5;
                 reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
-                        getString(R.string.reminder3),new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
+                        getString(R.string.reminder3), new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setSingleChoiceItems(reminderTitle, checkedItem, (DialogInterface dialog, int which) -> {
             switch (which) {
                 case 0:
-                    listReminder.remove(position);
-                    refreshReminders();
+                    if (!isCreateReminder) {
+                        listReminder.remove(position);
+                        refreshReminders();
+                    }
                     break;
                 case 1:
                 case 2:
                 case 3:
                 case 4:
-                    if (listReminder == null) listReminder = new ArrayList<>();
-                    EventReminder reminder = new EventReminder();
-                    reminder.setMinutes(reminderMinutes[which]);
-                    reminder.setMethod(reminderMethod[which]);
-                    listReminder.add(reminder);
+                    if (isCreateReminder) {
+                        EventReminder reminder = new EventReminder();
+                        reminder.setMinutes(reminderMinutes[which]);
+                        reminder.setMethod(reminderMethod[which]);
+                        listReminder.add(reminder);
+                    } else {
+                        EventReminder reminder = listReminder.get(position);
+                        reminder.setMinutes(reminderMinutes[which]);
+                        reminder.setMethod(reminderMethod[which]);
+                    }
                     refreshReminders();
                     break;
                 case 5:
@@ -226,6 +232,14 @@ public class EventEditActivity extends AppCompatActivity {
         googleEvent.setStart(new EventTimeUtil(cc).getEventStartDT());
         googleEvent.setEnd(new EventTimeUtil(cc).getEventEndDT());
         googleEvent.setDescription(textReminderMe.getText().toString() + "(农历)");
+        if (listReminder.size() > 0) {
+            reminders.setUseDefault(false);
+            reminders.setOverrides(listReminder);
+
+        } else {
+            reminders.setUseDefault(true);
+        }
+        googleEvent.setReminders(reminders);
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         int operation = googleEvent.getId() == null ? FinalFields.OPERATION_INSERT : FinalFields.OPERATION_UPDATE;
