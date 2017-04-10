@@ -126,19 +126,19 @@ public class EventEditActivity extends AppCompatActivity {
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         reminders = googleEvent.getReminders();
-        listReminder = reminders.getOverrides();
+        if (reminders.getOverrides() != null) {
+            listReminder = reminders.getOverrides();
+        }
         refreshReminders();
     }
 
     private void refreshReminders() {
         //提醒
         listReminderDis.clear();
-        if (listReminder != null) {
-            for (EventReminder reminder : listReminder) {
-                HashMap<String, String> listMap = new HashMap<>();
-                listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
-                listReminderDis.add(listMap);
-            }
+        for (EventReminder reminder : listReminder) {
+            HashMap<String, String> listMap = new HashMap<>();
+            listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
+            listReminderDis.add(listMap);
         }
         HashMap<String, String> listMap = new HashMap<String, String>();
         listMap.put("txTitle", getString(R.string.create_reminder));
@@ -169,7 +169,7 @@ public class EventEditActivity extends AppCompatActivity {
             } else {
                 checkedItem = 5;
                 reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
-                        getString(R.string.reminder3),new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
+                        getString(R.string.reminder3), new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -191,7 +191,7 @@ public class EventEditActivity extends AppCompatActivity {
                         reminder.setMethod(reminderMethod[which]);
                         listReminder.add(reminder);
                     } else {
-                        EventReminder reminder= listReminder.get(position);
+                        EventReminder reminder = listReminder.get(position);
                         reminder.setMinutes(reminderMinutes[which]);
                         reminder.setMethod(reminderMethod[which]);
                     }
