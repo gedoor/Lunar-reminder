@@ -23,13 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.UI.Help.ReminderToString;
+import gedoor.kunfei.lunarreminder.UI.Help.ReminderUtil;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatYear;
@@ -129,7 +128,7 @@ public class ReminderReadActivity extends AppCompatActivity {
         if (listReminder != null) {
             for (EventReminder reminder : listReminder) {
                 HashMap<String, String> listMap = new HashMap<String, String>();
-                listMap.put("txTitle", new ReminderToString(reminder).getTitle());
+                listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
                 listReminderDis.add(listMap);
             }
         }
