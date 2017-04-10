@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void initGoogleAccount() {
         //初始化Google账号
-        mGoogleAccount = sharedPreferences.getString(FinalFields.PREF_GOOGLE_ACCOUNT_NAME, null);
+        mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
         mTimeZone = sharedPreferences.getString(FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE, null);
         credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                         String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
                         if (accountName != null) {
                             credential.setSelectedAccountName(accountName);
-                            editor.putString(FinalFields.PREF_GOOGLE_ACCOUNT_NAME, accountName);
+                            editor.putString(getString(R.string.pref_key_google_account), accountName);
                             editor.commit();
                             mGoogleAccount = accountName;
                             credential.setSelectedAccountName(mGoogleAccount);

@@ -6,6 +6,10 @@
         android:summary="@string/lunar_calendar_name"/>
 
     <Preference
+        android:key="@string/pref_key_google_account"
+        android:title="Account name"/>
+
+    <Preference
         android:key="@string/pref_key_calendar_id"
         android:title="Lunar calendar id"
         android:summary=""/>

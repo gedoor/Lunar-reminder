@@ -21,7 +21,6 @@ public final class FinalFields {
     public static final String PREF_CALENDAR_TYPE = "calendarType";
 
     public static final String PREF_GOOGLE_CALENDAR_TIMEZONE = "gtimeZone";
-    public static final String PREF_GOOGLE_ACCOUNT_NAME = "gAaccountName";
 
     public static final String PREF_LOCAL_CALENDAR_ID = "lCalendarId";
     public static final String PREF_LOCAL_CALENDAR_TIMEZONE = "ltimeZone";
