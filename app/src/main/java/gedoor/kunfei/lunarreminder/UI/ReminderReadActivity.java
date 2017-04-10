@@ -10,13 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventReminder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +44,9 @@ public class ReminderReadActivity extends AppCompatActivity {
     private static final int REQUEST_REMINDER = 1;
 
     ChineseCalendar cc = new ChineseCalendar();
+    Event.Reminders reminders;
+    List<EventReminder> listReminder;
+    ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
     long eventID;
     int position;
     String lunarRepeatNum;
@@ -47,6 +57,8 @@ public class ReminderReadActivity extends AppCompatActivity {
     TextView textReminderMe;
     @BindView(R.id.vw_repeat)
     TextView vwRepeat;
+    @BindView(R.id.list_vw_reminder)
+    ListView listViewReminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +117,30 @@ public class ReminderReadActivity extends AppCompatActivity {
             lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        reminders = googleEvent.getReminders();
+        listReminder = reminders.getOverrides();
+        refreshReminders();
+    }
+
+    private void refreshReminders() {
+        //提醒
+        listReminderDis.clear();
+        if (listReminder != null) {
+            for (EventReminder reminder : listReminder) {
+                HashMap<String, String> listMap = new HashMap<String, String>();
+                String txType = reminder.getMethod();
+                int tqMinutes = reminder.getMinutes();
+                int tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
+                int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
+                int txHour = txMinutes/60;
+                int txMinutesByHour = txMinutes%60;
+                String txTime = "提前" + tqDay + "天" + String.format(Locale.CHINA,"%2d:%02d", txHour, txMinutesByHour);
+                listMap.put("txTitle", txTime);
+                listReminderDis.add(listMap);
+            }
+        }
+        SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new  int[]{R.id.reminder_item_title});
+        listViewReminder.setAdapter(adapter);
     }
 
     @Override

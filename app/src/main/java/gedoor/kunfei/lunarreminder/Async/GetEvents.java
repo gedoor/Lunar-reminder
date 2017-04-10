@@ -57,10 +57,7 @@ public class GetEvents extends CalendarAsyncTask {
             Events events = client.events().list(calendarID).setSingleEvents(true).setOrderBy("startTime")
                     .setTimeMin(startDT).setTimeMax(endDT).execute();
             googleEvents = events.getItems();
-            Gson gson = new Gson();
-            String json = gson.toJson(googleEvents);
-            editor.putString(mContext.getString(R.string.pref_key_google_events), json);
-            editor.commit();
+
         }
         new LoadEventsList(activity).execute();
 

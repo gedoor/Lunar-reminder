@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -131,17 +132,19 @@ public class ReminderEditActivity extends AppCompatActivity {
     private void refreshReminders() {
         //提醒
         listReminderDis.clear();
-        for (EventReminder reminder : listReminder) {
-            HashMap<String, String> listMap = new HashMap<String, String>();
-            String txType = reminder.getMethod();
-            int tqMinutes = reminder.getMinutes();
-            int tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
-            int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
-            int txHour = txMinutes/60;
-            int txMinutesByHour = txMinutes%60;
-            String txTime = "提前" + tqDay + "天" + txHour + ":" + txMinutesByHour;
-            listMap.put("txTitle", txTime);
-            listReminderDis.add(listMap);
+        if (listReminder != null) {
+            for (EventReminder reminder : listReminder) {
+                HashMap<String, String> listMap = new HashMap<String, String>();
+                String txType = reminder.getMethod();
+                int tqMinutes = reminder.getMinutes();
+                int tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
+                int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
+                int txHour = txMinutes/60;
+                int txMinutesByHour = txMinutes%60;
+                String txTime = "提前" + tqDay + "天" + String.format(Locale.CHINA,"%d:%02d", txHour, txMinutesByHour);
+                listMap.put("txTitle", txTime);
+                listReminderDis.add(listMap);
+            }
         }
         HashMap<String, String> listMap = new HashMap<String, String>();
         listMap.put("txTitle", "添加提醒");
