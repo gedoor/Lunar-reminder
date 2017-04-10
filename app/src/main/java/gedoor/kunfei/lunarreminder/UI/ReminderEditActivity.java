@@ -153,6 +153,7 @@ public class ReminderEditActivity extends AppCompatActivity {
     }
 
     private void editReminder(int position) {
+        int checkedItem = 0;
         if (listReminderDis.get(position).get("txTitle").equals("添加提醒")) {
 
         } else {
@@ -160,7 +161,7 @@ public class ReminderEditActivity extends AppCompatActivity {
         }
         String[] reminders = new String[]{"无提醒","提前一天9:00","提前一天9:00通过邮件"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setSingleChoiceItems(reminders, 0, (DialogInterface dialog, int which) -> {
+        builder.setSingleChoiceItems(reminders, checkedItem, (DialogInterface dialog, int which) -> {
 
         });
         builder.show();
