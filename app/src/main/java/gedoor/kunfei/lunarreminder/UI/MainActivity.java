@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivityForResult(intent, REQUEST_REMINDER);
                         return true;
                     case Menu.FIRST + 1:
+                        swOnRefresh();
                         new DeleteEvents(this, calendarID, googleEvents.get(Integer.parseInt(mId))).execute();
                         return true;
                 }
