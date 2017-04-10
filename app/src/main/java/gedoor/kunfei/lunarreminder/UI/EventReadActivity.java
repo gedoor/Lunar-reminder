@@ -32,7 +32,6 @@ import gedoor.kunfei.lunarreminder.UI.Help.ReminderUtil;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatYear;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
@@ -91,9 +90,7 @@ public class EventReadActivity extends AppCompatActivity {
         if (bundle != null) {
             eventID = bundle.getLong("id");
             position = bundle.getInt("position");
-            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                InitGoogleEvent();
-            }
+            InitGoogleEvent();
         } else {
             finish();
         }
@@ -134,7 +131,7 @@ public class EventReadActivity extends AppCompatActivity {
                 listReminderDis.add(listMap);
             }
         }
-        SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new  int[]{R.id.reminder_item_title});
+        SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new int[]{R.id.reminder_item_title});
         listViewReminder.setAdapter(adapter);
     }
 
@@ -149,14 +146,12 @@ public class EventReadActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_delete) {
-            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putInt(FinalFields.OPERATION, FinalFields.OPERATION_DELETE);
-                intent.putExtras(bundle);
-                this.setResult(RESULT_OK, intent);
-                finish();
-            }
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putInt(FinalFields.OPERATION, FinalFields.OPERATION_DELETE);
+            intent.putExtras(bundle);
+            this.setResult(RESULT_OK, intent);
+            finish();
             return true;
         }
 

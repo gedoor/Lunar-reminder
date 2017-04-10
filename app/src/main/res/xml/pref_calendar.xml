@@ -2,7 +2,7 @@
 
     <Preference
         android:key="@string/pref_key_lunar_display_name"
-        android:title="Lunar calendar display name"
+        android:title="@string/pref_title_calendar_name"
         android:summary="@string/lunar_calendar_name"/>
 
     <Preference

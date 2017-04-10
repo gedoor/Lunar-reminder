@@ -43,8 +43,6 @@
     <string name="about_donate_des">上架 Google play 需25$，如果觉得软件好请捐赠。</string>
 
     <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
     <string name="pref_header_app_config">程序配置</string>
 
     <string name="pref_title_theme">主题</string>
@@ -52,11 +50,10 @@
     <string name="pref_title_cache_data">缓存数据</string>
     <string name="pref_description_cache_data">缓存Calendar Events数据,加载更快</string>
 
-    <!-- Example settings for Data & Sync -->
     <string name="pref_header_calendar_config">Calendar配置</string>
 
+    <string name="pref_title_calendar_name">Lunar calendar name</string>
 
-    <!-- Example settings for Notifications -->
     <string name="pref_header_event_config">Event配置</string>
 
     <string name="default_repeat_year">默认重复年数</string>
