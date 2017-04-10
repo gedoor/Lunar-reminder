@@ -158,6 +158,12 @@ public class ReminderEditActivity extends AppCompatActivity {
         } else {
 
         }
+        String[] reminders = new String[]{"无提醒","提前一天9:00","提前一天9:00通过邮件"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setSingleChoiceItems(reminders, 0, (DialogInterface dialog, int which) -> {
+
+        });
+        builder.show();
     }
 
     private void initEvent() {
