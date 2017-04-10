@@ -39,6 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.UI.Help.ReminderToString;
 import gedoor.kunfei.lunarreminder.UI.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -135,14 +136,7 @@ public class ReminderEditActivity extends AppCompatActivity {
         if (listReminder != null) {
             for (EventReminder reminder : listReminder) {
                 HashMap<String, String> listMap = new HashMap<String, String>();
-                String txType = reminder.getMethod();
-                int tqMinutes = reminder.getMinutes();
-                int tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
-                int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
-                int txHour = txMinutes/60;
-                int txMinutesByHour = txMinutes%60;
-                String txTime = "提前" + tqDay + "天" + String.format(Locale.CHINA,"%d:%02d", txHour, txMinutesByHour);
-                listMap.put("txTitle", txTime);
+                listMap.put("txTitle", new ReminderToString(reminder).getTitle());
                 listReminderDis.add(listMap);
             }
         }

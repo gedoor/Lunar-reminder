@@ -26,16 +26,12 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.Event;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +40,6 @@ import gedoor.kunfei.lunarreminder.Async.GetEvents;
 import gedoor.kunfei.lunarreminder.Async.InsertCalendar;
 import gedoor.kunfei.lunarreminder.Async.InsertEvents;
 import gedoor.kunfei.lunarreminder.Async.LoadCalendars;
-import gedoor.kunfei.lunarreminder.Async.LoadEventsList;
 import gedoor.kunfei.lunarreminder.Async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.Data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
@@ -74,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private String mGoogleAccount;
     private String mTimeZone;
     public GoogleAccountCredential credential;
-    public com.google.api.services.calendar.Calendar client;
+    public Calendar client;
     public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     public boolean showAllEvents = false;
     public int numAsyncTasks = 0;
@@ -83,13 +78,16 @@ public class MainActivity extends AppCompatActivity {
     String[] perms = {Manifest.permission.GET_ACCOUNTS};
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    SharedPreferences.Editor editor = sharedPreferences.edit();;
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    ;
     String accountName;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
             Intent intent = new Intent(this, ReminderEditActivity.class);
@@ -135,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             Menu menu = popupMenu.getMenu();
             menu.add(Menu.NONE, Menu.FIRST, 0, "修改");
             menu.add(Menu.NONE, Menu.FIRST + 1, 1, "删除");
-            popupMenu.setOnMenuItemClickListener((MenuItem item)->{
+            popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
                 switch (item.getItemId()) {
                     case Menu.FIRST:
                         Intent intent = new Intent(this, ReminderEditActivity.class);
@@ -145,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtras(bundle);
                         startActivityForResult(intent, REQUEST_REMINDER);
                         return true;
-                    case Menu.FIRST+1:
+                    case Menu.FIRST + 1:
                         new DeleteEvents(this, calendarID, googleEvents.get(Integer.parseInt(mId))).execute();
                         return true;
                 }
@@ -189,10 +186,11 @@ public class MainActivity extends AppCompatActivity {
             loadGoogleCalendar();
         }
     }
+
     //载入事件
     public void loadGoogleCalendar() {
         Boolean cacheEvents = sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true);
-        client = new com.google.api.services.calendar.Calendar.Builder(
+        client = new Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
                 .build();
         if (calendarID == null) {
@@ -228,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE, timeZone);
         editor.commit();
     }
+
     //检测google服务
     private boolean checkGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
@@ -283,15 +282,18 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
+
     //刷新动画开始
     public void swOnRefresh() {
         swipeRefresh.setProgressViewOffset(false, 0, 52);
         swipeRefresh.setRefreshing(true);
     }
+
     //刷新动画停止
     public void swNoRefresh() {
         swipeRefresh.setRefreshing(false);
     }
+
     //刷新事件列表
     public void refreshView() {
         adapter = new SimpleAdapterEvent(this, list, R.layout.item_event,
