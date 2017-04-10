@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -73,15 +74,17 @@ public class ReminderEditActivity extends AppCompatActivity {
     TextView vwRepeat;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;
+    @BindView(R.id.reminder_toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_edit);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.reminder_toolbar);
-        toolbar.setTitle("");
+
         setSupportActionBar(toolbar);
+        toolbar.setTitle("");
         toolbar.setNavigationOnClickListener((View view) -> {
             setResult(RESULT_CANCELED);
             finish();
@@ -102,6 +105,10 @@ public class ReminderEditActivity extends AppCompatActivity {
             }
             initEvent();
         }
+
+        listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            editReminder(position);
+        });
 
     }
 
@@ -143,6 +150,14 @@ public class ReminderEditActivity extends AppCompatActivity {
         listReminderDis.add(listMap);
         SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new  int[]{R.id.reminder_item_title});
         listViewReminder.setAdapter(adapter);
+    }
+
+    private void editReminder(int position) {
+        if (listReminderDis.get(position).get("txTitle").equals("添加提醒")) {
+
+        } else {
+
+        }
     }
 
     private void initEvent() {

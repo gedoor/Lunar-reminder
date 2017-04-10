@@ -59,15 +59,17 @@ public class ReminderReadActivity extends AppCompatActivity {
     TextView vwRepeat;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;
+    @BindView(R.id.reminder_toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder_read);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.reminder_toolbar);
-        toolbar.setTitle("");
+
         setSupportActionBar(toolbar);
+        toolbar.setTitle("");
         toolbar.setNavigationOnClickListener((View view) -> {
             setResult(RESULT_CANCELED);
             finish();
