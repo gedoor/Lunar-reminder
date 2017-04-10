@@ -135,28 +135,64 @@ public class EventEditActivity extends AppCompatActivity {
         listReminderDis.clear();
         if (listReminder != null) {
             for (EventReminder reminder : listReminder) {
-                HashMap<String, String> listMap = new HashMap<String, String>();
+                HashMap<String, String> listMap = new HashMap<>();
                 listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
                 listReminderDis.add(listMap);
             }
         }
         HashMap<String, String> listMap = new HashMap<String, String>();
-        listMap.put("txTitle", "添加提醒");
+        listMap.put("txTitle", getString(R.string.create_reminder));
         listReminderDis.add(listMap);
         SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new int[]{R.id.reminder_item_title});
         listViewReminder.setAdapter(adapter);
     }
 
     private void editReminder(int position) {
-        if (listReminderDis.get(position).get("txTitle").equals("添加提醒")) {
-
-        } else {
-
+        int checkedItem = 1;
+        int[] reminderMinutes = new int[]{0, 900, 900, 9580, 9580};
+        String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
+        String[] reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
+                getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.customize)};
+        if (!listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder))) {
+            EventReminder reminder = listReminder.get(position);
+            if (reminder.getMinutes() == 900) {
+                if (reminder.getMethod().equals("email")) {
+                    checkedItem = 2;
+                }
+            } else if (reminder.getMinutes() == 9580) {
+                if (reminder.getMethod().equals("email")) {
+                    checkedItem = 4;
+                } else {
+                    checkedItem = 3;
+                }
+            } else {
+                checkedItem = 5;
+                reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
+                        getString(R.string.reminder3),new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
+            }
         }
-        String[] reminders = new String[]{"无提醒", "提前一天9:00", "提前一天9:00通过邮件"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setSingleChoiceItems(reminders, 0, (DialogInterface dialog, int which) -> {
-
+        builder.setSingleChoiceItems(reminderTitle, checkedItem, (DialogInterface dialog, int which) -> {
+            switch (which) {
+                case 0:
+                    listReminder.remove(position);
+                    refreshReminders();
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    if (listReminder == null) listReminder = new ArrayList<>();
+                    EventReminder reminder = new EventReminder();
+                    reminder.setMinutes(reminderMinutes[which]);
+                    reminder.setMethod(reminderMethod[which]);
+                    listReminder.add(reminder);
+                    refreshReminders();
+                    break;
+                case 5:
+                    break;
+            }
+            dialog.dismiss();
         });
         builder.show();
     }

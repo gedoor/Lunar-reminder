@@ -33,6 +33,15 @@
         <item>初一</item>
     </string-array>
 
+    <string name="create_reminder">添加提醒</string>
+    <string name="reminder0">无提醒</string>
+    <string name="reminder1">提前1天9:00</string>
+    <string name="reminder2">提前1天9:00通过邮件</string>
+    <string name="reminder3">提前1周9:00</string>
+    <string name="reminder4">提前1周9:00通过邮件</string>
+    <string name="customize">自定义</string>
+    
+
     <string name="about_description">说明</string>
     <string name="about_description_body">农历提醒是一个在google日历中新建按农历重复事件的应用，该应用可以实现新建,修改,删除农历事件，且该应用不存储日历数据，实时读取google日历数据。</string>
     <string name="about_author">作者</string>
