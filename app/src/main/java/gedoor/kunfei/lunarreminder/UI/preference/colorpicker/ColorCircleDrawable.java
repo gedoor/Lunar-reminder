@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.UI.preference;
+package gedoor.kunfei.lunarreminder.UI.preference.colorpicker;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;

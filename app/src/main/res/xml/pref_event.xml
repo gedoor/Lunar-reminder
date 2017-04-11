@@ -3,7 +3,7 @@
     <Preference
         android:key="@string/pref_key_repeat_year"
         android:title="@string/default_repeat_year"
-        android:summary="12" />
+        android:defaultValue="12" />
 
     <Preference
         android:key="default_reminder"

@@ -11,7 +11,29 @@
         <item>@color/lavender</item>
         <item>@color/grape</item>
         <item>@color/flamingo</item>
-        <item>@color/graphite</item>
+    </array>
+
+    <array name="calendar_rainbow">
+        <item>@color/bright_pink</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/cyan</item>
+        <item>@color/azure</item>
+        <item>@color/blue</item>
+        <item>@color/violet</item>
+        <item>@color/magenta</item>
+        <item>@color/tomato</item>
+        <item>@color/tangerine</item>
+        <item>@color/banana</item>
+        <item>@color/basil</item>
+        <item>@color/sage</item>
+        <item>@color/peacock</item>
+        <item>@color/blueberry</item>
+        <item>@color/lavender</item>
+        <item>@color/grape</item>
+        <item>@color/flamingo</item>
     </array>
 
     <string-array name="default_rainbow_name">

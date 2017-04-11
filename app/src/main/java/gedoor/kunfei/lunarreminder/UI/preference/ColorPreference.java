@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import gedoor.kunfei.lunarreminder.UI.preference.ColorCircleDrawable;
+import gedoor.kunfei.lunarreminder.UI.preference.colorpicker.ColorCircleDrawable;
 import gedoor.kunfei.lunarreminder.UI.preference.colorpicker.ColorPickerDialog;
 import gedoor.kunfei.lunarreminder.UI.preference.colorpicker.ColorPickerSwatch;
 import gedoor.kunfei.lunarreminder.R;
