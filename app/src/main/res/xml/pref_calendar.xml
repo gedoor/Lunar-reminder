@@ -19,7 +19,7 @@
         android:key="@string/pref_key_calendar_color"
         android:title="Calendar color"
         tools:dialogTitle="@string/select_color"
-        tools:colors="@array/default_rainbow"
+        tools:colors="@array/calendar_rainbow"
         tools:columns="5"
         tools:material="true"
         tools:backwardsOrder="true"
