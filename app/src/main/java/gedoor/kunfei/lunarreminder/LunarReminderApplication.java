@@ -20,7 +20,6 @@ import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_CALENDAR_TYPE;
 public class LunarReminderApplication extends Application {
     public static Context mContext;
     public static String calendarID = null;
-    public static String calendarType;
     public static List<Event> googleEvents;
     public static Event googleEvent;
     public static int eventRepeat = 12;
@@ -30,7 +29,6 @@ public class LunarReminderApplication extends Application {
         super.onCreate();
         mContext = this;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        calendarType = sharedPreferences.getString(PREF_CALENDAR_TYPE, null);
         calendarID = sharedPreferences.getString(getString(R.string.pref_key_calendar_id), null);
     }
 

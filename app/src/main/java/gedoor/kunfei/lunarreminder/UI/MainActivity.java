@@ -48,7 +48,6 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
-            Intent intent = new Intent(this, ReminderEditActivity.class);
+            Intent intent = new Intent(this, EventEditActivity.class);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
 
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             if (mId.equals("")) {
                 return;
             }
-            Intent intent = new Intent(this, ReminderReadActivity.class);
+            Intent intent = new Intent(this, EventReadActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("position", Integer.parseInt(mId));
             bundle.putLong("id", position);
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
                 switch (item.getItemId()) {
                     case Menu.FIRST:
-                        Intent intent = new Intent(this, ReminderEditActivity.class);
+                        Intent intent = new Intent(this, EventEditActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putInt("position", Integer.parseInt(mId));
                         bundle.putLong("id", position);
@@ -143,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivityForResult(intent, REQUEST_REMINDER);
                         return true;
                     case Menu.FIRST + 1:
+                        swOnRefresh();
                         new DeleteEvents(this, calendarID, googleEvents.get(Integer.parseInt(mId))).execute();
                         return true;
                 }
@@ -153,19 +153,13 @@ public class MainActivity extends AppCompatActivity {
         });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
-            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                getGoogleEvents();
-            }
-
+            getGoogleEvents();
         });
 
     }
 
     public void initActivity() {
         if (checkGooglePlayServicesAvailable()) {
-            calendarType = FinalFields.CalendarTypeGoogle;
-            editor.putString(FinalFields.PREF_CALENDAR_TYPE, calendarType);
-            editor.commit();
             initGoogleAccount();
         } else {
             Toast.makeText(this, "检测不到Google服务,程序无法使用", Toast.LENGTH_LONG).show();
@@ -176,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
     public void initGoogleAccount() {
         //初始化Google账号
         mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
-        mTimeZone = sharedPreferences.getString(FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE, null);
+        mTimeZone = sharedPreferences.getString(getString(R.string.pref_key_timezone), null);
         credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
         if (credential.getSelectedAccountName() == null) {
@@ -215,16 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void getGoogleEvents() {
         new GetEvents(this).execute();
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setTimeZone(String timeZone) {
-        mTimeZone = timeZone;
-        editor.putString(FinalFields.PREF_GOOGLE_CALENDAR_TIMEZONE, timeZone);
-        editor.commit();
     }
 
     //检测google服务
@@ -287,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
     public void swOnRefresh() {
         swipeRefresh.setProgressViewOffset(false, 0, 52);
         swipeRefresh.setRefreshing(true);
+        
     }
 
     //刷新动画停止
@@ -308,21 +293,18 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_REMINDER:
-                    if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                        swOnRefresh();
-                        Bundle bundle = data.getExtras();
-                        switch (bundle.getInt(FinalFields.OPERATION)) {
-                            case FinalFields.OPERATION_INSERT:
-                                new InsertEvents(this, calendarID, googleEvent, eventRepeat).execute();
-                                break;
-                            case FinalFields.OPERATION_UPDATE:
-                                new UpdateEvents(this, calendarID, googleEvent, eventRepeat).execute();
-                                break;
-                            case FinalFields.OPERATION_DELETE:
-                                new DeleteEvents(this, calendarID, googleEvent).execute();
-                                break;
-                        }
-
+                    swOnRefresh();
+                    Bundle bundle = data.getExtras();
+                    switch (bundle.getInt(FinalFields.OPERATION)) {
+                        case FinalFields.OPERATION_INSERT:
+                            new InsertEvents(this, calendarID, googleEvent, eventRepeat).execute();
+                            break;
+                        case FinalFields.OPERATION_UPDATE:
+                            new UpdateEvents(this, calendarID, googleEvent, eventRepeat).execute();
+                            break;
+                        case FinalFields.OPERATION_DELETE:
+                            new DeleteEvents(this, calendarID, googleEvent).execute();
+                            break;
                     }
                     break;
                 case REQUEST_ACCOUNT_PICKER:
@@ -334,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
                             editor.commit();
                             mGoogleAccount = accountName;
                             credential.setSelectedAccountName(mGoogleAccount);
+                            swOnRefresh();
                             loadGoogleCalendar();
                         } else {
                             finish();

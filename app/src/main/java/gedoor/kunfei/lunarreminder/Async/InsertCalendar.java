@@ -5,6 +5,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.api.services.calendar.model.Calendar;
+import com.google.api.services.calendar.model.CalendarListEntry;
 
 import java.io.IOException;
 
@@ -30,7 +31,10 @@ public class InsertCalendar extends CalendarAsyncTask {
         Calendar calendar = client.calendars().insert(mCalendar).execute();
         Log.d(TAG, "calendar timeZone:" + calendar.getTimeZone());
         calendarID = calendar.getId();
+        CalendarListEntry calendarListEntry = client.calendarList().get(calendarID).execute();
         editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
+        editor.putString(mContext.getString(R.string.pref_key_lunar_calendar_color), calendarListEntry.getBackgroundColor());
+        editor.putString(mContext.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
         editor.commit();
 
         activity.getGoogleEvents();

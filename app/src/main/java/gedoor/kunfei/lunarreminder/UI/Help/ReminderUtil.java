@@ -24,8 +24,8 @@ public class ReminderUtil {
     }
 
     public String getTitle() {
-        String txType = reminder.getMethod().equals("mail") ? "通过邮件" : "";
-        String txTitle = "提前" + tqDay + "天" + String.format(Locale.CHINA,"%2d:%02d", txHour, txMinutesByHour) + txType;
+        String txType = reminder.getMethod().equals("email") ? "通过邮件" : "";
+        String txTitle = "提前" + tqDay + "天" + String.format(Locale.CHINA,"%d:%02d", txHour, txMinutesByHour) + txType;
         return txTitle;
     }
 

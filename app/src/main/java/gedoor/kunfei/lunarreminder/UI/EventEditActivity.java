@@ -44,7 +44,6 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
 import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatYear;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarType;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
@@ -54,12 +53,12 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
  * Created by GKF on 2017/3/7.
  */
 @SuppressLint("WrongConstant")
-public class ReminderEditActivity extends AppCompatActivity {
+public class EventEditActivity extends AppCompatActivity {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
-    List<EventReminder> listReminder;
+    List<EventReminder> listReminder = new ArrayList<>();
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
     int cYear;
     long id;
@@ -95,14 +94,10 @@ public class ReminderEditActivity extends AppCompatActivity {
         if (bundle != null) {
             id = bundle.getLong("id");
             position = bundle.getInt("position");
-            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                googleEvent = googleEvents.get(position);
-                initGoogleEvent();
-            }
+            googleEvent = googleEvents.get(position);
+            initGoogleEvent();
         } else {
-            if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-                googleEvent = new Event();
-            }
+            googleEvent = new Event();
             initEvent();
         }
 
@@ -131,38 +126,94 @@ public class ReminderEditActivity extends AppCompatActivity {
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         reminders = googleEvent.getReminders();
-        listReminder = reminders.getOverrides();
+        if (reminders.getOverrides() != null) {
+            listReminder = reminders.getOverrides();
+        }
         refreshReminders();
     }
 
     private void refreshReminders() {
         //提醒
         listReminderDis.clear();
-        if (listReminder != null) {
-            for (EventReminder reminder : listReminder) {
-                HashMap<String, String> listMap = new HashMap<String, String>();
-                listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
-                listReminderDis.add(listMap);
-            }
+        for (EventReminder reminder : listReminder) {
+            HashMap<String, String> listMap = new HashMap<>();
+            listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
+            listReminderDis.add(listMap);
         }
         HashMap<String, String> listMap = new HashMap<String, String>();
-        listMap.put("txTitle", "添加提醒");
+        listMap.put("txTitle", getString(R.string.create_reminder));
         listReminderDis.add(listMap);
-        SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new  int[]{R.id.reminder_item_title});
+        SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new int[]{R.id.reminder_item_title});
         listViewReminder.setAdapter(adapter);
     }
 
     private void editReminder(int position) {
+<<<<<<< HEAD:app/src/main/java/gedoor/kunfei/lunarreminder/UI/ReminderEditActivity.java
         int checkedItem = 0;
         if (listReminderDis.get(position).get("txTitle").equals("添加提醒")) {
 
         } else {
 
+=======
+        int checkedItem = 1;
+        int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
+        String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
+        String[] reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
+                getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.customize)};
+        boolean isCreateReminder = listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder));
+        if (!isCreateReminder) {
+            EventReminder reminder = listReminder.get(position);
+            if (reminder.getMinutes() == reminderMinutes[1]) {
+                if (reminder.getMethod().equals("email")) {
+                    checkedItem = 2;
+                }
+            } else if (reminder.getMinutes() == reminderMinutes[3]) {
+                if (reminder.getMethod().equals("email")) {
+                    checkedItem = 4;
+                } else {
+                    checkedItem = 3;
+                }
+            } else {
+                checkedItem = 5;
+                reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
+                        getString(R.string.reminder3), new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
+            }
+>>>>>>> origin/master:app/src/main/java/gedoor/kunfei/lunarreminder/UI/EventEditActivity.java
         }
-        String[] reminders = new String[]{"无提醒","提前一天9:00","提前一天9:00通过邮件"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+<<<<<<< HEAD:app/src/main/java/gedoor/kunfei/lunarreminder/UI/ReminderEditActivity.java
         builder.setSingleChoiceItems(reminders, checkedItem, (DialogInterface dialog, int which) -> {
 
+=======
+        builder.setSingleChoiceItems(reminderTitle, checkedItem, (DialogInterface dialog, int which) -> {
+            switch (which) {
+                case 0:
+                    if (!isCreateReminder) {
+                        listReminder.remove(position);
+                        refreshReminders();
+                    }
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    if (isCreateReminder) {
+                        EventReminder reminder = new EventReminder();
+                        reminder.setMinutes(reminderMinutes[which]);
+                        reminder.setMethod(reminderMethod[which]);
+                        listReminder.add(reminder);
+                    } else {
+                        EventReminder reminder = listReminder.get(position);
+                        reminder.setMinutes(reminderMinutes[which]);
+                        reminder.setMethod(reminderMethod[which]);
+                    }
+                    refreshReminders();
+                    break;
+                case 5:
+                    break;
+            }
+            dialog.dismiss();
+>>>>>>> origin/master:app/src/main/java/gedoor/kunfei/lunarreminder/UI/EventEditActivity.java
         });
         builder.show();
     }
@@ -187,9 +238,7 @@ public class ReminderEditActivity extends AppCompatActivity {
                     .show();
             return;
         }
-        if (calendarType.equals(FinalFields.CalendarTypeGoogle)) {
-            saveGoogleEvent();
-        }
+        saveGoogleEvent();
     }
 
     private void saveGoogleEvent() {
@@ -198,6 +247,14 @@ public class ReminderEditActivity extends AppCompatActivity {
         googleEvent.setStart(new EventTimeUtil(cc).getEventStartDT());
         googleEvent.setEnd(new EventTimeUtil(cc).getEventEndDT());
         googleEvent.setDescription(textReminderMe.getText().toString() + "(农历)");
+        if (listReminder.size() > 0) {
+            reminders.setUseDefault(false);
+            reminders.setOverrides(listReminder);
+
+        } else {
+            reminders.setUseDefault(true);
+        }
+        googleEvent.setReminders(reminders);
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         int operation = googleEvent.getId() == null ? FinalFields.OPERATION_INSERT : FinalFields.OPERATION_UPDATE;
@@ -206,10 +263,11 @@ public class ReminderEditActivity extends AppCompatActivity {
         this.setResult(RESULT_OK, intent);
         finish();
     }
+
     //菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_reminder_edit, menu);
+        getMenuInflater().inflate(R.menu.menu_event_edit, menu);
         return true;
     }
 
@@ -222,6 +280,7 @@ public class ReminderEditActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     //单击事件
     @OnClick({R.id.vw_chinese_date, R.id.vw_repeat})
     public void onClick(View view) {
@@ -244,11 +303,11 @@ public class ReminderEditActivity extends AppCompatActivity {
         numberPicker.setMinValue(1);
         numberPicker.setValue(Integer.parseInt(lunarRepeatNum));
         builder.setView(view);
-        builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
+        builder.setPositiveButton("确定", (DialogInterface dialog, int which) -> {
             lunarRepeatNum = String.valueOf(numberPicker.getValue());
             vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         });
-        builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{
+        builder.setNegativeButton("取消", (DialogInterface dialog, int which) -> {
         });
         builder.create();
         builder.show();

@@ -37,12 +37,8 @@ public class LoadCalendars extends CalendarAsyncTask {
                 calendarID = calendar.getId();
                 editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
                 editor.putString(mContext.getString(R.string.pref_key_lunar_calendar_color), calendar.getBackgroundColor());
+                editor.putString(mContext.getString(R.string.pref_key_timezone), calendar.getTimeZone());
                 editor.commit();
-            }
-            if (calendar.getSummary().equals(activity.getAccountName())) {
-                if (calendar.getTimeZone() != null) timeZone = calendar.getTimeZone();
-                activity.setTimeZone(timeZone);
-                Log.d(TAG, "get google account timeZone:" + calendar.getTimeZone());
             }
         }
         if (calendarID == null) {
