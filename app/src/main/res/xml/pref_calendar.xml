@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <Preference
         android:key="@string/pref_key_lunar_display_name"
@@ -14,9 +15,15 @@
         android:title="Lunar calendar id"
         android:summary=""/>
 
-    <Preference
+    <org.xdty.preference.ColorPreference
         android:key="@string/pref_key_lunar_calendar_color"
         android:title="Calendar color"
-        android:summary="@string/app_name" />
+        tools:dialogTitle="@string/select_color"
+        tools:colors="@array/default_rainbow"
+        tools:columns="5"
+        tools:material="true"
+        tools:backwardsOrder="true"
+        tools:strokeWidth="0"
+        android:defaultValue="@color/yellow"/>
 
 </PreferenceScreen>

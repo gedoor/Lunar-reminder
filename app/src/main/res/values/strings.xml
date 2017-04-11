@@ -62,6 +62,7 @@
     <string name="pref_header_calendar_config">Calendar配置</string>
 
     <string name="pref_title_calendar_name">Lunar calendar name</string>
+    <string name="select_color">选择颜色</string>
 
     <string name="pref_header_event_config">Event配置</string>
 

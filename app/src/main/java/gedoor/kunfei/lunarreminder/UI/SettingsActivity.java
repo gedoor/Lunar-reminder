@@ -184,7 +184,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_calendar_id)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_lunar_calendar_color)));
         }
 
         @Override
