@@ -10,9 +10,6 @@ import com.google.api.services.calendar.model.Events;
 
 import java.util.List;
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.PREF_CALENDAR_TYPE;
-
-
 /**
  * Created by GKF on 2017/3/10.
  */
