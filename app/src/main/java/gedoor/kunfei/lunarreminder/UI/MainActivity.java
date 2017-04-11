@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     //载入事件
     public void loadGoogleCalendar() {
-        Boolean cacheEvents = sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true);
+        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         client = new Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
                 .build();
@@ -195,7 +195,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getGoogleEvents();
         }
-
+        if (isFirstOpen) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        }
     }
 
     //插入农历提醒日历

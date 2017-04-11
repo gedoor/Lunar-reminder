@@ -4,7 +4,9 @@ package gedoor.kunfei.lunarreminder.UI;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -35,6 +37,14 @@ public class AboutActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setupActionBar();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true)) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getString(R.string.pref_key_first_open), false);
+            editor.commit();
+        }
+
     }
 
     private void setupActionBar() {

@@ -49,7 +49,7 @@
     <string name="about_donate">捐赠</string>
     <string name="about_donate_zfb">支付宝:gekunfei@qq.com</string>
     <string name="about_donate_wexin">微信:kunfei_ge</string>
-    <string name="about_donate_des">上架 Google play 需25$，如果觉得软件好请捐赠。</string>
+    <string name="about_donate_des">上架 Google play 需25$，如果觉得软件好请捐赠，五星好评支持我。</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_header_app_config">程序配置</string>
