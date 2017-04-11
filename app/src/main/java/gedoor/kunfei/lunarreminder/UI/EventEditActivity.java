@@ -240,6 +240,7 @@ public class EventEditActivity extends AppCompatActivity {
 
         } else {
             reminders.setUseDefault(true);
+            reminders.setOverrides(null);
         }
         googleEvent.setReminders(reminders);
         Intent intent = new Intent();
