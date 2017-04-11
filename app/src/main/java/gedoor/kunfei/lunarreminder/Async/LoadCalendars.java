@@ -1,6 +1,7 @@
 package gedoor.kunfei.lunarreminder.Async;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -36,7 +37,7 @@ public class LoadCalendars extends CalendarAsyncTask {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
                 calendarID = calendar.getId();
                 editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
-                editor.putString(mContext.getString(R.string.pref_key_calendar_color), calendar.getBackgroundColor());
+                editor.putInt(mContext.getString(R.string.pref_key_calendar_color), Color.parseColor(calendar.getBackgroundColor()));
                 editor.putString(mContext.getString(R.string.pref_key_timezone), calendar.getTimeZone());
                 editor.commit();
             }

@@ -1,10 +1,9 @@
 package gedoor.kunfei.lunarreminder.Async;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.CalendarListEntry;
 
 import java.io.IOException;
@@ -15,25 +14,22 @@ import gedoor.kunfei.lunarreminder.UI.MainActivity;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
-public class InsertCalendar extends CalendarAsyncTask {
-    private static final String TAG = "AsyncInsertCalendar";
-    private final Calendar mCalendar;
+/**
+ * Created by GKF on 2017/4/11.
+ */
+
+public class GetCalendar extends CalendarAsyncTask {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    public InsertCalendar(MainActivity calendarSample, Calendar calendar) {
-        super(calendarSample);
-        this.mCalendar = calendar;
+    public GetCalendar(MainActivity activity) {
+        super(activity);
     }
 
-    @Override
     protected void doInBackground() throws IOException {
-        Calendar calendar = client.calendars().insert(mCalendar).execute();
-        Log.d(TAG, "calendar timeZone:" + calendar.getTimeZone());
-        calendarID = calendar.getId();
-        editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
+        CalendarListEntry calendarListEntry = client.calendarList().get(calendarID).execute();
+        editor.putInt(mContext.getString(R.string.pref_key_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
+        editor.putString(mContext.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
         editor.commit();
-
-        activity.getGoogleEvents();
     }
 }

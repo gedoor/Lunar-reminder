@@ -22,7 +22,6 @@ import gedoor.kunfei.lunarreminder.UI.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
@@ -43,6 +42,7 @@ public class GetEvents extends CalendarAsyncTask {
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
+        new GetCalendar(activity).execute();
         if (activity.showAllEvents) {
             Events events = client.events().list(calendarID).setSingleEvents(true).setOrderBy("startTime")
                     .execute();
