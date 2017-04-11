@@ -130,6 +130,10 @@ public class EventReadActivity extends AppCompatActivity {
                 listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
                 listReminderDis.add(listMap);
             }
+        } else {
+            HashMap<String, String> listMap = new HashMap<String, String>();
+            listMap.put("txTitle", getString(R.string.defaultReminder));
+            listReminderDis.add(listMap);
         }
         SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new int[]{R.id.reminder_item_title});
         listViewReminder.setAdapter(adapter);
