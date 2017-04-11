@@ -148,13 +148,6 @@ public class EventEditActivity extends AppCompatActivity {
     }
 
     private void editReminder(int position) {
-<<<<<<< HEAD:app/src/main/java/gedoor/kunfei/lunarreminder/UI/ReminderEditActivity.java
-        int checkedItem = 0;
-        if (listReminderDis.get(position).get("txTitle").equals("添加提醒")) {
-
-        } else {
-
-=======
         int checkedItem = 1;
         int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
         String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
@@ -178,13 +171,8 @@ public class EventEditActivity extends AppCompatActivity {
                 reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
                         getString(R.string.reminder3), new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
             }
->>>>>>> origin/master:app/src/main/java/gedoor/kunfei/lunarreminder/UI/EventEditActivity.java
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-<<<<<<< HEAD:app/src/main/java/gedoor/kunfei/lunarreminder/UI/ReminderEditActivity.java
-        builder.setSingleChoiceItems(reminders, checkedItem, (DialogInterface dialog, int which) -> {
-
-=======
         builder.setSingleChoiceItems(reminderTitle, checkedItem, (DialogInterface dialog, int which) -> {
             switch (which) {
                 case 0:
@@ -213,7 +201,6 @@ public class EventEditActivity extends AppCompatActivity {
                     break;
             }
             dialog.dismiss();
->>>>>>> origin/master:app/src/main/java/gedoor/kunfei/lunarreminder/UI/EventEditActivity.java
         });
         builder.show();
     }
