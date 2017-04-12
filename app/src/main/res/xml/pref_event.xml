@@ -5,8 +5,11 @@
         android:title="@string/default_repeat_year"
         android:defaultValue="12" />
 
-    <Preference
-        android:key="default_reminder"
-        android:title="@string/default_reminder" />
+    <ListPreference
+        android:key="@string/pref_key_default_reminder"
+        android:title="@string/default_reminder"
+        android:defaultValue="0"
+        android:entries="@array/reminder_list_str"
+        android:entryValues="@array/reminder_list_value"/>
 
 </PreferenceScreen>

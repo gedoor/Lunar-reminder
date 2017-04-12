@@ -49,4 +49,19 @@
         <item>@string/flamingo</item>
         <item>@string/graphite</item>
     </string-array>
+
+    <string-array name="reminder_list_str">
+        <item>@string/reminder0</item>
+        <item>@string/reminder1</item>
+        <item>@string/reminder2</item>
+        <item>@string/reminder3</item>
+        <item>@string/reminder4</item>
+    </string-array>
+    <string-array name="reminder_list_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
 </resources>

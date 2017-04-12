@@ -29,7 +29,7 @@ public class LoadCalendars extends CalendarAsyncTask {
 
     @Override
     protected void doInBackground() throws IOException {
-        CalendarList feed = client.calendarList().list().setFields("items(id,summary,timeZone)").execute();
+        CalendarList feed = client.calendarList().list().setFields("items(id,summary)").execute();
         String timeZone = TimeZone.getDefault().toString();
         for (CalendarListEntry calendar : feed.getItems()) {
             Log.d(TAG, "return calendar summary:" + calendar.getSummary() + " timeZone:" + calendar.getTimeZone());
@@ -37,8 +37,6 @@ public class LoadCalendars extends CalendarAsyncTask {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
                 calendarID = calendar.getId();
                 editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
-                editor.putInt(mContext.getString(R.string.pref_key_calendar_color), Color.parseColor(calendar.getBackgroundColor()));
-                editor.putString(mContext.getString(R.string.pref_key_timezone), calendar.getTimeZone());
                 editor.commit();
             }
         }

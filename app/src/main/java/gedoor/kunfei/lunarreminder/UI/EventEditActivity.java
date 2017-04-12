@@ -60,6 +60,9 @@ public class EventEditActivity extends AppCompatActivity {
     Event.Reminders reminders;
     List<EventReminder> listReminder = new ArrayList<>();
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
+    static int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
+    static String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
+
     int cYear;
     long id;
     int position;
@@ -149,10 +152,8 @@ public class EventEditActivity extends AppCompatActivity {
 
     private void editReminder(int position) {
         int checkedItem = 1;
-        int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
-        String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
         String[] reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
-                getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.customize)};
+                getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.reminder_customize)};
         boolean isCreateReminder = listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder));
         if (!isCreateReminder) {
             EventReminder reminder = listReminder.get(position);
@@ -168,7 +169,7 @@ public class EventEditActivity extends AppCompatActivity {
                 }
             } else {
                 checkedItem = 5;
-                reminderTitle[5] = getString(R.string.customize) + " - " + new ReminderUtil(reminder).getTitle();
+                reminderTitle[5] = getString(R.string.reminder_customize) + " - " + new ReminderUtil(reminder).getTitle();
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -214,6 +215,13 @@ public class EventEditActivity extends AppCompatActivity {
         vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
         lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        int defaultReminder = Integer.parseInt(preferences.getString(getString(R.string.pref_key_default_reminder), "0"));
+        if (defaultReminder != 0) {
+            EventReminder reminder = new EventReminder();
+            reminder.setMinutes(reminderMinutes[defaultReminder]);
+            reminder.setMethod(reminderMethod[defaultReminder]);
+            listReminder.add(reminder);
+        }
         refreshReminders();
     }
 
