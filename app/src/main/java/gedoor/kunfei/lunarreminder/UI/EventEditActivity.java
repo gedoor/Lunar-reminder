@@ -86,7 +86,7 @@ public class EventEditActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        toolbar.setTitle("");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationOnClickListener((View view) -> {
             setResult(RESULT_CANCELED);
             finish();
