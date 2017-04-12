@@ -1,0 +1,129 @@
+package gedoor.kunfei.lunarreminder.UI;
+
+import android.Manifest;
+import android.accounts.AccountManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarScopes;
+
+import java.util.Collections;
+
+import gedoor.kunfei.lunarreminder.Async.LoadCalendars;
+import gedoor.kunfei.lunarreminder.R;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
+
+/**
+ * Created by GKF on 2017/4/12.
+ */
+
+public class BaseActivity extends AppCompatActivity {
+    public static final int REQUEST_PERMS = 101;
+    public static final int REQUEST_ACCOUNT_PICKER = 102;
+    public static final int REQUEST_AUTHORIZATION = 103;
+
+    public GoogleAccountCredential credential;
+    public Calendar client;
+    public String mGoogleAccount;
+    String[] perms = {Manifest.permission.GET_ACCOUNTS};
+
+    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //get permission
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            init();
+        } else {
+            EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
+        }
+    }
+
+    private void init() {
+        if (checkGooglePlayServicesAvailable()) {
+            initGoogleAccount();
+        } else {
+            Toast.makeText(this, "检测不到Google服务,程序无法使用", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    public void initGoogleAccount() {
+        //初始化Google账号
+        mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
+        credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
+        credential.setSelectedAccountName(mGoogleAccount);
+        if (credential.getSelectedAccountName() == null) {
+            startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+        } else {
+            initFinish();
+        }
+    }
+
+    public void initFinish() {
+
+    }
+
+    //检测google服务
+    private boolean checkGooglePlayServicesAvailable() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(this);
+        return connectionStatusCode == ConnectionResult.SUCCESS;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @AfterPermissionGranted(REQUEST_PERMS)
+    private void methodRequiresPermission() {
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            init();
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_ACCOUNT_PICKER:
+                    if (data != null && data.getExtras() != null) {
+                        String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
+                        if (accountName != null) {
+                            credential.setSelectedAccountName(accountName);
+                            editor.putString(getString(R.string.pref_key_google_account), accountName);
+                            editor.commit();
+                            mGoogleAccount = accountName;
+                            credential.setSelectedAccountName(mGoogleAccount);
+                            initFinish();
+                        } else {
+                            finish();
+                        }
+                    }
+                    break;
+                case REQUEST_AUTHORIZATION:
+                    initFinish();
+                    break;
+            }
+        }
+    }
+}

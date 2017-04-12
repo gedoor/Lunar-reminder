@@ -54,31 +54,25 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 @SuppressLint("WrongConstant")
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final int REQUEST_REMINDER = 1;
     private static final int REQUEST_SETTINGS = 2;
-    private static final int REQUEST_PERMS = 3;
-    private static final int REQUEST_ACCOUNT_PICKER = 4;
-    public static final int REQUEST_AUTHORIZATION = 5;
-    public static final int REQUEST_ABOUT = 6;
+    public static final int REQUEST_ABOUT = 3;
 
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-    private String mGoogleAccount;
+
     private String mTimeZone;
-    public GoogleAccountCredential credential;
-    public Calendar client;
+
     public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     public boolean showAllEvents = false;
     public int numAsyncTasks = 0;
     private SimpleAdapterEvent adapter;
 
-    String[] perms = {Manifest.permission.GET_ACCOUNTS};
-
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
-    ;
+
     String accountName;
 
     @BindView(R.id.list_view_events)
@@ -90,11 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        super.onCreate(savedInstanceState);
 
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
@@ -102,12 +96,6 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_REMINDER);
         });
 
-        //get permission
-        if (EasyPermissions.hasPermissions(this, perms)) {
-            initActivity();
-        } else {
-            EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
-        }
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
@@ -158,27 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void initActivity() {
-        if (checkGooglePlayServicesAvailable()) {
-            initGoogleAccount();
-        } else {
-            Toast.makeText(this, "检测不到Google服务,程序无法使用", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    public void initGoogleAccount() {
-        //初始化Google账号
-        mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
-        mTimeZone = sharedPreferences.getString(getString(R.string.pref_key_timezone), null);
-        credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
-        credential.setSelectedAccountName(mGoogleAccount);
-        if (credential.getSelectedAccountName() == null) {
-            startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
-        } else {
-            swOnRefresh();
-            loadGoogleCalendar();
-        }
+    @Override
+    public void initFinish() {
+        swOnRefresh();
+        loadGoogleCalendar();
     }
 
     //载入事件
@@ -214,15 +185,6 @@ public class MainActivity extends AppCompatActivity {
         new GetEvents(this).execute();
     }
 
-    //检测google服务
-    private boolean checkGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
-        return connectionStatusCode == ConnectionResult.SUCCESS;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 添加菜单
@@ -248,26 +210,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent_about = new Intent(this, AboutActivity.class);
                 this.startActivityForResult(intent_about, REQUEST_ABOUT);
                 return true;
-
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    @AfterPermissionGranted(REQUEST_PERMS)
-    private void methodRequiresPermission() {
-        if (EasyPermissions.hasPermissions(this, perms)) {
-            initActivity();
-        } else {
-            finish();
-        }
     }
 
     //刷新动画开始
@@ -293,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_REMINDER:
@@ -310,26 +255,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     break;
-                case REQUEST_ACCOUNT_PICKER:
-                    if (data != null && data.getExtras() != null) {
-                        String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
-                        if (accountName != null) {
-                            credential.setSelectedAccountName(accountName);
-                            editor.putString(getString(R.string.pref_key_google_account), accountName);
-                            editor.commit();
-                            mGoogleAccount = accountName;
-                            credential.setSelectedAccountName(mGoogleAccount);
-                            swOnRefresh();
-                            loadGoogleCalendar();
-                        } else {
-                            finish();
-                        }
-                    }
-                    break;
-                case REQUEST_AUTHORIZATION:
-                    swOnRefresh();
-                    new LoadCalendars(this).execute();
-                    break;
+
             }
         }
     }

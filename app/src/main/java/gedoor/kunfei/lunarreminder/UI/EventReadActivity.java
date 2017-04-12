@@ -39,7 +39,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  * Created by GKF on 2017/3/18.
  */
 
-public class EventReadActivity extends AppCompatActivity {
+public class EventReadActivity extends BaseActivity {
     private static final int REQUEST_REMINDER = 1;
 
     ChineseCalendar cc = new ChineseCalendar();
