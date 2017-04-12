@@ -168,8 +168,7 @@ public class EventEditActivity extends AppCompatActivity {
                 }
             } else {
                 checkedItem = 5;
-                reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
-                        getString(R.string.reminder3), new ReminderUtil(reminder).getTitle() + getString(R.string.reminder4)};
+                reminderTitle[5] = getString(R.string.customize) + " - " + new ReminderUtil(reminder).getTitle();
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

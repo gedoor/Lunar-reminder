@@ -36,19 +36,6 @@
         <item>@color/flamingo</item>
     </array>
 
-    <array name="calendar_rainbow">
-        <item>@color/tomato</item>
-        <item>@color/tangerine</item>
-        <item>@color/yellow</item>
-        <item>@color/basil</item>
-        <item>@color/sage</item>
-        <item>@color/peacock</item>
-        <item>@color/blueberry</item>
-        <item>@color/lavender</item>
-        <item>@color/grape</item>
-        <item>@color/flamingo</item>
-    </array>
-
     <string-array name="default_rainbow_name">
         <item>@string/tomato</item>
         <item>@string/tangerine</item>

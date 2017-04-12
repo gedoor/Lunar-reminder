@@ -5,6 +5,8 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 
+import gedoor.kunfei.lunarreminder.R;
+
 /**
  * Created by GKF on 2017/3/19.
  */
@@ -19,5 +21,6 @@ public final class FinalFields {
     public static final int OPERATION_INSERT = 1;
     public static final int OPERATION_UPDATE = 2;
     public static final int OPERATION_DELETE = 3;
+
 
 }
