@@ -93,7 +93,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @AfterPermissionGranted(REQUEST_PERMS)
-    private void methodRequiresPermission() {
+    public void methodRequiresPermission() {
         if (EasyPermissions.hasPermissions(this, perms)) {
             init();
         } else {
@@ -116,6 +116,7 @@ public class BaseActivity extends AppCompatActivity {
                             credential.setSelectedAccountName(mGoogleAccount);
                             initFinish();
                         } else {
+                            Toast.makeText(this, "无法获取google用户,将退出", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     }
