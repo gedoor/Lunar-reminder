@@ -7,6 +7,7 @@
     <string name="action_del">删除</string>
     <string name="reminder_me">提醒我</string>
     <string name="reminder">提醒</string>
+    <string name="defaultReminder">默认提醒</string>
     <string name="repeat">重复</string>
     <string name="all_day">全天</string>
     <string name="ok">确定</string>
