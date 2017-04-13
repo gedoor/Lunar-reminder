@@ -65,7 +65,6 @@ public class AboutActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     @OnClick({R.id.zfb, R.id.weXin})
     public void onViewClicked(View view) {
         switch (view.getId()) {

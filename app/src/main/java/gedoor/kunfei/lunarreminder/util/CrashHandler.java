@@ -26,6 +26,8 @@ import java.util.Map;
 
 import gedoor.kunfei.lunarreminder.help.Logger;
 
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
+
 
 /**
  * @author Stay
@@ -77,25 +79,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         this.debug = debug;
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        boolean unuploadedLog = (boolean) SharedPreferencesUtil.getData(mContext, "unupload_log", false);
-        final String filePath = (String) SharedPreferencesUtil.getData(mContext, "unupload_log_file_path", "");
-        if (unuploadedLog) {
-            final File file = new File(filePath);
-            if (file.exists()) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!debug) {
-                            ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", SimpleFileUtil.readString(filePath, "utf-8")));
-                        } else
-                            SharedPreferencesUtil.saveData(mContext, "unupload_log", false);
-                    }
-                }).start();
-            } else {
-                SharedPreferencesUtil.saveData(mContext, "unupload_log", false);
-            }
-        }
+
     }
 
     /**
@@ -144,12 +128,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, "程序出错，日志已复制到剪贴板", Toast.LENGTH_LONG).show();
                 //添加信息发送或本地保存
-                getMobileInfo();//获取手机信息
-                getVersionInfo();//获取版本信息
-                getErrorInfo(ex);//获取错误信息
-                saveInfo2File();
+                String error;
+                error = getMobileInfo();//获取手机信息
+                error = error + "\n" + getVersionInfo();//获取版本信息
+                error = error + "\n" + getErrorInfo(ex);//获取错误信息
+                ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboardManager.setPrimaryClip(ClipData.newPlainText("error", error));
+                Toast.makeText(mContext, "程序出错,日志已复制到剪贴板", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -167,21 +153,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * @param e
      * @return 异常信息
      */
-    private void getErrorInfo(Throwable e) {
+    private String getErrorInfo(Throwable e) {
         Writer writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
         e.printStackTrace(pw);
         pw.flush();
         String error = writer.toString();
-        ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-        clipboardManager.setPrimaryClip(ClipData.newPlainText("error", error));
-        infos.put("error information", error);
-        try {
-            pw.close();
-            writer.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        return error;
     }
 
     /**
@@ -213,46 +191,20 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      *
      * @return
      */
-    private void getVersionInfo() {
+    private String getVersionInfo() {
         try {
             PackageManager pm = mContext.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(), PackageManager.GET_ACTIVITIES);
             if (pi != null) {
                 String versionName = pi.versionName == null ? "null" : pi.versionName;
                 String versionCode = pi.versionCode + "";
-                infos.put("versionName", versionName);
-                infos.put("versionCode", versionCode);
+                return versionName + "-" + versionCode;
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("UncaughtHandler", "has error at method 'getVersionInfo()'");
         }
-    }
-
-    private void saveInfo2File() {
-        StringBuffer buffer = new StringBuffer();
-        for (Map.Entry<String, String> entry : infos.entrySet()) {
-            buffer.append(entry.getKey() + " = " + entry.getValue());
-            buffer.append("\n");
-        }
-
-        String time = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date(System.currentTimeMillis()));
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            String path = mContext.getCacheDir().getAbsolutePath();
-            String name = "crash-" + time + ".log";
-            String filePath = path + File.separator + name;
-            SimpleFileUtil.createIfNotExist(filePath);
-            try {
-                SimpleFileUtil.writeString(filePath, buffer.toString(), "utf-8");
-                SharedPreferencesUtil.saveData(mContext, "unupload_log", true);
-                SharedPreferencesUtil.saveData(mContext, "unupload_log_file_path", filePath);
-                Logger.d("CrashHandler", "get");
-            } catch (Exception e) {
-                e.printStackTrace();
-                Logger.e("UncaughtHandler", "an error occured while writing file...", e);
-            }
-        }
-
+        return "";
     }
 
 }
