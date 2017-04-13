@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.ui.help.ReminderUtil;
+import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -62,6 +62,7 @@ public class EventEditActivity extends BaseActivity {
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
     static int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
     static String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
+    boolean isCreateEvent = true;
 
     int cYear;
     long id;
@@ -95,11 +96,13 @@ public class EventEditActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
+            isCreateEvent = false;
             id = bundle.getLong("id");
             position = bundle.getInt("position");
             googleEvent = googleEvents.get(position);
             initGoogleEvent();
         } else {
+            isCreateEvent = true;
             googleEvent = new Event();
             initEvent();
         }
@@ -140,7 +143,7 @@ public class EventEditActivity extends BaseActivity {
         listReminderDis.clear();
         for (EventReminder reminder : listReminder) {
             HashMap<String, String> listMap = new HashMap<>();
-            listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
+            listMap.put("txTitle", new ReminderHelp(reminder).getTitle());
             listReminderDis.add(listMap);
         }
         HashMap<String, String> listMap = new HashMap<String, String>();
@@ -169,7 +172,7 @@ public class EventEditActivity extends BaseActivity {
                 }
             } else {
                 checkedItem = 5;
-                reminderTitle[5] = getString(R.string.reminder_customize) + " - " + new ReminderUtil(reminder).getTitle();
+                reminderTitle[5] = getString(R.string.reminder_customize) + " - " + new ReminderHelp(reminder).getTitle();
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

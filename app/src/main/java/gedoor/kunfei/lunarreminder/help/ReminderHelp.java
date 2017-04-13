@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.ui.help;
+package gedoor.kunfei.lunarreminder.help;
 
 import com.google.api.services.calendar.model.EventReminder;
 
@@ -8,13 +8,13 @@ import java.util.Locale;
  * Created by GKF on 2017/4/10.
  */
 
-public class ReminderUtil {
+public class ReminderHelp {
     EventReminder reminder;
     int tqDay;
     int txHour;
     int txMinutesByHour;
 
-    public ReminderUtil(EventReminder reminder) {
+    public ReminderHelp(EventReminder reminder) {
         this.reminder = reminder;
         int tqMinutes = reminder.getMinutes();
         tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;

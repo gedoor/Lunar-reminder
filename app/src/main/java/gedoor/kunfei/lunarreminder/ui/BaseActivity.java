@@ -14,6 +14,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Collections;
 
@@ -40,6 +41,7 @@ public class BaseActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //get permission
@@ -48,6 +50,16 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
         }
+    }
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     public void init() {

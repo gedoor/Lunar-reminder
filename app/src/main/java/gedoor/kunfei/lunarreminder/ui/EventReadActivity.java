@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.ui.help.ReminderUtil;
+import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
@@ -126,7 +126,7 @@ public class EventReadActivity extends BaseActivity {
         if (listReminder != null) {
             for (EventReminder reminder : listReminder) {
                 HashMap<String, String> listMap = new HashMap<String, String>();
-                listMap.put("txTitle", new ReminderUtil(reminder).getTitle());
+                listMap.put("txTitle", new ReminderHelp(reminder).getTitle());
                 listReminderDis.add(listMap);
             }
         } else {
