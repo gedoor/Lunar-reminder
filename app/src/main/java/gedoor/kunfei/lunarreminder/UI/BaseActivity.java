@@ -33,6 +33,7 @@ public class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_ACCOUNT_PICKER = 102;
     public static final int REQUEST_AUTHORIZATION = 103;
 
+    public boolean initFinish = false;
     public GoogleAccountCredential credential;
     public Calendar client;
     public String mGoogleAccount;
@@ -68,13 +69,12 @@ public class BaseActivity extends AppCompatActivity {
         if (credential.getSelectedAccountName() == null) {
             startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
         } else {
+            initFinish = true;
             initFinish();
         }
     }
 
-    public void initFinish() {
-
-    }
+    public void initFinish() {  }
 
     //检测google服务
     private boolean checkGooglePlayServicesAvailable() {
@@ -114,6 +114,7 @@ public class BaseActivity extends AppCompatActivity {
                             editor.commit();
                             mGoogleAccount = accountName;
                             credential.setSelectedAccountName(mGoogleAccount);
+                            initFinish = true;
                             initFinish();
                         } else {
                             Toast.makeText(this, "无法获取google用户,将退出", Toast.LENGTH_LONG).show();
@@ -122,6 +123,7 @@ public class BaseActivity extends AppCompatActivity {
                     }
                     break;
                 case REQUEST_AUTHORIZATION:
+                    initFinish = true;
                     initFinish();
                     break;
             }

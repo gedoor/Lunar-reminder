@@ -84,11 +84,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        super.onCreate(savedInstanceState);
 
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
@@ -143,11 +143,14 @@ public class MainActivity extends BaseActivity {
         swipeRefresh.setOnRefreshListener(() -> {
             getGoogleEvents();
         });
-
+        initFinish();
     }
 
     @Override
     public void initFinish() {
+        if (swipeRefresh == null || !initFinish) {
+            return;
+        }
         swOnRefresh();
         loadGoogleCalendar();
     }
@@ -180,14 +183,13 @@ public class MainActivity extends BaseActivity {
 
         new InsertCalendar(this, calendar).execute();
     }
-
+    //获取事件
     public void getGoogleEvents() {
         new GetEvents(this).execute();
     }
-
+    // 添加菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // 添加菜单
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -262,7 +264,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
     }
 
