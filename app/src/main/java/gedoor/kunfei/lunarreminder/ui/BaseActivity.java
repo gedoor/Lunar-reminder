@@ -36,7 +36,7 @@ public class BaseActivity extends AppCompatActivity {
     public GoogleAccountCredential credential;
     public Calendar client;
     public String mGoogleAccount;
-    String[] perms = {Manifest.permission.GET_ACCOUNTS};
+    String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
