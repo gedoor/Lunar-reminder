@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="create_event"
+        android:enabled="true"
+        android:icon="@mipmap/add_128px"
+        android:shortcutShortLabel="@string/create_event_short_label"
+        android:shortcutLongLabel="@string/create_event_short_label">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="gedoor.kunfei.lunarreminder"
+            android:targetClass="gedoor.kunfei.lunarreminder.ui.EventEditActivity" />
+
+        <categories android:name="android.shortcut.conversation" />
+
+    </shortcut>
+
+
+
+</shortcuts>

@@ -13,6 +13,7 @@
     <string name="ok">确定</string>
     <string name="selectCalendarAaccount">请选择日历账户</string>
     <string name="title_activity_settings">设置</string>
+    <string name="create_event_short_label">创建事件</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>

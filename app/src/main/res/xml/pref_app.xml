@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <gedoor.kunfei.lunarreminder.UI.preference.ColorPreference
+    <gedoor.kunfei.lunarreminder.ui.preference.ColorPreference
         android:key="theme"
         android:summary="@string/pref_description_theme"
         android:title="@string/pref_title_theme"

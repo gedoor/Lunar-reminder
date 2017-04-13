@@ -15,7 +15,7 @@
         android:title="Lunar calendar id"
         android:summary=""/>
 
-    <gedoor.kunfei.lunarreminder.UI.preference.ColorPreference
+    <gedoor.kunfei.lunarreminder.ui.preference.ColorPreference
         android:key="@string/pref_key_calendar_color"
         android:title="Calendar color"
         android:defaultValue="@color/yellow"

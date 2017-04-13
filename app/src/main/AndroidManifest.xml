@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".UI.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,21 +23,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name=".UI.EventEditActivity"
+            android:name=".ui.EventEditActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UI.EventReadActivity"
+            android:name=".ui.EventReadActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".UI.AboutActivity"
+            android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".UI.SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

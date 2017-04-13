@@ -3,20 +3,13 @@ package gedoor.kunfei.lunarreminder.util;
 import android.annotation.SuppressLint;
 
 import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-
-import static gedoor.kunfei.lunarreminder.Data.FinalFields.LunarRepeatId;
 
 /**
  * Created by GKF on 2017/3/31.
