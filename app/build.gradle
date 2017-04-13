@@ -61,6 +61,18 @@ android {
         }
 
     }
+    productFlavors {
+        github {
+            manifestPlaceholders = [UMENG_CHANNEL: "GitHub"]
+        }
+        google {
+            manifestPlaceholders = [UMENG_CHANNEL: "Google"]
+            buildConfigField "boolean", "FIR_OTA_ENABLED", "false"
+        }
+        coolapk {
+            manifestPlaceholders = [UMENG_CHANNEL: "CookApk"]
+        }
+    }
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {

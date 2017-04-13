@@ -46,7 +46,7 @@
             android:theme="@style/AppTheme"/>
 
         <meta-data android:value="58eef5aa65b6d60c3b001c09" android:name="UMENG_APPKEY" />
-        <meta-data android:value="coolapk" android:name="UMENG_CHANNEL" />
+        <meta-data android:value="coolApk" android:name="UMENG_CHANNEL" />
     </application>
 
 </manifest>
