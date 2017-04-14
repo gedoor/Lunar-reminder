@@ -20,9 +20,9 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  * Created by GKF on 2017/4/8.
  */
 
-public class LoadEventsList extends CalendarAsyncTask {
+public class LoadEventList extends CalendarAsyncTask {
 
-    public LoadEventsList(BaseActivity activity) {
+    public LoadEventList(BaseActivity activity) {
         super(activity);
     }
 
@@ -55,5 +55,11 @@ public class LoadEventsList extends CalendarAsyncTask {
             activity.list.add(listMap);
             id++;
         }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean success) {
+        super.onPostExecute(success);
+        activity.eventListFinish();
     }
 }

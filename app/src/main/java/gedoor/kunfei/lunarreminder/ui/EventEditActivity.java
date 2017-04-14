@@ -38,11 +38,13 @@ import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
+import gedoor.kunfei.lunarreminder.sync.InsertEvents;
 import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
@@ -62,10 +64,10 @@ public class EventEditActivity extends BaseActivity {
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
     static int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
     static String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
-    boolean isCreateEvent = true;
+    boolean isCreateEvent;
+    boolean isShortcut;
 
     int cYear;
-    long id;
     int position;
     String lunarRepeatNum;
 
@@ -96,23 +98,51 @@ public class EventEditActivity extends BaseActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
-            isCreateEvent = false;
-            id = bundle.getLong("id");
+            isShortcut = false;
             position = bundle.getInt("position");
-            googleEvent = googleEvents.get(position);
-            initGoogleEvent();
+            if (position == -1) {
+                isCreateEvent = true;
+                googleEvent = new Event();
+                initEvent();
+            } else {
+                isCreateEvent = false;
+                googleEvent = googleEvents.get(position);
+                initGoogleEvent();
+            }
         } else {
+            isShortcut = true;
             isCreateEvent = true;
             googleEvent = new Event();
             initEvent();
         }
 
         listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            editReminder(position);
+            selectReminder(position);
         });
 
     }
-
+    //新建事件
+    private void initEvent() {
+        cc = new ChineseCalendar(Calendar.getInstance());
+        cc.set(Calendar.HOUR_OF_DAY, 0);
+        cc.set(Calendar.MINUTE, 0);
+        cc.set(Calendar.SECOND, 0);
+        cc.set(Calendar.MILLISECOND, 0);
+        cYear = cc.get(Calendar.YEAR);
+        vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
+        vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        int defaultReminder = Integer.parseInt(preferences.getString(getString(R.string.pref_key_default_reminder), "0"));
+        if (defaultReminder != 0) {
+            EventReminder reminder = new EventReminder();
+            reminder.setMinutes(reminderMinutes[defaultReminder]);
+            reminder.setMethod(reminderMethod[defaultReminder]);
+            listReminder.add(reminder);
+        }
+        reminders = new Event.Reminders();
+        refreshReminders();
+    }
+    //载入事件
     private void initGoogleEvent() {
         textReminderMe.setText(googleEvent.getSummary());
         textReminderMe.setSelection(googleEvent.getSummary().length());
@@ -153,7 +183,7 @@ public class EventEditActivity extends BaseActivity {
         listViewReminder.setAdapter(adapter);
     }
 
-    private void editReminder(int position) {
+    private void selectReminder(int position) {
         int checkedItem = 1;
         String[] reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
                 getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.reminder_customize)};
@@ -208,27 +238,6 @@ public class EventEditActivity extends BaseActivity {
         builder.show();
     }
 
-    private void initEvent() {
-        cc = new ChineseCalendar(Calendar.getInstance());
-        cc.set(Calendar.HOUR_OF_DAY, 0);
-        cc.set(Calendar.MINUTE, 0);
-        cc.set(Calendar.SECOND, 0);
-        cc.set(Calendar.MILLISECOND, 0);
-        cYear = cc.get(Calendar.YEAR);
-        vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-        lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
-        vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
-        int defaultReminder = Integer.parseInt(preferences.getString(getString(R.string.pref_key_default_reminder), "0"));
-        if (defaultReminder != 0) {
-            EventReminder reminder = new EventReminder();
-            reminder.setMinutes(reminderMinutes[defaultReminder]);
-            reminder.setMethod(reminderMethod[defaultReminder]);
-            listReminder.add(reminder);
-        }
-        reminders = new Event.Reminders();
-        refreshReminders();
-    }
-
     private void saveEvent() {
         String title = textReminderMe.getText().toString();
         if (title.isEmpty()) {
@@ -238,7 +247,7 @@ public class EventEditActivity extends BaseActivity {
         }
         saveGoogleEvent();
     }
-
+    //保存事件
     private void saveGoogleEvent() {
         eventRepeat = Integer.parseInt(lunarRepeatNum);
         googleEvent.setSummary(textReminderMe.getText().toString());
@@ -254,13 +263,21 @@ public class EventEditActivity extends BaseActivity {
             reminders.setOverrides(null);
         }
         googleEvent.setReminders(reminders);
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        int operation = googleEvent.getId() == null ? FinalFields.OPERATION_INSERT : FinalFields.OPERATION_UPDATE;
-        bundle.putInt(FinalFields.OPERATION, operation);
-        intent.putExtras(bundle);
-        this.setResult(RESULT_OK, intent);
-        finish();
+        if (isShortcut) {
+            new InsertEvents(this, calendarID, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent();
+            Bundle bundle = new Bundle();
+            int operation = googleEvent.getId() == null ? FinalFields.OPERATION_INSERT : FinalFields.OPERATION_UPDATE;
+            bundle.putInt(FinalFields.OPERATION, operation);
+            intent.putExtras(bundle);
+            this.setResult(RESULT_OK, intent);
+            finish();
+        }
+
     }
 
     //菜单
@@ -292,7 +309,7 @@ public class EventEditActivity extends BaseActivity {
                 break;
         }
     }
-
+    //选择重复年数
     private void selectRepeatYear() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("选择重复年数");

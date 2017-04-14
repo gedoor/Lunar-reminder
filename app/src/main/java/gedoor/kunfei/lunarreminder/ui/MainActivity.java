@@ -50,9 +50,6 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_SETTINGS = 2;
     public static final int REQUEST_ABOUT = 3;
 
-    final HttpTransport transport = AndroidHttp.newCompatibleTransport();
-    final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
     private SimpleAdapterEvent adapter;
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -75,8 +72,16 @@ public class MainActivity extends BaseActivity {
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
             Intent intent = new Intent(this, EventEditActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("position", -1);
+            intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
+
+        adapter = new SimpleAdapterEvent(this, list, R.layout.item_event,
+                new String[]{"start", "summary"},
+                new int[]{R.id.event_item_date, R.id.event_item_title});
+        listViewEvents.setAdapter(adapter);
 
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
@@ -130,6 +135,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initFinish() {
+        super.initFinish();
         if (swipeRefresh == null || !initFinish) {
             return;
         }
@@ -139,15 +145,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void syncFinish() {
+
+    }
+
+    @Override
+    public void eventListFinish() {
         refreshView();
     }
 
     //载入事件
     public void loadGoogleCalendar() {
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
-        client = new Calendar.Builder(
-                transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
-                .build();
         if (calendarID == null) {
             new LoadCalendars(this).execute();
 //        } else if (listCache != null && cacheEvents) {
@@ -204,10 +212,7 @@ public class MainActivity extends BaseActivity {
 
     //刷新事件列表
     public void refreshView() {
-        adapter = new SimpleAdapterEvent(this, list, R.layout.item_event,
-                new String[]{"start", "summary"},
-                new int[]{R.id.event_item_date, R.id.event_item_title});
-        listViewEvents.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         swNoRefresh();
     }
 

@@ -25,7 +25,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import java.io.IOException;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -40,7 +39,7 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        activity.numAsyncTasks++;
+        activity.syncStart();
     }
 
     @Override
@@ -63,21 +62,24 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        if (0 == --activity.numAsyncTasks) {
-            activity.syncFinish();
+        if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
+            return;
         }
+        activity.syncFinish();
     }
 
     @Override
     protected void onCancelled(Boolean success) {
         super.onCancelled(success);
-        --activity.numAsyncTasks;
+
     }
 
     abstract protected void doInBackground() throws IOException;
 
     private void showMassage(String massage) {
-        if (activity.isFinishing()) return;
+        if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
+            return;
+        }
         activity.runOnUiThread(()->{
             ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(activity.CLIPBOARD_SERVICE);
             clipboardManager.setPrimaryClip(ClipData.newPlainText("error", massage));
@@ -86,9 +88,12 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     private void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
-        if (activity.isFinishing()) return;
+        if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
+            return;
+        }
         activity.runOnUiThread(()->{
             activity.userRecoverable(userRecoverableException);
         });
     }
+
 }

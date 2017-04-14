@@ -93,7 +93,6 @@ public class EventReadActivity extends BaseActivity {
         } else {
             finish();
         }
-
     }
 
     private void InitGoogleEvent() {

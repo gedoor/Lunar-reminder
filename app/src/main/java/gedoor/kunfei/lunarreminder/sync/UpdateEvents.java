@@ -79,4 +79,6 @@ public class UpdateEvents extends CalendarAsyncTask {
         new GetEvents(activity).execute();
     }
 
+
+
 }

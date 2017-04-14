@@ -11,8 +11,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.umeng.analytics.MobclickAgent;
@@ -37,13 +41,15 @@ public class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_ACCOUNT_PICKER = 102;
     public static final int REQUEST_AUTHORIZATION = 103;
 
+    final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+    final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+
     public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     public boolean initFinish = false;
     public GoogleAccountCredential credential;
     public Calendar client;
     public String mGoogleAccount;
     String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
-    public int numAsyncTasks = 0;
     public boolean showAllEvents = false;
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -95,10 +101,18 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void initFinish() {
-
+        client = new Calendar.Builder(
+                transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
+                .build();
     }
 
+    public void syncStart() {
+
+    }
     public void syncFinish() {
+
+    }
+    public void eventListFinish() {
 
     }
 
