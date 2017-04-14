@@ -24,14 +24,15 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 
 import java.io.IOException;
 
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-    MainActivity activity;
+    BaseActivity activity;
     final com.google.api.services.calendar.Calendar client;
 
-    CalendarAsyncTask(MainActivity activity) {
+    CalendarAsyncTask(BaseActivity activity) {
         this.activity = activity;
         client = activity.client;
     }
@@ -63,7 +64,7 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
         if (0 == --activity.numAsyncTasks) {
-            activity.refreshView();
+            activity.syncFinish();
         }
     }
 
@@ -87,8 +88,7 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
         if (activity.isFinishing()) return;
         activity.runOnUiThread(()->{
-            activity.swNoRefresh();
-            activity.startActivityForResult(userRecoverableException.getIntent(), activity.REQUEST_AUTHORIZATION);
+            activity.userRecoverable(userRecoverableException);
         });
     }
 }

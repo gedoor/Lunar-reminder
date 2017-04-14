@@ -12,13 +12,18 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.data.FinalFields;
+import gedoor.kunfei.lunarreminder.sync.InsertCalendar;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
@@ -32,11 +37,14 @@ public class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_ACCOUNT_PICKER = 102;
     public static final int REQUEST_AUTHORIZATION = 103;
 
+    public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     public boolean initFinish = false;
     public GoogleAccountCredential credential;
     public Calendar client;
     public String mGoogleAccount;
     String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
+    public int numAsyncTasks = 0;
+    public boolean showAllEvents = false;
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -86,7 +94,25 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void initFinish() {  }
+    public void initFinish() {
+
+    }
+
+    public void syncFinish() {
+
+    }
+
+    public void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
+        startActivityForResult(userRecoverableException.getIntent(), REQUEST_AUTHORIZATION);
+    }
+
+    //插入农历提醒日历
+    public void createGoogleCalender() {
+        com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
+        calendar.setSummary(FinalFields.CalendarName);
+
+        new InsertCalendar(this, calendar).execute();
+    }
 
     //检测google服务
     private boolean checkGooglePlayServicesAvailable() {

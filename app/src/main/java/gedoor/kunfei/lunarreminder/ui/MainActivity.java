@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -52,18 +53,9 @@ public class MainActivity extends BaseActivity {
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-
-    private String mTimeZone;
-
-    public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-    public boolean showAllEvents = false;
-    public int numAsyncTasks = 0;
     private SimpleAdapterEvent adapter;
 
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
-
-    String accountName;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
@@ -131,7 +123,7 @@ public class MainActivity extends BaseActivity {
         });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
-            getGoogleEvents();
+            new GetEvents(this).execute();
         });
         initFinish();
     }
@@ -143,6 +135,11 @@ public class MainActivity extends BaseActivity {
         }
         swOnRefresh();
         loadGoogleCalendar();
+    }
+
+    @Override
+    public void syncFinish() {
+        refreshView();
     }
 
     //载入事件
@@ -157,7 +154,7 @@ public class MainActivity extends BaseActivity {
 //            googleEvents = listCache;
 //            new LoadEventsList(this).execute();
         } else {
-            getGoogleEvents();
+            new GetEvents(this).execute();
         }
         if (isFirstOpen) {
             Intent intent = new Intent(this, AboutActivity.class);
@@ -165,18 +162,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    //插入农历提醒日历
-    public void createGoogleCalender() {
-        com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
-        calendar.setSummary(FinalFields.CalendarName);
-        calendar.setTimeZone(mTimeZone);
-
-        new InsertCalendar(this, calendar).execute();
-    }
-    //获取事件
-    public void getGoogleEvents() {
-        new GetEvents(this).execute();
-    }
     // 添加菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -210,7 +195,6 @@ public class MainActivity extends BaseActivity {
     public void swOnRefresh() {
         swipeRefresh.setProgressViewOffset(false, 0, 52);
         swipeRefresh.setRefreshing(true);
-        
     }
 
     //刷新动画停止
@@ -224,6 +208,12 @@ public class MainActivity extends BaseActivity {
                 new String[]{"start", "summary"},
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
+        swNoRefresh();
+    }
+
+    @Override
+    public void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
+        super.userRecoverable(userRecoverableException);
         swNoRefresh();
     }
 

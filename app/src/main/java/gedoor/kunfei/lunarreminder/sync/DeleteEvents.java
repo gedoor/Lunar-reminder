@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
@@ -20,7 +21,7 @@ public class DeleteEvents extends CalendarAsyncTask {
     Event event;
     String lunarRepeatId;
 
-    public DeleteEvents(MainActivity activity, String calendarId, Event event) {
+    public DeleteEvents(BaseActivity activity, String calendarId, Event event) {
         super(activity);
         this.event = event;
         this.calendarId = calendarId;
@@ -39,6 +40,6 @@ public class DeleteEvents extends CalendarAsyncTask {
         } else {
             client.events().delete(calendarId, event.getId()).execute();
         }
-        activity.getGoogleEvents();
+        new GetEvents(activity).execute();
     }
 }

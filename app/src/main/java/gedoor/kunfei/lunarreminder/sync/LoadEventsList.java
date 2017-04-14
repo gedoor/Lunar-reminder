@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.Event;
 import java.io.IOException;
 import java.util.HashMap;
 
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -21,7 +22,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 public class LoadEventsList extends CalendarAsyncTask {
 
-    public LoadEventsList(MainActivity activity) {
+    public LoadEventsList(BaseActivity activity) {
         super(activity);
     }
 

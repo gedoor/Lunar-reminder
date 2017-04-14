@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.Event;
 import java.io.IOException;
 import java.util.Calendar;
 
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -23,7 +24,7 @@ public class InsertEvents extends CalendarAsyncTask{
     Event event;
     int repeatNum;
 
-    public InsertEvents(MainActivity activity,String calendarid, Event event, int repeatNum) {
+    public InsertEvents(BaseActivity activity, String calendarid, Event event, int repeatNum) {
         super(activity);
         this.calendarId = calendarid;
         this.event  = event;
@@ -44,7 +45,7 @@ public class InsertEvents extends CalendarAsyncTask{
             client.events().insert(calendarId, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
         }
-        activity.getGoogleEvents();
+        new GetEvents(activity).execute();
     }
 
 }

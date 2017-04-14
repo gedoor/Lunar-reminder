@@ -11,6 +11,7 @@ import com.google.api.services.calendar.model.Events;
 import java.io.IOException;
 import java.util.Calendar;
 
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -28,7 +29,7 @@ public class GetEvents extends CalendarAsyncTask {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    public GetEvents(MainActivity activity) {
+    public GetEvents(BaseActivity activity) {
         super(activity);
     }
 

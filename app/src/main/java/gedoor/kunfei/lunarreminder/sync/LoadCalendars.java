@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.TimeZone;
 
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.CalendarName;
@@ -22,7 +23,7 @@ public class LoadCalendars extends CalendarAsyncTask {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    public LoadCalendars(MainActivity activity) {
+    public LoadCalendars(BaseActivity activity) {
         super(activity);
     }
 
@@ -42,7 +43,7 @@ public class LoadCalendars extends CalendarAsyncTask {
         if (calendarID == null) {
             activity.createGoogleCalender();
         } else {
-            activity.getGoogleEvents();
+            new GetEvents(activity).execute();
         }
 
     }

@@ -9,6 +9,7 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 import java.io.IOException;
 
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
@@ -22,7 +23,7 @@ public class GetCalendar extends CalendarAsyncTask {
     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-    public GetCalendar(MainActivity activity) {
+    public GetCalendar(BaseActivity activity) {
         super(activity);
     }
 
