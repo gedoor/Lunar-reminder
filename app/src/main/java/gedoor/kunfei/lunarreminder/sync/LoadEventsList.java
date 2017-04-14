@@ -50,6 +50,7 @@ public class LoadEventsList extends CalendarAsyncTask {
                 activity.list.add(titleMap);
             }
             listMap.put("start", eventCC.getChinese(ChineseCalendar.CHINESE_MONTH) + "\n" + eventCC.getChinese(ChineseCalendar.CHINESE_DATE));
+            listMap.put("colorId", event.getColorId());
             activity.list.add(listMap);
             id++;
         }

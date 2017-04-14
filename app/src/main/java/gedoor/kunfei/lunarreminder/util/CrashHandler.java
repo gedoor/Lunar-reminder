@@ -6,27 +6,18 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import gedoor.kunfei.lunarreminder.help.Logger;
-
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 
 /**
@@ -140,16 +131,17 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
 
         }.start();
-        if (debug)
+        if (debug) {
             ex.printStackTrace();
-        Logger.d("CrashHandler", "catched");
+            Log.d("CrashHandler", "catched");
+        }
+
         MobclickAgent.reportError(mContext, ex);
         return true;
     }
 
     /**
      * 获取异常信息
-     *
      * @param e
      * @return 异常信息
      */
@@ -164,8 +156,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * 获取设备信息
-     *
-     * @return
      */
     private String getMobileInfo() {
         StringBuffer sb = new StringBuffer();
@@ -188,8 +178,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     /**
      * 获取手机
-     *
-     * @return
      */
     private String getVersionInfo() {
         try {

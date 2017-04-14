@@ -14,6 +14,8 @@
 
 package gedoor.kunfei.lunarreminder.sync;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -49,8 +51,7 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
             availabilityException.printStackTrace();
             showMassage(availabilityException.getMessage());
         } catch (UserRecoverableAuthIOException userRecoverableException) {
-            activity.swNoRefresh();
-            activity.startActivityForResult(userRecoverableException.getIntent(), activity.REQUEST_AUTHORIZATION);
+            userRecoverable(userRecoverableException);
         } catch (IOException e) {
             e.printStackTrace();
             showMassage(e.getMessage());
@@ -77,7 +78,17 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private void showMassage(String massage) {
         if (activity.isFinishing()) return;
         activity.runOnUiThread(()->{
-            Toast.makeText(activity, massage, Toast.LENGTH_LONG).show();
+            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(activity.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", massage));
+            Toast.makeText(activity, "出现一个错误,已拷贝到剪贴板", Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
+        if (activity.isFinishing()) return;
+        activity.runOnUiThread(()->{
+            activity.swNoRefresh();
+            activity.startActivityForResult(userRecoverableException.getIntent(), activity.REQUEST_AUTHORIZATION);
         });
     }
 }
