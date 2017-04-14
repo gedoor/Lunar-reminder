@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 
 import android.annotation.SuppressLint;
@@ -25,8 +25,6 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 public class GetEvents extends CalendarAsyncTask {
     private static final String TAG = "AsyncGetEvents";
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
 
     public GetEvents(BaseActivity activity) {
         super(activity);

@@ -38,7 +38,7 @@ import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
-import gedoor.kunfei.lunarreminder.sync.InsertEvents;
+import gedoor.kunfei.lunarreminder.async.InsertEvents;
 import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -61,7 +61,7 @@ public class EventEditActivity extends BaseActivity {
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
     List<EventReminder> listReminder = new ArrayList<>();
-    ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
+    ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<>();
     static int[] reminderMinutes = new int[]{0, 900, 900, 9540, 9540};
     static String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
     boolean isCreateEvent;
@@ -176,7 +176,7 @@ public class EventEditActivity extends BaseActivity {
             listMap.put("txTitle", new ReminderHelp(reminder).getTitle());
             listReminderDis.add(listMap);
         }
-        HashMap<String, String> listMap = new HashMap<String, String>();
+        HashMap<String, String> listMap = new HashMap<>();
         listMap.put("txTitle", getString(R.string.create_reminder));
         listReminderDis.add(listMap);
         SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new int[]{R.id.reminder_item_title});
@@ -360,12 +360,8 @@ public class EventEditActivity extends BaseActivity {
             new AlertDialog.Builder(this)
                     .setTitle("退出")
                     .setMessage("是否保存")
-                    .setPositiveButton("是", (DialogInterface dialogInterface, int which) -> {
-                        saveEvent();
-                    })
-                    .setNegativeButton("否", (DialogInterface dialogInterface, int which) -> {
-                        finish();
-                    })
+                    .setPositiveButton("是", (DialogInterface dialogInterface, int which) -> saveEvent())
+                    .setNegativeButton("否", (DialogInterface dialogInterface, int which) -> finish())
                     .show();
         }
         return false;

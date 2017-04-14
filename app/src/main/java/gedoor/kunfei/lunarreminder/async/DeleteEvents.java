@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
@@ -17,9 +16,9 @@ import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
  */
 
 public class DeleteEvents extends CalendarAsyncTask {
-    String calendarId;
-    Event event;
-    String lunarRepeatId;
+    private String calendarId;
+    private Event event;
+    private String lunarRepeatId;
 
     public DeleteEvents(BaseActivity activity, String calendarId, Event event) {
         super(activity);

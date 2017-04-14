@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import android.annotation.SuppressLint;
 
@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
@@ -22,7 +21,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 public class LoadEventList extends CalendarAsyncTask {
 
-    public LoadEventList(BaseActivity activity) {
+    LoadEventList(BaseActivity activity) {
         super(activity);
     }
 
@@ -33,7 +32,7 @@ public class LoadEventList extends CalendarAsyncTask {
         int id = 0;
         String ccYear = "";
         for (Event event : googleEvents) {
-            HashMap<String, String> listMap = new HashMap<String, String>();
+            HashMap<String, String> listMap = new HashMap<>();
             listMap.put("id", String.valueOf(id));
             listMap.put("summary", event.getSummary());
             Event.ExtendedProperties properties = event.getExtendedProperties();
@@ -44,7 +43,7 @@ public class LoadEventList extends CalendarAsyncTask {
             ChineseCalendar eventCC = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
             if (!ccYear.equals(eventCC.getChinese(ChineseCalendar.CHINESE_YEAR))) {
                 ccYear = eventCC.getChinese(ChineseCalendar.CHINESE_YEAR);
-                HashMap<String, String> titleMap = new HashMap<String, String>();
+                HashMap<String, String> titleMap = new HashMap<>();
                 titleMap.put("summary", ccYear);
                 titleMap.put("start", eventCC.getChinese(ChineseCalendar.CHINESE_ZODIAC_EMOJI));
                 titleMap.put("id", "");

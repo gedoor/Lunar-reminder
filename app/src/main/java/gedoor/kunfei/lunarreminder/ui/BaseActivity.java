@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
-import gedoor.kunfei.lunarreminder.sync.InsertCalendar;
+import gedoor.kunfei.lunarreminder.async.InsertCalendar;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
@@ -44,7 +45,7 @@ public class BaseActivity extends AppCompatActivity {
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-    public ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    public ArrayList<HashMap<String, String>> list = new ArrayList<>();
     public boolean initFinish = false;
     public GoogleAccountCredential credential;
     public Calendar client;
@@ -109,7 +110,11 @@ public class BaseActivity extends AppCompatActivity {
     public void syncStart() {
 
     }
-    public void syncFinish() {
+    public void syncSuccess() {
+
+    }
+
+    public void syncError() {
 
     }
     public void eventListFinish() {
@@ -141,12 +146,13 @@ public class BaseActivity extends AppCompatActivity {
         if (EasyPermissions.hasPermissions(this, perms)) {
             init();
         } else {
+            Toast.makeText(this, "没有权限,程序无法使用", Toast.LENGTH_LONG).show();
             finish();
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);

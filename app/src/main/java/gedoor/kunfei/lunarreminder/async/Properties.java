@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import com.google.api.services.calendar.model.Event;
 
@@ -11,16 +11,16 @@ import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
  * Created by GKF on 2017/4/7.
  */
 
-public class Properties {
-    String lunarRepeatId;
-    String repeatNum;
+class Properties {
+    private String lunarRepeatId;
+    private String repeatNum;
 
-    public Properties(String lunarRepeatId, int repeatNum) {
+    Properties(String lunarRepeatId, int repeatNum) {
         this.lunarRepeatId = lunarRepeatId;
         this.repeatNum = String.valueOf(repeatNum);
     }
 
-    public Event.ExtendedProperties getProperties() {
+    Event.ExtendedProperties getProperties() {
         Event.ExtendedProperties properties = new Event.ExtendedProperties();
         HashMap<String, String> map = new HashMap<>();
         map.put(LunarRepeatId, lunarRepeatId);

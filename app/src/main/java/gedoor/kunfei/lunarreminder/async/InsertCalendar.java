@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;

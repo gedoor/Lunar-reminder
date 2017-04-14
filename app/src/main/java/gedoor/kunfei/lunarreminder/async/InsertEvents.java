@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import android.annotation.SuppressLint;
 
@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
@@ -18,11 +17,11 @@ import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
  */
 @SuppressLint("WrongConstant")
 public class InsertEvents extends CalendarAsyncTask{
-    ChineseCalendar cc = new ChineseCalendar(Calendar.getInstance());
-    String lunarRepeatId = String.valueOf(cc.getTimeInMillis());
-    String calendarId;
-    Event event;
-    int repeatNum;
+    private ChineseCalendar cc = new ChineseCalendar(Calendar.getInstance());
+    private String lunarRepeatId = String.valueOf(cc.getTimeInMillis());
+    private String calendarId;
+    private Event event;
+    private int repeatNum;
 
     public InsertEvents(BaseActivity activity, String calendarid, Event event, int repeatNum) {
         super(activity);

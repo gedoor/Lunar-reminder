@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import android.annotation.SuppressLint;
 
@@ -8,10 +8,10 @@ import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
@@ -23,11 +23,10 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
  */
 @SuppressLint("WrongConstant")
 public class UpdateEvents extends CalendarAsyncTask {
-    String calendarId;
-    Event event;
-    String lunarRepeatId;
-    ChineseCalendar cc;
-    int repeatNum;
+    private String calendarId;
+    private Event event;
+    private ChineseCalendar cc;
+    private int repeatNum;
 
     public UpdateEvents(BaseActivity activity, String calendarId, Event event, int repeatNum) {
         super(activity);
@@ -42,9 +41,9 @@ public class UpdateEvents extends CalendarAsyncTask {
     protected void doInBackground() throws IOException {
         Event.ExtendedProperties properties = event.getExtendedProperties();
         if (properties != null) {
-            lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
+            String lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
             Event.ExtendedProperties nProperties = new Properties(lunarRepeatId, repeatNum).getProperties();
-            Events events = client.events().list(calendarID).setFields("items(id)").setPrivateExtendedProperty(Arrays.asList(LunarRepeatId + "=" + lunarRepeatId)).execute();
+            Events events = client.events().list(calendarID).setFields("items(id)").setPrivateExtendedProperty(Collections.singletonList(LunarRepeatId + "=" + lunarRepeatId)).execute();
             List<Event> items = events.getItems();
             int i = repeatNum > items.size() ? repeatNum : items.size();
             for (int j=1; j<=i; j++) {

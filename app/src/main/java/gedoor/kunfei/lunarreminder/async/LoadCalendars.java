@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -12,7 +12,6 @@ import java.util.TimeZone;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.ui.MainActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.CalendarName;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
@@ -20,8 +19,8 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 public class LoadCalendars extends CalendarAsyncTask {
     private static final String TAG = "AsyncLoadCalendars";
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
+    private SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    private SharedPreferences.Editor editor = sharedPreferences.edit();
 
     public LoadCalendars(BaseActivity activity) {
         super(activity);

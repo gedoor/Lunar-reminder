@@ -12,10 +12,11 @@
  * the License.
  */
 
-package gedoor.kunfei.lunarreminder.sync;
+package gedoor.kunfei.lunarreminder.async;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlaySe
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
@@ -49,12 +52,15 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
             return true;
         } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
             availabilityException.printStackTrace();
-            showMassage(availabilityException.getMessage());
+            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", availabilityException.getMessage()));
         } catch (UserRecoverableAuthIOException userRecoverableException) {
             userRecoverable(userRecoverableException);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            showMassage(e.getMessage());
+            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", e.getMessage()));
         }
         return false;
     }
@@ -65,35 +71,26 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
         if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
             return;
         }
-        activity.syncFinish();
+        if (success) {
+            activity.syncSuccess();
+        } else {
+            activity.syncError();
+            Toast.makeText(activity, "出现一个错误,已拷贝到剪贴板", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     protected void onCancelled(Boolean success) {
         super.onCancelled(success);
-
     }
 
     abstract protected void doInBackground() throws IOException;
-
-    private void showMassage(String massage) {
-        if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
-            return;
-        }
-        activity.runOnUiThread(()->{
-            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(activity.CLIPBOARD_SERVICE);
-            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", massage));
-            Toast.makeText(activity, "出现一个错误,已拷贝到剪贴板", Toast.LENGTH_LONG).show();
-        });
-    }
 
     private void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
         if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
             return;
         }
-        activity.runOnUiThread(()->{
-            activity.userRecoverable(userRecoverableException);
-        });
+        activity.runOnUiThread(()-> activity.userRecoverable(userRecoverableException));
     }
 
 }

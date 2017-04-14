@@ -15,24 +15,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.calendar.Calendar;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gedoor.kunfei.lunarreminder.sync.DeleteEvents;
-import gedoor.kunfei.lunarreminder.sync.GetEvents;
-import gedoor.kunfei.lunarreminder.sync.InsertCalendar;
-import gedoor.kunfei.lunarreminder.sync.InsertEvents;
-import gedoor.kunfei.lunarreminder.sync.LoadCalendars;
-import gedoor.kunfei.lunarreminder.sync.UpdateEvents;
+import gedoor.kunfei.lunarreminder.async.DeleteEvents;
+import gedoor.kunfei.lunarreminder.async.GetEvents;
+import gedoor.kunfei.lunarreminder.async.InsertEvents;
+import gedoor.kunfei.lunarreminder.async.LoadCalendars;
+import gedoor.kunfei.lunarreminder.async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
@@ -127,9 +118,7 @@ public class MainActivity extends BaseActivity {
             return true;
         });
         //下拉刷新
-        swipeRefresh.setOnRefreshListener(() -> {
-            new GetEvents(this).execute();
-        });
+        swipeRefresh.setOnRefreshListener(() -> new GetEvents(this).execute());
         initFinish();
     }
 
@@ -144,8 +133,13 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void syncFinish() {
+    public void syncSuccess() {
 
+    }
+
+    @Override
+    public void syncError() {
+        swNoRefresh();
     }
 
     @Override
@@ -183,7 +177,7 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_showAllEvents:
-                showAllEvents = showAllEvents ? false : true;
+                showAllEvents = !showAllEvents;
                 swOnRefresh();
                 new GetEvents(this).execute();
                 return true;
