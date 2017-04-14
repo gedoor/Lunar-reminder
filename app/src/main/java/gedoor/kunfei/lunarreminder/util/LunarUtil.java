@@ -1,12 +1,13 @@
 package gedoor.kunfei.lunarreminder.util;
 
+import android.annotation.SuppressLint;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-
+@SuppressLint("WrongConstant")
 public class LunarUtil {
-
     /**
      * 数字对应的汉字
      */
@@ -22,7 +23,6 @@ public class LunarUtil {
                                                 "廿一","廿二","廿三","廿四","廿五","廿六","廿七","廿八","廿九","三十"};
 
     public static HashMap<Integer, String[]> twelveMonthWithLeapCache = new HashMap<Integer, String[]>();
-
 
     public static int getMonthLeapByYear(int year){
         return ChineseCalendar.getMonthLeapByYear(year);

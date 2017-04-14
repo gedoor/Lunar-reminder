@@ -225,6 +225,7 @@ public class EventEditActivity extends BaseActivity {
             reminder.setMethod(reminderMethod[defaultReminder]);
             listReminder.add(reminder);
         }
+        reminders = new Event.Reminders();
         refreshReminders();
     }
 
