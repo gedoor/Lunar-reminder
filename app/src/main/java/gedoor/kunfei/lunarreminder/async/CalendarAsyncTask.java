@@ -29,10 +29,9 @@ import java.util.Map;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
-public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
-
+public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean> {
     BaseActivity activity;
-    final com.google.api.services.calendar.Calendar client;
+    com.google.api.services.calendar.Calendar client;
 
     CalendarAsyncTask(BaseActivity activity) {
         this.activity = activity;
@@ -55,7 +54,8 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
             ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboardManager.setPrimaryClip(ClipData.newPlainText("error", availabilityException.getMessage()));
         } catch (UserRecoverableAuthIOException userRecoverableException) {
-            userRecoverable(userRecoverableException);
+            publishProgress(-1);
+            activity.startActivityForResult(userRecoverableException.getIntent(), BaseActivity.REQUEST_AUTHORIZATION);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,6 +63,17 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
             clipboardManager.setPrimaryClip(ClipData.newPlainText("error", e.getMessage()));
         }
         return false;
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+        if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
+            return;
+        }
+        if (values[0] == -1) {
+            activity.userRecoverable();
+        }
     }
 
     @Override
@@ -85,12 +96,5 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     abstract protected void doInBackground() throws IOException;
-
-    private void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
-        if (activity == null || activity.isDestroyed() || activity.isFinishing()) {
-            return;
-        }
-        activity.runOnUiThread(()-> activity.userRecoverable(userRecoverableException));
-    }
 
 }

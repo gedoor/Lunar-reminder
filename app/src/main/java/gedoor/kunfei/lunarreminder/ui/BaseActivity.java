@@ -121,8 +121,8 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    public void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
-        startActivityForResult(userRecoverableException.getIntent(), REQUEST_AUTHORIZATION);
+    public void userRecoverable() {
+
     }
 
     //插入农历提醒日历

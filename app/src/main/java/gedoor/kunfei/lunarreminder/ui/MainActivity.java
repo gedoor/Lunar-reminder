@@ -211,8 +211,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void userRecoverable(UserRecoverableAuthIOException userRecoverableException) {
-        super.userRecoverable(userRecoverableException);
+    public void userRecoverable() {
         swNoRefresh();
     }
 
