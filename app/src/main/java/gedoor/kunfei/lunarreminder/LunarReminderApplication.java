@@ -1,5 +1,6 @@
 package gedoor.kunfei.lunarreminder;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,16 +26,14 @@ public class LunarReminderApplication extends Application {
      */
     public final static boolean DEBUG = BuildConfig.DEBUG;
 
-    public static Context mContext;
-    public static String calendarID = null;
+    public static String calendarID;
     public static List<Event> googleEvents;
     public static Event googleEvent;
-    public static int eventRepeat = 12;
+    public static int eventRepeat;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         calendarID = sharedPreferences.getString(getString(R.string.pref_key_calendar_id), null);
 
@@ -43,17 +42,16 @@ public class LunarReminderApplication extends Application {
         crashHandler.init(getApplicationContext(), DEBUG);
     }
 
-    public static String getVersionName() {
-        PackageManager packageManager = mContext.getPackageManager();
+    public String getVersionName() {
+        PackageManager packageManager = this.getPackageManager();
         PackageInfo packInfo;
         try {
-            packInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
+            packInfo = packageManager.getPackageInfo(this.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             return "0.0.0";
         }
-        String version = packInfo.versionName;
-        return version;
+        return packInfo.versionName;
     }
 
 

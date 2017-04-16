@@ -25,9 +25,6 @@ import gedoor.kunfei.lunarreminder.R;
 
 import java.util.List;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
-
-
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (Preference preference, Object value)-> {
@@ -168,8 +165,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EventPreferenceFragment extends PreferenceFragment {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -199,6 +195,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         private void selectRepeatYear(Preference preference) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
             builder.setTitle("选择重复年数");
             View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
@@ -209,7 +207,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             builder.setView(view);
             builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
                 editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(numberPicker.getValue()));
-                editor.commit();
+                editor.apply();
                 preference.setSummary(String.valueOf(numberPicker.getValue()));
             });
             builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{

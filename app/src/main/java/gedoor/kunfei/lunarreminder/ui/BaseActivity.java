@@ -14,7 +14,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -31,10 +30,9 @@ import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.async.InsertCalendar;
 import pub.devrel.easypermissions.EasyPermissions;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
-
 /**
  * Created by GKF on 2017/4/12.
+ * 农历初始化
  */
 
 public class BaseActivity extends AppCompatActivity {
@@ -46,15 +44,11 @@ public class BaseActivity extends AppCompatActivity {
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
     public ArrayList<HashMap<String, String>> list = new ArrayList<>();
-    public boolean initFinish = false;
     public GoogleAccountCredential credential;
     public Calendar client;
     public String mGoogleAccount;
     String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
     public boolean showAllEvents = false;
-
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +84,13 @@ public class BaseActivity extends AppCompatActivity {
 
     public void initGoogleAccount() {
         //初始化Google账号
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
-        credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
+        credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
         if (credential.getSelectedAccountName() == null) {
             startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
         } else {
-            initFinish = true;
             initFinish();
         }
     }
@@ -105,6 +99,7 @@ public class BaseActivity extends AppCompatActivity {
         client = new Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
                 .build();
+
     }
 
     public void syncStart() {
@@ -166,12 +161,13 @@ public class BaseActivity extends AppCompatActivity {
                     if (data != null && data.getExtras() != null) {
                         String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
                         if (accountName != null) {
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             credential.setSelectedAccountName(accountName);
                             editor.putString(getString(R.string.pref_key_google_account), accountName);
-                            editor.commit();
+                            editor.apply();
                             mGoogleAccount = accountName;
                             credential.setSelectedAccountName(mGoogleAccount);
-                            initFinish = true;
                             initFinish();
                         } else {
                             Toast.makeText(this, "无法获取google用户,将退出", Toast.LENGTH_LONG).show();
@@ -180,7 +176,6 @@ public class BaseActivity extends AppCompatActivity {
                     }
                     break;
                 case REQUEST_AUTHORIZATION:
-                    initFinish = true;
                     initFinish();
                     break;
             }

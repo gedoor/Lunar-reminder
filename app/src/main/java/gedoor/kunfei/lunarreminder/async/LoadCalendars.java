@@ -15,12 +15,9 @@ import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.CalendarName;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 public class LoadCalendars extends CalendarAsyncTask {
     private static final String TAG = "AsyncLoadCalendars";
-    private SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    private SharedPreferences.Editor editor = sharedPreferences.edit();
 
     public LoadCalendars(BaseActivity activity) {
         super(activity);
@@ -28,6 +25,8 @@ public class LoadCalendars extends CalendarAsyncTask {
 
     @Override
     protected void doInBackground() throws IOException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         CalendarList feed = client.calendarList().list().setFields("items(id,summary)").execute();
         String timeZone = TimeZone.getDefault().toString();
         for (CalendarListEntry calendar : feed.getItems()) {
@@ -35,7 +34,7 @@ public class LoadCalendars extends CalendarAsyncTask {
             if (calendar.getSummary().equals(CalendarName)) {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
                 calendarID = calendar.getId();
-                editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
+                editor.putString(activity.getString(R.string.pref_key_calendar_id), calendarID);
                 editor.commit();
             }
         }

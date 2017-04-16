@@ -49,14 +49,13 @@ import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 /**
  * Created by GKF on 2017/3/7.
  */
 @SuppressLint("WrongConstant")
 public class EventEditActivity extends BaseActivity {
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+    SharedPreferences preferences;
     DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
@@ -87,6 +86,8 @@ public class EventEditActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
         ButterKnife.bind(this);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -158,7 +159,7 @@ public class EventEditActivity extends BaseActivity {
         Event.ExtendedProperties properties = googleEvent.getExtendedProperties();
         lunarRepeatNum = properties.getPrivate().get(LunarRepeatYear);
         if (lunarRepeatNum == null) {
-            lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
+            lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         reminders = googleEvent.getReminders();

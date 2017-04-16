@@ -12,24 +12,24 @@ import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 /**
  * Created by GKF on 2017/4/11.
  */
 
 public class GetCalendar extends CalendarAsyncTask {
-    private SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    private SharedPreferences.Editor editor = sharedPreferences.edit();
 
     public GetCalendar(BaseActivity activity) {
         super(activity);
+
     }
 
     protected void doInBackground() throws IOException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         CalendarListEntry calendarListEntry = client.calendarList().get(calendarID).execute();
-        editor.putInt(mContext.getString(R.string.pref_key_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
-        editor.putString(mContext.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
-        editor.commit();
+        editor.putInt(activity.getString(R.string.pref_key_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
+        editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
+        editor.apply();
     }
 }

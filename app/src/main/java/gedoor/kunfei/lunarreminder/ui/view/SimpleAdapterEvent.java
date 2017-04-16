@@ -11,25 +11,26 @@ import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 /**
  * Created by GKF on 2017/4/2.
  */
 
 public class SimpleAdapterEvent extends SimpleAdapter {
-    ArrayList<HashMap<String, String>> listitem;
+    private Context mContext;
+    private ArrayList<HashMap<String, String>> listItem;
 
     public SimpleAdapterEvent(Context context, ArrayList<HashMap<String, String>> data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
-        this.listitem = data;
+        this.mContext = context;
+        this.listItem = data;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
 
-        String mId = listitem.get(position).get("id");
+        String mId = listItem.get(position).get("id");
         TextView start = (TextView) view.findViewById(R.id.event_item_date);
         TextView title = (TextView) view.findViewById(R.id.event_item_title);
         if (mId == "") {

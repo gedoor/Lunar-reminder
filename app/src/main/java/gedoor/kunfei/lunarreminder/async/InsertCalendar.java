@@ -12,13 +12,10 @@ import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 public class InsertCalendar extends CalendarAsyncTask {
     private static final String TAG = "AsyncInsertCalendar";
     private final Calendar mCalendar;
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-    SharedPreferences.Editor editor = sharedPreferences.edit();
 
     public InsertCalendar(BaseActivity calendarSample, Calendar calendar) {
         super(calendarSample);
@@ -27,11 +24,13 @@ public class InsertCalendar extends CalendarAsyncTask {
 
     @Override
     protected void doInBackground() throws IOException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         Calendar calendar = client.calendars().insert(mCalendar).execute();
         Log.d(TAG, "calendar timeZone:" + calendar.getTimeZone());
         calendarID = calendar.getId();
-        editor.putString(mContext.getString(R.string.pref_key_calendar_id), calendarID);
-        editor.commit();
+        editor.putString(activity.getString(R.string.pref_key_calendar_id), calendarID);
+        editor.apply();
 
         new GetEvents(activity).execute();
     }

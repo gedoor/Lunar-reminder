@@ -19,12 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.R;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
-
 
 public class AboutActivity extends AppCompatActivity {
-    ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-
     @BindView(R.id.zfb)
     TextView zfb;
     @BindView(R.id.weXin)
@@ -38,7 +34,7 @@ public class AboutActivity extends AppCompatActivity {
 
         setupActionBar();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(getString(R.string.pref_key_first_open), false);
@@ -67,13 +63,14 @@ public class AboutActivity extends AppCompatActivity {
 
     @OnClick({R.id.zfb, R.id.weXin})
     public void onViewClicked(View view) {
+        ClipboardManager clipboardManager = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         switch (view.getId()) {
             case R.id.zfb:
-                Toast.makeText(mContext, "复制成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
                 clipboardManager.setPrimaryClip(ClipData.newPlainText("支付宝", "gekunfei@qq.com"));
                 break;
             case R.id.weXin:
-                Toast.makeText(mContext, "复制成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
                 clipboardManager.setPrimaryClip(ClipData.newPlainText("微信", "kunfei_ge"));
                 break;
         }

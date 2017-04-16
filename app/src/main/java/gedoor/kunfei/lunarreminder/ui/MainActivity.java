@@ -15,8 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteEvents;
@@ -33,9 +31,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
-@SuppressLint("WrongConstant")
 public class MainActivity extends BaseActivity {
     private static final int REQUEST_REMINDER = 1;
     private static final int REQUEST_SETTINGS = 2;
@@ -43,22 +39,21 @@ public class MainActivity extends BaseActivity {
 
     private SimpleAdapterEvent adapter;
 
-    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.fab)
     FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        super.onCreate(savedInstanceState);
 
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
@@ -119,15 +114,11 @@ public class MainActivity extends BaseActivity {
         });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> new GetEvents(this).execute());
-        initFinish();
     }
 
     @Override
     public void initFinish() {
         super.initFinish();
-        if (swipeRefresh == null || !initFinish) {
-            return;
-        }
         swOnRefresh();
         loadGoogleCalendar();
     }
@@ -149,6 +140,7 @@ public class MainActivity extends BaseActivity {
 
     //载入事件
     public void loadGoogleCalendar() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (calendarID == null) {
             new LoadCalendars(this).execute();
@@ -215,6 +207,7 @@ public class MainActivity extends BaseActivity {
         swNoRefresh();
     }
 
+    @SuppressLint("WrongConstant")
     @AfterPermissionGranted(REQUEST_PERMS)
     private void methodRequiresPermission() {
         afterPermissionGranted();

@@ -17,7 +17,6 @@ import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.mContext;
 
 /**
  * Created by GKF on 2017/3/29.
