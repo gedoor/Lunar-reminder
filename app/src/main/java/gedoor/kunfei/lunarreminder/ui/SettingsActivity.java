@@ -1,6 +1,7 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceScreen;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -145,6 +145,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_calendar);
             setHasOptionsMenu(true);
 
+
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_calendar_id)));
         }
@@ -165,15 +166,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class EventPreferenceFragment extends PreferenceFragment {
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_event);
             setHasOptionsMenu(true);
 
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+            if (sharedPreferences.getString(getString(R.string.pref_key_repeat_year), null) == null) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
+                editor.apply();
+            }
+
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_repeat_year)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_default_reminder)));
+            findPreference(getString(R.string.pref_key_repeat_year)).setOnPreferenceClickListener((Preference preference)->{
+                selectRepeatYear(preference);
+                return true;
+            });
         }
 
         @Override
@@ -186,26 +197,18 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
 
-        @Override
-        public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference){
-            if (preference.getKey().equals(getString(R.string.pref_key_repeat_year))) {
-                selectRepeatYear(preference);
-            }
-            return true;
-        }
-
         private void selectRepeatYear(Preference preference) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-            SharedPreferences.Editor editor = sharedPreferences.edit();
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
             builder.setTitle("选择重复年数");
-            View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
+            @SuppressLint("InflateParams") View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
             NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
             numberPicker.setMaxValue(36);
             numberPicker.setMinValue(1);
-            numberPicker.setValue(Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_repeat_year), "12")));
+            numberPicker.setValue(Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year))));
             builder.setView(view);
             builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(numberPicker.getValue()));
                 editor.apply();
                 preference.setSummary(String.valueOf(numberPicker.getValue()));

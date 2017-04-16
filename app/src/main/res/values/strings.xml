@@ -5,6 +5,7 @@
     <string name="action_about">关于</string>
     <string name="action_save">保存</string>
     <string name="action_del">删除</string>
+    <string name="action_apply">应用</string>
     <string name="reminder_me">提醒我</string>
     <string name="reminder">提醒</string>
     <string name="defaultReminder">默认提醒</string>
