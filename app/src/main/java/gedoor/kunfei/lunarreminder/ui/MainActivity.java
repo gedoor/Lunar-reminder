@@ -3,11 +3,15 @@ package gedoor.kunfei.lunarreminder.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -40,13 +44,12 @@ public class MainActivity extends BaseActivity {
     public static final int REQUEST_ABOUT = 3;
 
     private SimpleAdapterEvent adapter;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.drawer)
@@ -55,11 +58,16 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener((View view)->{drawer.openDrawer(Gravity.START);});
+        setupActionBar();
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawerToggle.syncState();
+        drawer.addDrawerListener(mDrawerToggle);
+
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
             Intent intent = new Intent(this, EventEditActivity.class);
@@ -121,6 +129,27 @@ public class MainActivity extends BaseActivity {
         swipeRefresh.setOnRefreshListener(() -> new GetEvents(this).execute());
 
         initGoogleAccount();
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // 这个必须要，没有的话进去的默认是个箭头。。正常应该是三横杠的
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -186,6 +215,14 @@ public class MainActivity extends BaseActivity {
             case R.id.action_about:
                 Intent intent_about = new Intent(this, AboutActivity.class);
                 this.startActivityForResult(intent_about, REQUEST_ABOUT);
+                return true;
+            case android.R.id.home:
+                if(  drawer.isDrawerOpen(GravityCompat.START)
+                        ){
+                    drawer.closeDrawers();
+                }else{
+                    drawer.openDrawer(GravityCompat.START);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
