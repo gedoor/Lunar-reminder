@@ -326,11 +326,11 @@ public class EventEditActivity extends BaseActivity {
         numberPicker.setMinValue(1);
         numberPicker.setValue(Integer.parseInt(lunarRepeatNum));
         builder.setView(view);
-        builder.setPositiveButton("确定", (DialogInterface dialog, int which) -> {
+        builder.setPositiveButton(getString(R.string.ok), (DialogInterface dialog, int which) -> {
             lunarRepeatNum = String.valueOf(numberPicker.getValue());
             vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         });
-        builder.setNegativeButton("取消", (DialogInterface dialog, int which) -> {
+        builder.setNegativeButton(getString(R.string.cancel), (DialogInterface dialog, int which) -> {
         });
         builder.create();
         builder.show();
