@@ -50,10 +50,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        super.onCreate(savedInstanceState);
 
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
@@ -114,11 +114,12 @@ public class MainActivity extends BaseActivity {
         });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> new GetEvents(this).execute());
+
+        initGoogleAccount();
     }
 
     @Override
     public void initFinish() {
-        super.initFinish();
         swOnRefresh();
         loadGoogleCalendar();
     }
@@ -143,7 +144,7 @@ public class MainActivity extends BaseActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (calendarID == null) {
-            new LoadCalendars(this).execute();
+            new LoadCalendars(this, getString(R.string.lunar_calendar_name)).execute();
 //        } else if (listCache != null && cacheEvents) {
 //            googleEvents = listCache;
 //            new LoadEventsList(this).execute();

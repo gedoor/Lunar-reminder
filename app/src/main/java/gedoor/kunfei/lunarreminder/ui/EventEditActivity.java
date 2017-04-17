@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +53,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 /**
  * Created by GKF on 2017/3/7.
+ * 编辑创建Event
  */
 @SuppressLint("WrongConstant")
 public class EventEditActivity extends BaseActivity {
@@ -90,6 +92,7 @@ public class EventEditActivity extends BaseActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setNavigationOnClickListener((View view) -> {
             setResult(RESULT_CANCELED);
@@ -117,12 +120,13 @@ public class EventEditActivity extends BaseActivity {
             initEvent();
         }
 
-        listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            selectReminder(position);
-        });
+        listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> selectReminder(position));
 
+        initGoogleAccount();
     }
+
     //新建事件
+    @SuppressLint("SetTextI18n")
     private void initEvent() {
         cc = new ChineseCalendar(Calendar.getInstance());
         cc.set(Calendar.HOUR_OF_DAY, 0);
@@ -144,12 +148,13 @@ public class EventEditActivity extends BaseActivity {
         refreshReminders();
     }
     //载入事件
+    @SuppressLint("SetTextI18n")
     private void initGoogleEvent() {
         textReminderMe.setText(googleEvent.getSummary());
         textReminderMe.setSelection(googleEvent.getSummary().length());
         DateTime start = googleEvent.getStart().getDate();
         if (start == null) start = googleEvent.getStart().getDateTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
         try {
             cc.setTime(dateFormat.parse(start.toStringRfc3339()));
         } catch (ParseException e) {
@@ -311,10 +316,11 @@ public class EventEditActivity extends BaseActivity {
         }
     }
     //选择重复年数
+    @SuppressLint("SetTextI18n")
     private void selectRepeatYear() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("选择重复年数");
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_repeat_year, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_repeat_year, null);
         NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
         numberPicker.setMaxValue(36);
         numberPicker.setMinValue(1);
@@ -334,6 +340,7 @@ public class EventEditActivity extends BaseActivity {
         void getCalendar(ChineseCalendar cc);
     }
 
+    @SuppressLint("SetTextI18n")
     private void selectDate() {
         mDialog = new DialogGLC(this, ((ChineseCalendar cc) -> {
             this.cc = cc;

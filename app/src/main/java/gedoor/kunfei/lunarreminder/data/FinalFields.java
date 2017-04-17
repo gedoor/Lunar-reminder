@@ -2,11 +2,10 @@ package gedoor.kunfei.lunarreminder.data;
 
 /**
  * Created by GKF on 2017/3/19.
+ * 固定字符
  */
 
 public final class FinalFields {
-    public static final String CalendarName = "Lunar Reminder";
-
     public static final String LunarRepeatId = "LunarRepeatId";
     public static final String LunarRepeatYear = "LunarRepeatYear";
 

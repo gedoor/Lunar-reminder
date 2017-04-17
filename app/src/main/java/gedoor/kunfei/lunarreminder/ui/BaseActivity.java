@@ -53,12 +53,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get permission
-        if (EasyPermissions.hasPermissions(this, perms)) {
-            init();
-        } else {
-            EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
-        }
     }
 
     @Override
@@ -73,16 +67,18 @@ public class BaseActivity extends AppCompatActivity {
         MobclickAgent.onPause(this);
     }
 
-    public void init() {
-        if (checkGooglePlayServicesAvailable()) {
-            initGoogleAccount();
-        } else {
+    public void initGoogleAccount() {
+        //get permission
+        if (!EasyPermissions.hasPermissions(this, perms)) {
+            EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
+            return;
+        }
+        //检查google服务
+        if (!checkGooglePlayServicesAvailable()) {
             Toast.makeText(this, "检测不到Google服务,程序无法使用", Toast.LENGTH_LONG).show();
             finish();
+            return;
         }
-    }
-
-    public void initGoogleAccount() {
         //初始化Google账号
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
@@ -90,42 +86,31 @@ public class BaseActivity extends AppCompatActivity {
         credential.setSelectedAccountName(mGoogleAccount);
         if (credential.getSelectedAccountName() == null) {
             startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
-        } else {
-            initFinish();
+            return;
         }
-    }
-
-    public void initFinish() {
         client = new Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
                 .build();
-
+        initFinish();
     }
 
+    public void initFinish() {
+
+    }
     public void syncStart() {
 
     }
     public void syncSuccess() {
 
     }
-
     public void syncError() {
 
     }
     public void eventListFinish() {
 
     }
-
     public void userRecoverable() {
 
-    }
-
-    //插入农历提醒日历
-    public void createGoogleCalender() {
-        com.google.api.services.calendar.model.Calendar calendar = new com.google.api.services.calendar.model.Calendar();
-        calendar.setSummary(FinalFields.CalendarName);
-
-        new InsertCalendar(this, calendar).execute();
     }
 
     //检测google服务
@@ -139,7 +124,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public void afterPermissionGranted() {
         if (EasyPermissions.hasPermissions(this, perms)) {
-            init();
+            initGoogleAccount();
         } else {
             Toast.makeText(this, "没有权限,程序无法使用", Toast.LENGTH_LONG).show();
             finish();
@@ -168,7 +153,7 @@ public class BaseActivity extends AppCompatActivity {
                             editor.apply();
                             mGoogleAccount = accountName;
                             credential.setSelectedAccountName(mGoogleAccount);
-                            initFinish();
+                            initGoogleAccount();
                         } else {
                             Toast.makeText(this, "无法获取google用户,将退出", Toast.LENGTH_LONG).show();
                             finish();
@@ -176,7 +161,7 @@ public class BaseActivity extends AppCompatActivity {
                     }
                     break;
                 case REQUEST_AUTHORIZATION:
-                    initFinish();
+                    initGoogleAccount();
                     break;
             }
         }
