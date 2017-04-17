@@ -1,6 +1,10 @@
 package gedoor.kunfei.lunarreminder.ui.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
@@ -14,16 +18,22 @@ import gedoor.kunfei.lunarreminder.R;
 
 /**
  * Created by GKF on 2017/4/2.
+ * 自定义Adapter
  */
 
 public class SimpleAdapterEvent extends SimpleAdapter {
     private Context mContext;
     private ArrayList<HashMap<String, String>> listItem;
+    private Drawable calendarColor;
 
     public SimpleAdapterEvent(Context context, ArrayList<HashMap<String, String>> data, int resource, String[] from, int[] to) {
         super(context, data, resource, from, to);
         this.mContext = context;
         this.listItem = data;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int color = sharedPreferences.getInt(context.getString(R.string.pref_key_calendar_color), 0);
+        this.calendarColor = color == 0 ?
+                context.getResources().getDrawable(R.color.colorLunar) : new ColorDrawable(color);
     }
 
     @Override
@@ -40,7 +50,7 @@ public class SimpleAdapterEvent extends SimpleAdapter {
             title.setTextSize(30);
         } else {
             start.setTextSize(16);
-            title.setBackground(mContext.getResources().getDrawable(R.color.colorLunar));
+            title.setBackground(calendarColor);
             title.setTextColor(mContext.getResources().getColor(R.color.colorWhite));
             title.setTextSize(16);
         }

@@ -17,6 +17,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 /**
  * Created by GKF on 2017/4/8.
+ * 载入事件列表
  */
 
 public class LoadEventList extends CalendarAsyncTask {

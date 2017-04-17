@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="gedoor.kunfei.lunarreminder">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -31,9 +32,11 @@
         </activity>
         <activity
             android:name=".ui.EventEditActivity"
+            android:label="@string/event"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.EventReadActivity"
+            android:label="@string/event"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.AboutActivity"

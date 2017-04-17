@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,14 +49,17 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.drawer)
+    DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        toolbar.setNavigationOnClickListener((View view)->{drawer.openDrawer(Gravity.START);});
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
             Intent intent = new Intent(this, EventEditActivity.class);

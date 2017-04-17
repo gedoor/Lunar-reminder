@@ -114,28 +114,29 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             // OOM一般是解码Bitmap造成的，不影响程序继续运行
             return true;
         }
-        //使用Toast来显示异常信息
-        new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                //添加信息发送或本地保存
-                String error;
-                error = getMobileInfo();//获取手机信息
-                error = error + "\n" + getVersionInfo();//获取版本信息
-                error = error + "\n" + getErrorInfo(ex);//获取错误信息
-                ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(ClipData.newPlainText("error", error));
-                Toast.makeText(mContext, "程序出错,日志已复制到剪贴板", Toast.LENGTH_SHORT).show();
-                Looper.loop();
-            }
-
-        }.start();
         if (debug) {
             ex.printStackTrace();
             Log.d("CrashHandler", "catched");
-        }
+            return false;
+        } else {
+            //使用Toast来显示异常信息
+            new Thread() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    //添加信息发送或本地保存
+                    String error;
+                    error = getMobileInfo();//获取手机信息
+                    error = error + "\n" + getVersionInfo();//获取版本信息
+                    error = error + "\n" + getErrorInfo(ex);//获取错误信息
+                    ClipboardManager clipboardManager = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboardManager.setPrimaryClip(ClipData.newPlainText("error", error));
+                    Toast.makeText(mContext, "程序出错,日志已复制到剪贴板", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
 
+            }.start();
+        }
         MobclickAgent.reportError(mContext, ex);
         return true;
     }
