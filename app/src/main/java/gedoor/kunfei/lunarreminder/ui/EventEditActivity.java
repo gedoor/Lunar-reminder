@@ -122,6 +122,12 @@ public class EventEditActivity extends BaseActivity {
 
         listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> selectReminder(position));
 
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        //初始化googleAccount
         initGoogleAccount();
     }
 
@@ -366,12 +372,13 @@ public class EventEditActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             new AlertDialog.Builder(this)
-                    .setTitle("退出")
-                    .setMessage("是否保存")
-                    .setPositiveButton("是", (DialogInterface dialogInterface, int which) -> saveEvent())
+                    .setTitle(getString(R.string.exit))
+                    .setMessage(getString(R.string.exit_event_description))
+                    .setPositiveButton("是", (DialogInterface dialogInterface, int which) -> {})
                     .setNegativeButton("否", (DialogInterface dialogInterface, int which) -> finish())
                     .show();
+            return true;
         }
-        return false;
+        return super.onKeyDown(keyCode, keyEvent);
     }
 }

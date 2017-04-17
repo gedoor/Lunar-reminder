@@ -6,6 +6,7 @@
     <string name="action_about">关于</string>
     <string name="action_save">保存</string>
     <string name="action_del">删除</string>
+    <string name="exit">退出</string>
     <string name="action_apply">应用</string>
     <string name="reminder_me">提醒我</string>
     <string name="reminder">提醒</string>
@@ -18,6 +19,7 @@
     <string name="selectCalendarAaccount">请选择日历账户</string>
     <string name="title_activity_settings">设置</string>
     <string name="create_event_short_label">创建事件</string>
+    <string name="exit_event_description">尚未保存，是否继续编辑。</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>

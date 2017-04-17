@@ -32,6 +32,7 @@ import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean> {
     BaseActivity activity;
     com.google.api.services.calendar.Calendar client;
+    private String errorStr;
 
     CalendarAsyncTask(BaseActivity activity) {
         this.activity = activity;
@@ -51,16 +52,14 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean
             return true;
         } catch (final GooglePlayServicesAvailabilityIOException availabilityException) {
             availabilityException.printStackTrace();
-            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", availabilityException.getMessage()));
+            errorStr = availabilityException.getMessage();
         } catch (UserRecoverableAuthIOException userRecoverableException) {
             publishProgress(-1);
             activity.startActivityForResult(userRecoverableException.getIntent(), BaseActivity.REQUEST_AUTHORIZATION);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", e.getMessage()));
+            errorStr = e.getMessage();
         }
         return false;
     }
@@ -86,6 +85,8 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean
             activity.syncSuccess();
         } else {
             activity.syncError();
+            ClipboardManager clipboardManager = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(ClipData.newPlainText("error", errorStr));
             Toast.makeText(activity, "出现一个错误,已拷贝到剪贴板", Toast.LENGTH_LONG).show();
         }
     }
