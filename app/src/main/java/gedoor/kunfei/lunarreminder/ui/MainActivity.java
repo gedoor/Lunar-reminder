@@ -21,8 +21,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,9 +54,12 @@ public class MainActivity extends BaseActivity {
 
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ArrayList<String> listDrawer = new ArrayList<>();
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
+    @BindView(R.id.listViewDrawer)
+    ListView listViewDrawer;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
     @BindView(R.id.fab)
@@ -65,12 +74,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setupActionBar();
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        mDrawerToggle.syncState();
-        drawer.addDrawerListener(mDrawerToggle);
-
+        initDrawer();
+        //悬浮按钮
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
             Intent intent = new Intent(this, EventEditActivity.class);
@@ -132,14 +137,6 @@ public class MainActivity extends BaseActivity {
         swipeRefresh.setOnRefreshListener(() -> new GetEvents(this).execute());
     }
 
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -194,6 +191,33 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    //侧边栏初始化
+    private void initDrawer() {
+        listViewDrawer.setSelector(R.color.colorLightGrey);
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawerToggle.syncState();
+        drawer.addDrawerListener(mDrawerToggle);
+        listDrawer.add("农历提醒");
+        listDrawer.add("廿四节气");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_expandable_list_item_1,
+                listDrawer);
+        listViewDrawer.setAdapter(adapter);
+        listViewDrawer.setOnItemClickListener((parent, view, position, id) -> {
+            drawer.closeDrawers();
+        });
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
     // 添加菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

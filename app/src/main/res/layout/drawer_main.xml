@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:contentDescription="@string/app_name"
-        android:padding="20dp"
-        android:background="@color/yellow"
+        android:padding="30dp"
+        android:background="@drawable/bg"
         app:srcCompat="@mipmap/lunar_reminder"/>
 
     <ListView
+        android:id="@+id/listViewDrawer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
