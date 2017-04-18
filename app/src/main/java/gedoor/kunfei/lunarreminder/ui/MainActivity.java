@@ -1,7 +1,6 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,9 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,14 +22,12 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteEvents;
 import gedoor.kunfei.lunarreminder.async.GetEvents;
+import gedoor.kunfei.lunarreminder.async.GetWebContent;
 import gedoor.kunfei.lunarreminder.async.InsertEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
 import gedoor.kunfei.lunarreminder.async.UpdateEvents;
@@ -55,6 +49,8 @@ public class MainActivity extends BaseActivity {
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayList<String> listDrawer = new ArrayList<>();
+    private String solarTermsCalendarId;
+    private Boolean isFirstOpen;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
@@ -72,6 +68,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
 
         setupActionBar();
         initDrawer();
@@ -147,15 +145,9 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public void initFinish() {
         swOnRefresh();
-        loadGoogleCalendar();
+        loadReminderCalendar();
     }
 
     @Override
@@ -173,12 +165,10 @@ public class MainActivity extends BaseActivity {
         refreshView();
     }
 
-    //载入事件
-    public void loadGoogleCalendar() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
+    //载入提醒事件
+    public void loadReminderCalendar() {
         if (calendarID == null) {
-            new LoadCalendars(this, getString(R.string.lunar_calendar_name)).execute();
+            new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name)).execute();
 //        } else if (listCache != null && cacheEvents) {
 //            googleEvents = listCache;
 //            new LoadEventsList(this).execute();
@@ -191,6 +181,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    //载入节气
+    public void loadSolarTerms() {
+        if (solarTermsCalendarId == null) {
+            new LoadCalendars(this, getString(R.string.solar_terms_calendar_name)).execute();
+        }
+    }
     //侧边栏初始化
     private void initDrawer() {
         listViewDrawer.setSelector(R.color.colorLightGrey);
@@ -207,6 +203,10 @@ public class MainActivity extends BaseActivity {
                 listDrawer);
         listViewDrawer.setAdapter(adapter);
         listViewDrawer.setOnItemClickListener((parent, view, position, id) -> {
+            if (position == 1) {
+                new GetWebContent(this).execute();
+            }
+
             drawer.closeDrawers();
         });
     }
@@ -218,6 +218,7 @@ public class MainActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
     // 添加菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -244,10 +245,10 @@ public class MainActivity extends BaseActivity {
                 this.startActivityForResult(intent_about, REQUEST_ABOUT);
                 return true;
             case android.R.id.home:
-                if(  drawer.isDrawerOpen(GravityCompat.START)
-                        ){
+                if (drawer.isDrawerOpen(GravityCompat.START)
+                        ) {
                     drawer.closeDrawers();
-                }else{
+                } else {
                     drawer.openDrawer(GravityCompat.START);
                 }
                 return true;
@@ -277,6 +278,11 @@ public class MainActivity extends BaseActivity {
         swNoRefresh();
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
     @SuppressLint("WrongConstant")
     @AfterPermissionGranted(REQUEST_PERMS)
     private void methodRequiresPermission() {
@@ -311,7 +317,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(drawer.isDrawerOpen(GravityCompat.START)){
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawers();
                 return true;
             }

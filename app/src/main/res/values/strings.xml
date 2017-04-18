@@ -16,7 +16,7 @@
     <string name="all_day">全天</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
-    <string name="selectCalendarAaccount">请选择日历账户</string>
+    <string name="selectCalendarAccount">请选择日历账户</string>
     <string name="title_activity_settings">设置</string>
     <string name="create_event_short_label">创建事件</string>
     <string name="exit_event_description">尚未保存，是否继续编辑。</string>

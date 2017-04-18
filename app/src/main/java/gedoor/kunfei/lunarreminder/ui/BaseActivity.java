@@ -35,7 +35,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * 农历初始化
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     public static final int REQUEST_PERMS = 101;
     public static final int REQUEST_ACCOUNT_PICKER = 102;
     public static final int REQUEST_AUTHORIZATION = 103;

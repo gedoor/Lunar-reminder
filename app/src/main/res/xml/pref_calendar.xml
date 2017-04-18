@@ -4,7 +4,7 @@
     <Preference
         android:key="@string/pref_key_calendar_name"
         android:title="@string/pref_title_calendar_name"
-        android:summary="@string/lunar_calendar_name"/>
+        android:summary="@string/lunar_reminder_calendar_name"/>
 
     <Preference
         android:key="@string/pref_key_google_account"
