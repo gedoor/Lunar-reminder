@@ -89,8 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
             return;
         }
-        client = new Calendar.Builder(
-                transport, jsonFactory, credential).setApplicationName("Google-LunarReminder")
+        client = new Calendar.Builder(transport, jsonFactory, credential)
+                .setApplicationName("Google-LunarReminder")
                 .build();
         initFinish();
     }

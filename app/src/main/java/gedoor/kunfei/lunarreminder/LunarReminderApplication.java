@@ -8,16 +8,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.util.List;
 
 import gedoor.kunfei.lunarreminder.util.CrashHandler;
-
-/**
- * Created by GKF on 2017/3/10.
- */
 
 public class LunarReminderApplication extends Application {
     /**

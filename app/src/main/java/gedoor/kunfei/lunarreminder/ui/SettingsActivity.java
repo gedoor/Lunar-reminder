@@ -3,6 +3,8 @@ package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,9 +23,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.async.UpdateCalendar;
+import gedoor.kunfei.lunarreminder.util.DensityUtil;
 
 import java.util.List;
 
@@ -163,8 +169,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (id == android.R.id.home) {
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
+            } else if (id == R.id.action_apply) {
+                applyCalendarSetting();
             }
             return super.onOptionsItemSelected(item);
+        }
+
+        private void applyCalendarSetting() {
+            ProgressDialog dialog = ProgressDialog.show(this.getActivity(), "提示", "正在更新日历设置");
+            new UpdateCalendar(this.getActivity(), dialog).execute();
         }
     }
 

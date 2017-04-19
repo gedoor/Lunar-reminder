@@ -1,6 +1,8 @@
 package gedoor.kunfei.lunarreminder.async;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -8,6 +10,7 @@ import com.google.api.services.calendar.model.Event;
 import java.io.IOException;
 import java.util.HashMap;
 
+import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -29,6 +32,9 @@ public class LoadEventList extends CalendarAsyncTask {
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_calendar_color), 0);
+        String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
         activity.list.clear();
         int id = 0;
         String ccYear = "";
@@ -51,7 +57,8 @@ public class LoadEventList extends CalendarAsyncTask {
                 activity.list.add(titleMap);
             }
             listMap.put("start", eventCC.getChinese(ChineseCalendar.CHINESE_MONTH) + "\n" + eventCC.getChinese(ChineseCalendar.CHINESE_DATE));
-            listMap.put("colorId", event.getColorId());
+            listMap.put("bgColor", strBgColor);
+            listMap.put("fgColor", "");
             activity.list.add(listMap);
             id++;
         }
