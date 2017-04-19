@@ -202,6 +202,14 @@ public class MainActivity extends BaseActivity {
                 android.R.layout.simple_expandable_list_item_1,
                 listDrawer);
         listViewDrawer.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        listViewDrawer.post(new Runnable() {
+            @Override
+            public void run() {
+                listViewDrawer.setItemChecked(0, true);;
+                listViewDrawer.performItemClick(listViewDrawer.getSelectedView(), 0, 0);
+            }
+        });
         listViewDrawer.setOnItemClickListener((parent, view, position, id) -> {
             if (position == 1) {
                 new GetWebContent(this).execute();
@@ -225,7 +233,6 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
     //菜单
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
