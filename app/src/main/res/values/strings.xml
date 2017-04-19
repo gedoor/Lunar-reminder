@@ -69,7 +69,12 @@
 
     <string name="pref_header_calendar_config">Calendar配置</string>
 
-    <string name="pref_title_calendar_name">Lunar calendar name</string>
+    <string name="pref_title_calendar_name">日历名称</string>
+    <string name="pref_title_account_name">日历用户</string>
+    <string name="pref_title_calendar_id">日历ID</string>
+    <string name="pref_title_calendar_background">日历背景颜色</string>
+    <string name="pref_title_calendar_foreground">日历文字颜色</string>
+
     <string name="select_color">选择颜色</string>
 
     <string name="pref_header_event_config">Event配置</string>

@@ -8,16 +8,16 @@
 
     <Preference
         android:key="@string/pref_key_google_account"
-        android:title="Account name"/>
+        android:title="@string/pref_title_account_name"/>
 
     <Preference
         android:key="@string/pref_key_calendar_id"
-        android:title="Lunar calendar id"
+        android:title="@string/pref_title_calendar_id"
         android:summary=""/>
 
     <gedoor.kunfei.lunarreminder.ui.preference.ColorPreference
         android:key="@string/pref_key_calendar_color"
-        android:title="Calendar color"
+        android:title="@string/pref_title_calendar_background"
         android:defaultValue="@color/yellow"
         attr:dialogTitle="@string/select_color"
         attr:colors="@array/calendar_rainbow"
