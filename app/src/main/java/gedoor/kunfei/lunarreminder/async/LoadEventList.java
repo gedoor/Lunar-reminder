@@ -8,6 +8,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
@@ -24,6 +25,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  */
 
 public class LoadEventList extends CalendarAsyncTask {
+    private ArrayList<HashMap<String, String>> list = new ArrayList<>();
 
     LoadEventList(BaseActivity activity) {
         super(activity);
@@ -35,7 +37,6 @@ public class LoadEventList extends CalendarAsyncTask {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_calendar_color), 0);
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
-        activity.list.clear();
         int id = 0;
         String ccYear = "";
         for (Event event : googleEvents) {
@@ -54,12 +55,12 @@ public class LoadEventList extends CalendarAsyncTask {
                 titleMap.put("summary", ccYear);
                 titleMap.put("start", eventCC.getChinese(ChineseCalendar.CHINESE_ZODIAC_EMOJI));
                 titleMap.put("id", "");
-                activity.list.add(titleMap);
+                list.add(titleMap);
             }
             listMap.put("start", eventCC.getChinese(ChineseCalendar.CHINESE_MONTH) + "\n" + eventCC.getChinese(ChineseCalendar.CHINESE_DATE));
             listMap.put("bgColor", strBgColor);
             listMap.put("fgColor", "");
-            activity.list.add(listMap);
+            list.add(listMap);
             id++;
         }
     }
@@ -67,6 +68,8 @@ public class LoadEventList extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
+        activity.list.clear();
+        activity.list.addAll(list);
         activity.eventListFinish();
     }
 }

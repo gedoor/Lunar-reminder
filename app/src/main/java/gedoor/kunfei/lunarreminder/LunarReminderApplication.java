@@ -1,16 +1,12 @@
 package gedoor.kunfei.lunarreminder;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
-import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
 
 import java.util.List;
 
@@ -23,7 +19,6 @@ public class LunarReminderApplication extends Application {
      */
     public final static boolean DEBUG = BuildConfig.DEBUG;
 
-    public static String calendarID;
     public static List<Event> googleEvents;
     public static Event googleEvent;
     public static int eventRepeat;
@@ -31,8 +26,6 @@ public class LunarReminderApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        calendarID = sharedPreferences.getString(getString(R.string.pref_key_calendar_id), null);
 
         CrashHandler crashHandler = CrashHandler.getInstance();
         //注册crashHandler

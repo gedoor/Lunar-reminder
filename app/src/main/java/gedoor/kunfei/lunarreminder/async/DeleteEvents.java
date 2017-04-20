@@ -12,13 +12,12 @@ import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 /**
- * Created by GKF on 2017/3/31.
+ * 删除事件
  */
 
 public class DeleteEvents extends CalendarAsyncTask {
     private String calendarId;
     private Event event;
-    private String lunarRepeatId;
 
     public DeleteEvents(BaseActivity activity, String calendarId, Event event) {
         super(activity);
@@ -30,7 +29,7 @@ public class DeleteEvents extends CalendarAsyncTask {
     protected void doInBackground() throws IOException {
         Event.ExtendedProperties properties = event.getExtendedProperties();
         if (properties != null) {
-            lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
+            String lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
             Events events = client.events().list(calendarId).setFields("items(id)").setPrivateExtendedProperty(Arrays.asList(LunarRepeatId + "=" + lunarRepeatId)).execute();
             List<Event> items = events.getItems();
             for (Event event : items) {
@@ -39,6 +38,6 @@ public class DeleteEvents extends CalendarAsyncTask {
         } else {
             client.events().delete(calendarId, event.getId()).execute();
         }
-        new GetEvents(activity).execute();
+        new GetLunarReminderEvents(activity, calendarId).execute();
     }
 }

@@ -7,7 +7,6 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 
 /**
  * Created by GKF on 2017/3/31.
@@ -43,7 +41,7 @@ public class UpdateEvents extends CalendarAsyncTask {
         if (properties != null) {
             String lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
             Event.ExtendedProperties nProperties = new Properties(lunarRepeatId, repeatNum).getProperties();
-            Events events = client.events().list(calendarID).setFields("items(id)").setPrivateExtendedProperty(Collections.singletonList(LunarRepeatId + "=" + lunarRepeatId)).execute();
+            Events events = client.events().list(calendarId).setFields("items(id)").setPrivateExtendedProperty(Collections.singletonList(LunarRepeatId + "=" + lunarRepeatId)).execute();
             List<Event> items = events.getItems();
             int i = repeatNum > items.size() ? repeatNum : items.size();
             for (int j=1; j<=i; j++) {
@@ -75,7 +73,7 @@ public class UpdateEvents extends CalendarAsyncTask {
         } else {
             client.events().update(calendarId, event.getId(), event).execute();
         }
-        new GetEvents(activity).execute();
+        new GetLunarReminderEvents(activity, calendarId).execute();
     }
 
 

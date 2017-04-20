@@ -13,7 +13,7 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
 /**
- * Created by GKF on 2017/3/31.
+ * 插入事件
  */
 @SuppressLint("WrongConstant")
 public class InsertEvents extends CalendarAsyncTask{
@@ -44,7 +44,7 @@ public class InsertEvents extends CalendarAsyncTask{
             client.events().insert(calendarId, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
         }
-        new GetEvents(activity).execute();
+        new GetLunarReminderEvents(activity, calendarId).execute();
     }
 
 }

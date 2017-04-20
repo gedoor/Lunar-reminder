@@ -10,12 +10,12 @@
     <header
         android:fragment="gedoor.kunfei.lunarreminder.ui.SettingsActivity$CalendarPreferenceFragment"
         android:icon="@drawable/ic_date_range_black_24dp"
-        android:title="@string/pref_header_calendar_config" />
+        android:title="@string/pref_header_reminder_calendar_config" />
 
     <header
         android:fragment="gedoor.kunfei.lunarreminder.ui.SettingsActivity$EventPreferenceFragment"
         android:icon="@drawable/ic_event_note_black_24dp"
-        android:title="@string/pref_header_event_config" />
+        android:title="@string/pref_header_reminder_event_config" />
 
 
 </preference-headers>

@@ -15,26 +15,26 @@ import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 /**
- * Created by GKF on 2017/3/29.
+ * 获取提醒事件
  */
 
-public class GetEvents extends CalendarAsyncTask {
+public class GetLunarReminderEvents extends CalendarAsyncTask {
     private static final String TAG = "AsyncGetEvents";
+    private String calendarId;
 
-    public GetEvents(BaseActivity activity) {
+    public GetLunarReminderEvents(BaseActivity activity, String calendarId) {
         super(activity);
+        this.calendarId = calendarId;
     }
 
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
-        new GetCalendar(activity).execute();
         if (activity.showAllEvents) {
-            Events events = client.events().list(calendarID).setSingleEvents(true).setOrderBy("startTime")
+            Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                     .execute();
             googleEvents = events.getItems();
         } else {
@@ -44,7 +44,7 @@ public class GetEvents extends CalendarAsyncTask {
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
             cc.add(Calendar.DATE, -1);
             DateTime endDT = new DateTime(new EventTimeUtil(cc).getDateTime());
-            Events events = client.events().list(calendarID).setSingleEvents(true).setOrderBy("startTime")
+            Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                     .setTimeMin(startDT).setTimeMax(endDT).execute();
             googleEvents = events.getItems();
 

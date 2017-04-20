@@ -12,16 +12,18 @@ import java.util.TimeZone;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
+import gedoor.kunfei.lunarreminder.util.ACache;
 
 public class LoadCalendars extends CalendarAsyncTask {
     private static final String TAG = "AsyncLoadCalendars";
     private String calendarName;
+    private String calendarPrefKey;
+    private String calendarId;
 
-    public LoadCalendars(BaseActivity activity, String calendarName) {
+    public LoadCalendars(BaseActivity activity, String calendarName, String calendarPrefKey) {
         super(activity);
         this.calendarName = calendarName;
+        this.calendarPrefKey = calendarPrefKey;
     }
 
     @Override
@@ -34,17 +36,24 @@ public class LoadCalendars extends CalendarAsyncTask {
             Log.d(TAG, "return calendar summary:" + calendar.getSummary() + " timeZone:" + calendar.getTimeZone());
             if (calendar.getSummary().equals(calendarName)) {
                 Log.d(TAG, "Lunar Birthday calendar already exist:" + calendar.getId());
-                calendarID = calendar.getId();
-                editor.putString(activity.getString(R.string.pref_key_calendar_id), calendarID);
+                calendarId = calendar.getId();
+                editor.putString(calendarPrefKey, calendarId);
                 editor.apply();
             }
         }
-        if (calendarID == null) {
-            new InsertCalendar(activity, calendarName);
+        if (calendarId == null) {
+            new InsertCalendar(activity, calendarName, calendarPrefKey).execute();
+        } else if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
+            new GetCalendar(activity, calendarId).execute();
+            new GetLunarReminderEvents(activity, calendarId).execute();
         } else {
-            new GetEvents(activity).execute();
+            ACache mCache = ACache.get(activity);
+            if (mCache.isExist("jq", ACache.STRING)) {
+                new LoadSolarTermsList(activity).execute();
+            } else {
+                new InsertSolarTermsEvents(activity, calendarId).execute();
+            }
         }
-
     }
 
 }

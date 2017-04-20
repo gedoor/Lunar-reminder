@@ -45,7 +45,6 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
@@ -276,7 +275,8 @@ public class EventEditActivity extends BaseActivity {
         }
         googleEvent.setReminders(reminders);
         if (isShortcut) {
-            new InsertEvents(this, calendarID, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
+            String calendarId = preferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+            new InsertEvents(this, calendarId, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

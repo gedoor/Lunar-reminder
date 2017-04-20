@@ -26,17 +26,19 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteEvents;
-import gedoor.kunfei.lunarreminder.async.GetEvents;
-import gedoor.kunfei.lunarreminder.async.GetWebContent;
+import gedoor.kunfei.lunarreminder.async.GetCalendar;
+import gedoor.kunfei.lunarreminder.async.GetLunarReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertEvents;
+import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
+import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
 import gedoor.kunfei.lunarreminder.async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
+import gedoor.kunfei.lunarreminder.util.ACache;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
@@ -46,11 +48,14 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_SETTINGS = 2;
     public static final int REQUEST_ABOUT = 3;
 
+    private SharedPreferences sharedPreferences;
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayList<String> listDrawer = new ArrayList<>();
+    private String lunarReminderCalendarId;
     private String solarTermsCalendarId;
     private Boolean isFirstOpen;
+    private int drawerSelected;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
@@ -68,7 +73,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
 
         setupActionBar();
@@ -123,7 +128,7 @@ public class MainActivity extends BaseActivity {
                         return true;
                     case Menu.FIRST + 1:
                         swOnRefresh();
-                        new DeleteEvents(this, calendarID, googleEvents.get(Integer.parseInt(mId))).execute();
+                        new DeleteEvents(this, lunarReminderCalendarId, googleEvents.get(Integer.parseInt(mId))).execute();
                         return true;
                 }
                 return true;
@@ -132,7 +137,16 @@ public class MainActivity extends BaseActivity {
             return true;
         });
         //下拉刷新
-        swipeRefresh.setOnRefreshListener(() -> new GetEvents(this).execute());
+        swipeRefresh.setOnRefreshListener(() -> {
+            if (drawerSelected == 1) {
+                solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
+                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
+            } else {
+                lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+                new GetCalendar(this, lunarReminderCalendarId).execute();
+                new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
+            }
+        });
     }
 
     @Override
@@ -167,13 +181,16 @@ public class MainActivity extends BaseActivity {
 
     //载入提醒事件
     public void loadReminderCalendar() {
-        if (calendarID == null) {
-            new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name)).execute();
+        lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+        if (lunarReminderCalendarId == null) {
+            new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
 //        } else if (listCache != null && cacheEvents) {
 //            googleEvents = listCache;
 //            new LoadEventsList(this).execute();
         } else {
-            new GetEvents(this).execute();
+            lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+            new GetCalendar(this, lunarReminderCalendarId).execute();
+            new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
         }
         if (isFirstOpen) {
             Intent intent = new Intent(this, AboutActivity.class);
@@ -183,8 +200,18 @@ public class MainActivity extends BaseActivity {
 
     //载入节气
     public void loadSolarTerms() {
+        solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
         if (solarTermsCalendarId == null) {
-            new LoadCalendars(this, getString(R.string.solar_terms_calendar_name)).execute();
+            swOnRefresh();
+            new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
+        } else {
+            swOnRefresh();
+            ACache mCache = ACache.get(this);
+            if (mCache.isExist("jq", ACache.STRING)) {
+                new LoadSolarTermsList(this).execute();
+            } else {
+                new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
+            }
         }
     }
     //侧边栏初始化
@@ -212,9 +239,9 @@ public class MainActivity extends BaseActivity {
         });
         listViewDrawer.setOnItemClickListener((parent, view, position, id) -> {
             if (position == 1) {
-                new GetWebContent(this).execute();
+                loadSolarTerms();
             }
-
+            drawerSelected = position;
             drawer.closeDrawers();
         });
     }
@@ -241,7 +268,7 @@ public class MainActivity extends BaseActivity {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
                 swOnRefresh();
-                new GetEvents(this).execute();
+                new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -306,13 +333,13 @@ public class MainActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     switch (bundle.getInt(FinalFields.OPERATION)) {
                         case FinalFields.OPERATION_INSERT:
-                            new InsertEvents(this, calendarID, googleEvent, eventRepeat).execute();
+                            new InsertEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
                             break;
                         case FinalFields.OPERATION_UPDATE:
-                            new UpdateEvents(this, calendarID, googleEvent, eventRepeat).execute();
+                            new UpdateEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
                             break;
                         case FinalFields.OPERATION_DELETE:
-                            new DeleteEvents(this, calendarID, googleEvent).execute();
+                            new DeleteEvents(this, lunarReminderCalendarId, googleEvent).execute();
                             break;
                     }
                     break;

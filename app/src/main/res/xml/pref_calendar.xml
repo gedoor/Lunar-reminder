@@ -11,7 +11,7 @@
         android:title="@string/pref_title_account_name"/>
 
     <Preference
-        android:key="@string/pref_key_calendar_id"
+        android:key="@string/pref_key_lunar_reminder_calendar_id"
         android:title="@string/pref_title_calendar_id"
         android:summary=""/>
 

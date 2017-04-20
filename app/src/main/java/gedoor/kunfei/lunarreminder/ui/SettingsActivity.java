@@ -3,7 +3,6 @@ package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,18 +22,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.async.UpdateCalendar;
-import gedoor.kunfei.lunarreminder.util.DensityUtil;
 
 import java.util.List;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
-
+    private static SharedPreferences preferences;
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (Preference preference, Object value)-> {
         String stringValue = value.toString();
 
@@ -72,6 +68,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     /**
@@ -154,7 +151,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_calendar_id)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_lunar_reminder_calendar_id)));
 
         }
         // 添加菜单
@@ -176,8 +173,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         private void applyCalendarSetting() {
+            String calendarId = preferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
             ProgressDialog dialog = ProgressDialog.show(this.getActivity(), "提示", "正在更新日历设置");
-            new UpdateCalendar(this.getActivity(), dialog).execute();
+            new UpdateCalendar(this.getActivity(), dialog, calendarId).execute();
         }
     }
 
@@ -218,17 +216,16 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         private void selectRepeatYear(Preference preference) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
             builder.setTitle("选择重复年数");
             @SuppressLint("InflateParams") View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
             NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
             numberPicker.setMaxValue(36);
             numberPicker.setMinValue(1);
-            numberPicker.setValue(Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year))));
+            numberPicker.setValue(Integer.parseInt(preferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year))));
             builder.setView(view);
             builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(numberPicker.getValue()));
                 editor.apply();
                 preference.setSummary(String.valueOf(numberPicker.getValue()));

@@ -1,5 +1,6 @@
 <resources>
-    <string name="pref_key_calendar_id">glCalendarId</string>
+    <string name="pref_key_lunar_reminder_calendar_id">glCalendarId</string>
+    <string name="pref_key_solar_terms_calendar_id">stCalendarId</string>
     <string name="pref_key_calendar_name">glDisplayName</string>
     <string name="pref_key_calendar_color">glCalendarColor</string>
     <string name="pref_key_cache_events">cacheEvents</string>

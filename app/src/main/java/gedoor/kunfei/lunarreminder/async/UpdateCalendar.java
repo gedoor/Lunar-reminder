@@ -22,8 +22,6 @@ import java.util.Collections;
 
 import gedoor.kunfei.lunarreminder.R;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
-
 /**
  * 更新日历
  */
@@ -31,12 +29,14 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.calendarID;
 public class UpdateCalendar extends AsyncTask<Void, Integer, Boolean> {
     private Context mContext;
     private ProgressDialog mDialog;
+    private String calendarId;
     private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     private final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-    public UpdateCalendar(Context context, ProgressDialog dialog) {
+    public UpdateCalendar(Context context, ProgressDialog dialog, String calendarId) {
         mContext = context;
         mDialog = dialog;
+        this.calendarId = calendarId;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class UpdateCalendar extends AsyncTask<Void, Integer, Boolean> {
                 .setApplicationName("Google-LunarReminder")
                 .build();
         try {
-            CalendarListEntry calendarListEntry = client.calendarList().get(calendarID).execute();
+            CalendarListEntry calendarListEntry = client.calendarList().get(calendarId).execute();
             calendarListEntry.setBackgroundColor(String.format("#%06X", 0xFFFFFF & calendarColor));
             client.calendarList().update(calendarListEntry.getId(), calendarListEntry).setColorRgbFormat(true).execute();
         } catch (IOException e) {

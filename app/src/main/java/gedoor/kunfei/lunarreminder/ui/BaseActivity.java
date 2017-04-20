@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         //初始化Google账号
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mGoogleAccount = sharedPreferences.getString(getString(R.string.pref_key_google_account), null);
+        mGoogleAccount = mGoogleAccount == null ? sharedPreferences.getString(getString(R.string.pref_key_google_account), null) : mGoogleAccount;
         credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
         if (credential.getSelectedAccountName() == null) {
