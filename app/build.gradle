@@ -31,7 +31,6 @@ android {
             storePassword keystorePSW
             keyAlias keystoreAlias
             keyPassword keystoreAliasPSW
-            println("====== signingConfigs.release ======")
         }
     }
     defaultConfig {
