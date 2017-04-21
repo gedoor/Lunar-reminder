@@ -24,10 +24,10 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  * 载入事件列表
  */
 
-public class LoadEventList extends CalendarAsyncTask {
+public class LoadReminderEventList extends CalendarAsyncTask {
     private ArrayList<HashMap<String, String>> list = new ArrayList<>();
 
-    public LoadEventList(BaseActivity activity) {
+    public LoadReminderEventList(BaseActivity activity) {
         super(activity);
     }
 

@@ -45,7 +45,7 @@ public class LoadCalendars extends CalendarAsyncTask {
             new InsertCalendar(activity, calendarName, calendarPrefKey).execute();
         } else if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
             new GetCalendar(activity).execute();
-            new GetLunarReminderEvents(activity, calendarId).execute();
+            new GetReminderEvents(activity, calendarId).execute();
         } else {
             ACache mCache = ACache.get(activity);
             if (mCache.isExist("jq", ACache.STRING)) {

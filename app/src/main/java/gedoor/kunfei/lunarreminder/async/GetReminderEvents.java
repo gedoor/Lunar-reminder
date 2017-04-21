@@ -2,8 +2,6 @@ package gedoor.kunfei.lunarreminder.async;
 
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Events;
@@ -21,11 +19,11 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  * 获取提醒事件
  */
 
-public class GetLunarReminderEvents extends CalendarAsyncTask {
+public class GetReminderEvents extends CalendarAsyncTask {
     private static final String TAG = "AsyncGetEvents";
     private String calendarId;
 
-    public GetLunarReminderEvents(BaseActivity activity, String calendarId) {
+    public GetReminderEvents(BaseActivity activity, String calendarId) {
         super(activity);
         this.calendarId = calendarId;
     }
@@ -49,7 +47,7 @@ public class GetLunarReminderEvents extends CalendarAsyncTask {
             googleEvents = events.getItems();
 
         }
-        new LoadEventList(activity).execute();
+        new LoadReminderEventList(activity).execute();
     }
 
 }

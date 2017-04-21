@@ -2,10 +2,8 @@ package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.GravityCompat;
@@ -13,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,17 +20,15 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteEvents;
 import gedoor.kunfei.lunarreminder.async.GetCalendar;
-import gedoor.kunfei.lunarreminder.async.GetLunarReminderEvents;
-import gedoor.kunfei.lunarreminder.async.InsertEvents;
+import gedoor.kunfei.lunarreminder.async.GetReminderEvents;
+import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
-import gedoor.kunfei.lunarreminder.async.LoadEventList;
+import gedoor.kunfei.lunarreminder.async.LoadReminderEventList;
 import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
 import gedoor.kunfei.lunarreminder.async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
@@ -138,7 +133,7 @@ public class MainActivity extends BaseActivity {
             new GetCalendar(this).execute();
             switch (radioGroupDrawer.getCheckedRadioButtonId()) {
                 case R.id.radioButtonReminder:
-                    new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
+                    new GetReminderEvents(this, lunarReminderCalendarId).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
                     new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
@@ -153,7 +148,7 @@ public class MainActivity extends BaseActivity {
                 case R.id.radioButtonReminder:
                     setTitle(R.string.app_name);
                     showReminderHelp(true);
-                    new LoadEventList(this).execute();
+                    new LoadReminderEventList(this).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
                     setTitle(R.string.solar_terms_24);
@@ -209,10 +204,10 @@ public class MainActivity extends BaseActivity {
         if (lunarReminderCalendarId == null) {
             new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
         } else if (googleEvents != null) {
-            new LoadEventList(this).execute();
+            new LoadReminderEventList(this).execute();
         } else {
             new GetCalendar(this).execute();
-            new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
+            new GetReminderEvents(this, lunarReminderCalendarId).execute();
         }
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (isFirstOpen) {
@@ -292,7 +287,7 @@ public class MainActivity extends BaseActivity {
                 showAllEvents = !showAllEvents;
                 swOnRefresh();
                 getCalendarId();
-                new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
+                new GetReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
@@ -357,7 +352,7 @@ public class MainActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     switch (bundle.getInt(FinalFields.OPERATION)) {
                         case FinalFields.OPERATION_INSERT:
-                            new InsertEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
+                            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
                             break;
                         case FinalFields.OPERATION_UPDATE:
                             new UpdateEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();

@@ -3,9 +3,7 @@ package gedoor.kunfei.lunarreminder.ui;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -39,7 +37,7 @@ import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
-import gedoor.kunfei.lunarreminder.async.InsertEvents;
+import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
@@ -273,7 +271,7 @@ public class EventEditActivity extends BaseActivity {
         googleEvent.setReminders(reminders);
         if (isShortcut) {
             getCalendarId();
-            new InsertEvents(this, lunarReminderCalendarId, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
+            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

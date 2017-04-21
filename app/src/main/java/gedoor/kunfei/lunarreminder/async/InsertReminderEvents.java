@@ -16,14 +16,14 @@ import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
  * 插入事件
  */
 @SuppressLint("WrongConstant")
-public class InsertEvents extends CalendarAsyncTask{
+public class InsertReminderEvents extends CalendarAsyncTask{
     private ChineseCalendar cc = new ChineseCalendar(Calendar.getInstance());
     private String lunarRepeatId = String.valueOf(cc.getTimeInMillis());
     private String calendarId;
     private Event event;
     private int repeatNum;
 
-    public InsertEvents(BaseActivity activity, String calendarid, Event event, int repeatNum) {
+    public InsertReminderEvents(BaseActivity activity, String calendarid, Event event, int repeatNum) {
         super(activity);
         this.calendarId = calendarid;
         this.event  = event;
@@ -44,7 +44,7 @@ public class InsertEvents extends CalendarAsyncTask{
             client.events().insert(calendarId, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
         }
-        new GetLunarReminderEvents(activity, calendarId).execute();
+        new GetReminderEvents(activity, calendarId).execute();
     }
 
 }

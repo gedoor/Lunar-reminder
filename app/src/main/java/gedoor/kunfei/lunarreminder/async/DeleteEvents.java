@@ -38,6 +38,6 @@ public class DeleteEvents extends CalendarAsyncTask {
         } else {
             client.events().delete(calendarId, event.getId()).execute();
         }
-        new GetLunarReminderEvents(activity, calendarId).execute();
+        new GetReminderEvents(activity, calendarId).execute();
     }
 }
