@@ -232,9 +232,7 @@ public class MainActivity extends BaseActivity {
     }
     //侧边栏初始化
     private void initDrawer() {
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerToggle.syncState();
         drawer.addDrawerListener(mDrawerToggle);
     }
@@ -242,7 +240,6 @@ public class MainActivity extends BaseActivity {
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -250,7 +247,6 @@ public class MainActivity extends BaseActivity {
     public void setTitle(@StringRes int title) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            // Show the Up button in the action bar.
             actionBar.setTitle(title);
         }
     }
