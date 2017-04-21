@@ -17,16 +17,16 @@ import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 /**
- * Created by GKF on 2017/3/31.
+ * 更新提醒事件
  */
 @SuppressLint("WrongConstant")
-public class UpdateEvents extends CalendarAsyncTask {
+public class UpdateReminderEvents extends CalendarAsyncTask {
     private String calendarId;
     private Event event;
     private ChineseCalendar cc;
     private int repeatNum;
 
-    public UpdateEvents(BaseActivity activity, String calendarId, Event event, int repeatNum) {
+    public UpdateReminderEvents(BaseActivity activity, String calendarId, Event event, int repeatNum) {
         super(activity);
         this.calendarId = calendarId;
         this.event = event;

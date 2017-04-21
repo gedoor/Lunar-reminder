@@ -22,7 +22,7 @@ import android.widget.RadioGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import gedoor.kunfei.lunarreminder.async.DeleteEvents;
+import gedoor.kunfei.lunarreminder.async.DeleteReminderEvents;
 import gedoor.kunfei.lunarreminder.async.GetCalendar;
 import gedoor.kunfei.lunarreminder.async.GetReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
@@ -30,7 +30,7 @@ import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
 import gedoor.kunfei.lunarreminder.async.LoadReminderEventList;
 import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
-import gedoor.kunfei.lunarreminder.async.UpdateEvents;
+import gedoor.kunfei.lunarreminder.async.UpdateReminderEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
                         return true;
                     case Menu.FIRST + 1:
                         swOnRefresh();
-                        new DeleteEvents(this, lunarReminderCalendarId, googleEvents.get(Integer.parseInt(mId))).execute();
+                        new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvents.get(Integer.parseInt(mId))).execute();
                         return true;
                 }
                 return true;
@@ -355,10 +355,10 @@ public class MainActivity extends BaseActivity {
                             new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
                             break;
                         case FinalFields.OPERATION_UPDATE:
-                            new UpdateEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
+                            new UpdateReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
                             break;
                         case FinalFields.OPERATION_DELETE:
-                            new DeleteEvents(this, lunarReminderCalendarId, googleEvent).execute();
+                            new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvent).execute();
                             break;
                     }
                     break;
