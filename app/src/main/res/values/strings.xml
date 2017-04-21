@@ -4,6 +4,7 @@
     <string name="action_settings">设置</string>
     <string name="action_showAllEvents">显示全部事件</string>
     <string name="action_about">关于</string>
+    <string name="action_edit">编辑</string>
     <string name="action_save">保存</string>
     <string name="action_del">删除</string>
     <string name="exit">退出</string>

@@ -1,6 +1,7 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -105,8 +107,7 @@ public class MainActivity extends BaseActivity {
             }
             PopupMenu popupMenu = new PopupMenu(this, view);
             Menu menu = popupMenu.getMenu();
-            menu.add(Menu.NONE, Menu.FIRST, 0, "修改");
-            menu.add(Menu.NONE, Menu.FIRST + 1, 1, "删除");
+            getMenuInflater().inflate(R.menu.menu_event_list, menu);
             popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
                 switch (item.getItemId()) {
                     case Menu.FIRST:
@@ -269,12 +270,13 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         menuShowAll = menu.getItem(0);
         return super.onPrepareOptionsMenu(menu);
     }
-        //菜单
+    //菜单
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
