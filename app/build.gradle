@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 
-def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 def gitTag = 'git tag'.execute([], project.rootDir).text.trim().split("\n").last()
 def gitCommits = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
 
@@ -9,7 +8,7 @@ def keystorePSW = ''
 def keystoreAlias = ''
 def keystoreAliasPSW = ''
 // default keystore file, PLZ config file path in local.properties
-def keyfile = file('s.keystore.temp')
+def keyFile = file('s.keystore.temp')
 
 Properties properties = new Properties()
 // local.properties file in the root director
@@ -20,7 +19,7 @@ if (keystoreFilepath) {
     keystorePSW = properties.getProperty("keystore.password")
     keystoreAlias = properties.getProperty("keystore.alias")
     keystoreAliasPSW = properties.getProperty("keystore.alias_password")
-    keyfile = file(keystoreFilepath)
+    keyFile = file(keystoreFilepath)
 }
 
 android {
@@ -28,7 +27,7 @@ android {
     buildToolsVersion "25.0.2"
     signingConfigs {
         myConfig {
-            storeFile keyfile
+            storeFile keyFile
             storePassword keystorePSW
             keyAlias keystoreAlias
             keyPassword keystoreAliasPSW
@@ -112,6 +111,7 @@ dependencies {
     compile 'com.google.api-client:google-api-client-android:1.22.0'
     compile 'com.google.http-client:google-http-client-gson:1.22.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
+
 }
 repositories {
     mavenCentral()

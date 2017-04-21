@@ -14,11 +14,31 @@
         android:background="@drawable/bg"
         app:srcCompat="@mipmap/lunar_reminder"/>
 
-    <ListView
-        android:id="@+id/listViewDrawer"
+    <RadioGroup
+        android:id="@+id/radioGroupDrawer"
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/radioButtonReminder"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:checked="true"/>
 
-    </ListView>
+        <RadioButton
+            android:id="@+id/radioButtonSolarTerms"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/solar_terms_24"/>
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLightGrey"/>
 
 </LinearLayout>

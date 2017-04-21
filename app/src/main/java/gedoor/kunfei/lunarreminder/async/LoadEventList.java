@@ -27,7 +27,7 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 public class LoadEventList extends CalendarAsyncTask {
     private ArrayList<HashMap<String, String>> list = new ArrayList<>();
 
-    LoadEventList(BaseActivity activity) {
+    public LoadEventList(BaseActivity activity) {
         super(activity);
     }
 

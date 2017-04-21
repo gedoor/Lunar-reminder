@@ -11,6 +11,7 @@
     <string name="reminder_me">提醒我</string>
     <string name="reminder">提醒</string>
     <string name="solar_terms">节气</string>
+    <string name="solar_terms_24">廿四节气</string>
     <string name="defaultReminder">默认提醒</string>
     <string name="repeat">重复</string>
     <string name="all_day">全天</string>

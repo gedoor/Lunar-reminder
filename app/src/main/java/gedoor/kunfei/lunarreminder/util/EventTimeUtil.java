@@ -12,24 +12,23 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Created by GKF on 2017/3/31.
+ * EventTime转换
  */
 @SuppressLint("WrongConstant")
 public class EventTimeUtil {
-    ChineseCalendar cc;
+    private Calendar c;
 
-    public EventTimeUtil(ChineseCalendar cc) {
-        this.cc = cc;
-        if (cc != null) {
-            cc.set(Calendar.HOUR_OF_DAY, 0);
-            cc.set(Calendar.MINUTE, 0);
-            cc.set(Calendar.SECOND, 0);
-            cc.set(Calendar.MILLISECOND, 0);
+    public EventTimeUtil(Calendar c) {
+        this.c = c;
+        if (this.c != null) {
+            this.c.set(Calendar.HOUR_OF_DAY, 0);
+            this.c.set(Calendar.MINUTE, 0);
+            this.c.set(Calendar.SECOND, 0);
+            this.c.set(Calendar.MILLISECOND, 0);
         }
     }
 
     public EventDateTime getEventStartDT() {
-        int m = cc.get(Calendar.MONTH)+1;
         DateTime dateTime = new DateTime(getDate());
         EventDateTime eventDateTime = new EventDateTime();
         eventDateTime.setDate(dateTime);
@@ -37,28 +36,26 @@ public class EventTimeUtil {
     }
 
     public EventDateTime getEventEndDT() {
-        cc.add(Calendar.DATE, 1);
+        c.add(Calendar.DATE, 1);
         DateTime dateTime = new DateTime(getDate());
         EventDateTime eventDateTime = new EventDateTime();
         eventDateTime.setDate(dateTime);
-        cc.add(Calendar.DATE, -1);
+        c.add(Calendar.DATE, -1);
         return eventDateTime;
     }
 
     public String getDate(){
-        String dt = String.format(Locale.CHINA, "%04d-%02d-%02d", cc.get(Calendar.YEAR), cc.get(Calendar.MONTH)+1, cc.get(Calendar.DATE));
-        return dt;
+        return String.format(Locale.CHINA, "%04d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DATE));
     }
 
     public Date getDateTime() {
-        cc.get(Calendar.YEAR);
-        Date date = cc.getTime();
-        return date;
+        c.get(Calendar.YEAR);
+        return c.getTime();
     }
 
     public ChineseCalendar getCalendar(DateTime dateTime) {
         ChineseCalendar cc = new ChineseCalendar();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             cc.setTime(dateFormat.parse(dateTime.toStringRfc3339()));
         } catch (ParseException e) {

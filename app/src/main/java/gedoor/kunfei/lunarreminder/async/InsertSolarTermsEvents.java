@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +31,7 @@ import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
+import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsF;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsJ;
 
@@ -50,6 +52,7 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
+        deleteEvents();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_calendar_color), 0);
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
@@ -61,33 +64,32 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
             connection.connect();
             InputStream is = connection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is, "Big5"));
-            String line = null;
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
                 for (int i = 0; i < 24; i++) {
                     if (line.contains(solarTermsF[i])) {
                         String st[] = line.split(" ");
-                        String dt[] = st[0].split("年|月|日");
+                        String dt[] = st[0].split("[年月日]");
                         int year = Integer.parseInt(dt[0]);
                         int month = Integer.parseInt(dt[1]);
                         int day = Integer.parseInt(dt[2]);
                         Calendar c = Calendar.getInstance();
                         c.set(Calendar.YEAR, year);
-                        c.set(Calendar.MONTH, month);
+                        c.set(Calendar.MONTH, month - 1);
                         c.set(Calendar.DAY_OF_MONTH, day);
-                        ChineseCalendar cc = new ChineseCalendar(c);
+                        String start[] = new EventTimeUtil(c).getDate().split("-");
                         Event event = new Event();
                         event.setSummary(solarTermsJ[i]);
-                        event.setStart(new EventTimeUtil(cc).getEventStartDT());
-                        event.setEnd(new EventTimeUtil(cc).getEventEndDT());
-                        DateTime startDT = new DateTime(new EventTimeUtil(cc).getDateTime());
-                        cc.add(Calendar.DATE, 1);
-                        DateTime endDT = new DateTime(new EventTimeUtil(cc).getDateTime());
+                        event.setStart(new EventTimeUtil(c).getEventStartDT());
+                        event.setEnd(new EventTimeUtil(c).getEventEndDT());
+                        DateTime startDT = new DateTime(new EventTimeUtil(c).getDateTime());
+                        c.add(Calendar.DATE, 1);
+                        DateTime endDT = new DateTime(new EventTimeUtil(c).getDateTime());
                         Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                                 .setTimeMin(startDT).setTimeMax(endDT).execute();
                         if (events.getItems().size() == 0) {
                             client.events().insert(calendarId, event).execute();
                         }
-                        String start[] = new EventTimeUtil(cc).getDate().split("-");
                         HashMap<String, String> hp = new HashMap<>();
                         hp.put("start", (start[0] + "\n" + start[1] + "-" + start[2]));
                         hp.put("summary", solarTermsJ[i]);
@@ -113,6 +115,14 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
         activity.list.clear();
         activity.list.addAll(list);
         activity.eventListFinish();
+    }
+
+    private void deleteEvents() throws IOException {
+        Events events = client.events().list(calendarId).setFields("items(id)").execute();
+        List<Event> items = events.getItems();
+        for (Event event : items) {
+            client.events().delete(calendarId,event.getId()).execute();
+        }
     }
 
 }

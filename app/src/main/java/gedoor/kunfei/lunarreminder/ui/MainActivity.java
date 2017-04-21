@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.RadioGroup;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,7 @@ import gedoor.kunfei.lunarreminder.async.GetLunarReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertEvents;
 import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
+import gedoor.kunfei.lunarreminder.async.LoadEventList;
 import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
 import gedoor.kunfei.lunarreminder.async.UpdateEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
@@ -51,16 +54,14 @@ public class MainActivity extends BaseActivity {
     private SharedPreferences sharedPreferences;
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ArrayList<String> listDrawer = new ArrayList<>();
     private String lunarReminderCalendarId;
     private String solarTermsCalendarId;
     private Boolean isFirstOpen;
-    private int drawerSelected;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
-    @BindView(R.id.listViewDrawer)
-    ListView listViewDrawer;
+    @BindView(R.id.radioGroupDrawer)
+    RadioGroup radioGroupDrawer;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
     @BindView(R.id.fab)
@@ -74,7 +75,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
 
         setupActionBar();
         initDrawer();
@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity {
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
-            if (mId.equals("")) {
+            if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
                 return;
             }
             Intent intent = new Intent(this, EventReadActivity.class);
@@ -138,13 +138,28 @@ public class MainActivity extends BaseActivity {
         });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
-            if (drawerSelected == 1) {
-                solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
-                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
-            } else {
-                lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
-                new GetCalendar(this, lunarReminderCalendarId).execute();
-                new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
+            switch (radioGroupDrawer.getCheckedRadioButtonId()) {
+                case R.id.radioButtonReminder:
+                    loadReminderCalendar();
+                    break;
+                case R.id.radioButtonSolarTerms:
+                    new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
+                    break;
+            }
+        });
+        //切换日历
+        radioGroupDrawer.setOnCheckedChangeListener((group, checkedId) -> {
+            drawer.closeDrawers();
+            swOnRefresh();
+            switch (checkedId) {
+                case R.id.radioButtonReminder:
+                    getSupportActionBar().setTitle(R.string.app_name);
+                    new LoadEventList(this).execute();
+                    break;
+                case R.id.radioButtonSolarTerms:
+                    getSupportActionBar().setTitle(R.string.solar_terms_24);
+                    loadSolarTerms();
+                    break;
             }
         });
     }
@@ -161,7 +176,16 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initFinish() {
         swOnRefresh();
-        loadReminderCalendar();
+        switch (radioGroupDrawer.getCheckedRadioButtonId()) {
+            case R.id.radioButtonReminder:
+                getSupportActionBar().setTitle(R.string.app_name);
+                loadReminderCalendar();
+                break;
+            case R.id.radioButtonSolarTerms:
+                getSupportActionBar().setTitle(R.string.solar_terms_24);
+                loadSolarTerms();
+                break;
+        }
     }
 
     @Override
@@ -184,14 +208,12 @@ public class MainActivity extends BaseActivity {
         lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
         if (lunarReminderCalendarId == null) {
             new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
-//        } else if (listCache != null && cacheEvents) {
-//            googleEvents = listCache;
-//            new LoadEventsList(this).execute();
         } else {
             lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
             new GetCalendar(this, lunarReminderCalendarId).execute();
             new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
         }
+        isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (isFirstOpen) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
@@ -202,48 +224,23 @@ public class MainActivity extends BaseActivity {
     public void loadSolarTerms() {
         solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
         if (solarTermsCalendarId == null) {
-            swOnRefresh();
             new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
         } else {
-            swOnRefresh();
             ACache mCache = ACache.get(this);
             if (mCache.isExist("jq", ACache.STRING)) {
                 new LoadSolarTermsList(this).execute();
             } else {
-                new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
+                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
             }
         }
     }
     //侧边栏初始化
     private void initDrawer() {
-        listViewDrawer.setSelector(R.color.colorLightGrey);
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
         mDrawerToggle.syncState();
         drawer.addDrawerListener(mDrawerToggle);
-        listDrawer.add("农历提醒");
-        listDrawer.add("廿四节气");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_expandable_list_item_1,
-                listDrawer);
-        listViewDrawer.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        listViewDrawer.post(new Runnable() {
-            @Override
-            public void run() {
-                listViewDrawer.setItemChecked(0, true);;
-                listViewDrawer.performItemClick(listViewDrawer.getSelectedView(), 0, 0);
-            }
-        });
-        listViewDrawer.setOnItemClickListener((parent, view, position, id) -> {
-            if (position == 1) {
-                loadSolarTerms();
-            }
-            drawerSelected = position;
-            drawer.closeDrawers();
-        });
     }
 
     private void setupActionBar() {
