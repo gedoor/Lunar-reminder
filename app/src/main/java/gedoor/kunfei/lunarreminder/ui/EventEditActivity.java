@@ -56,7 +56,6 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
  */
 @SuppressLint("WrongConstant")
 public class EventEditActivity extends BaseActivity {
-    SharedPreferences preferences;
     DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
@@ -87,8 +86,6 @@ public class EventEditActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_edit);
         ButterKnife.bind(this);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
@@ -140,9 +137,9 @@ public class EventEditActivity extends BaseActivity {
         cc.set(Calendar.MILLISECOND, 0);
         cYear = cc.get(Calendar.YEAR);
         vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-        lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
+        lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), "12");
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
-        int defaultReminder = Integer.parseInt(preferences.getString(getString(R.string.pref_key_default_reminder), "0"));
+        int defaultReminder = Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_default_reminder), "0"));
         if (defaultReminder != 0) {
             EventReminder reminder = new EventReminder();
             reminder.setMinutes(reminderMinutes[defaultReminder]);
@@ -169,7 +166,7 @@ public class EventEditActivity extends BaseActivity {
         Event.ExtendedProperties properties = googleEvent.getExtendedProperties();
         lunarRepeatNum = properties.getPrivate().get(LunarRepeatYear);
         if (lunarRepeatNum == null) {
-            lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
+            lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
         reminders = googleEvent.getReminders();
@@ -275,8 +272,8 @@ public class EventEditActivity extends BaseActivity {
         }
         googleEvent.setReminders(reminders);
         if (isShortcut) {
-            String calendarId = preferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
-            new InsertEvents(this, calendarId, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
+            getCalendarId();
+            new InsertEvents(this, lunarReminderCalendarId, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

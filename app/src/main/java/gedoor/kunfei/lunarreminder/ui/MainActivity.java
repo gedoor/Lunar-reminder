@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioGroup;
@@ -52,11 +51,8 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_SETTINGS = 2;
     public static final int REQUEST_ABOUT = 3;
 
-    private SharedPreferences sharedPreferences;
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
-    private String lunarReminderCalendarId;
-    private String solarTermsCalendarId;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
@@ -74,7 +70,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         setupActionBar();
         initDrawer();
@@ -138,9 +133,10 @@ public class MainActivity extends BaseActivity {
         });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
+            getCalendarId();
             switch (radioGroupDrawer.getCheckedRadioButtonId()) {
                 case R.id.radioButtonReminder:
-                    loadReminderCalendar();
+                    new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
                     new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
@@ -154,10 +150,12 @@ public class MainActivity extends BaseActivity {
             switch (checkedId) {
                 case R.id.radioButtonReminder:
                     setTitle(R.string.app_name);
+                    fab.show();
                     new LoadEventList(this).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
                     setTitle(R.string.solar_terms_24);
+                    fab.hide();
                     loadSolarTerms();
                     break;
             }
@@ -205,11 +203,12 @@ public class MainActivity extends BaseActivity {
 
     //载入提醒事件
     public void loadReminderCalendar() {
-        lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+        getCalendarId();
         if (lunarReminderCalendarId == null) {
             new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
+        } else if (googleEvents != null) {
+            new LoadEventList(this).execute();
         } else {
-            lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
             new GetCalendar(this, lunarReminderCalendarId).execute();
             new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
         }
@@ -222,7 +221,7 @@ public class MainActivity extends BaseActivity {
 
     //载入节气
     public void loadSolarTerms() {
-        solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
+        getCalendarId();
         if (solarTermsCalendarId == null) {
             new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
         } else {
@@ -273,6 +272,7 @@ public class MainActivity extends BaseActivity {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
                 swOnRefresh();
+                lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
                 new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:

@@ -43,6 +43,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
+    public SharedPreferences sharedPreferences;
+    public String lunarReminderCalendarId;
+    public String solarTermsCalendarId;
     public ArrayList<HashMap<String, String>> list = new ArrayList<>();
     public GoogleAccountCredential credential;
     public Calendar client;
@@ -53,7 +56,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        getCalendarId();
     }
 
     @Override
@@ -81,7 +85,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         //初始化Google账号
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mGoogleAccount = mGoogleAccount == null ? sharedPreferences.getString(getString(R.string.pref_key_google_account), null) : mGoogleAccount;
         credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
@@ -114,6 +117,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
+    public void getCalendarId() {
+        lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+        solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
+    }
     //检测google服务
     private boolean checkGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
@@ -122,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 apiAvailability.isGooglePlayServicesAvailable(this);
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
-
+    //获取权限
     public void afterPermissionGranted() {
         if (EasyPermissions.hasPermissions(this, perms)) {
             initGoogleAccount();
