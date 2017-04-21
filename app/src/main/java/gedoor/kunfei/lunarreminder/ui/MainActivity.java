@@ -56,7 +56,6 @@ public class MainActivity extends BaseActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private String lunarReminderCalendarId;
     private String solarTermsCalendarId;
-    private Boolean isFirstOpen;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
@@ -153,11 +152,11 @@ public class MainActivity extends BaseActivity {
             swOnRefresh();
             switch (checkedId) {
                 case R.id.radioButtonReminder:
-                    getSupportActionBar().setTitle(R.string.app_name);
+                    setTitle(R.string.app_name);
                     new LoadEventList(this).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
-                    getSupportActionBar().setTitle(R.string.solar_terms_24);
+                    setTitle(R.string.solar_terms_24);
                     loadSolarTerms();
                     break;
             }
@@ -178,11 +177,11 @@ public class MainActivity extends BaseActivity {
         swOnRefresh();
         switch (radioGroupDrawer.getCheckedRadioButtonId()) {
             case R.id.radioButtonReminder:
-                getSupportActionBar().setTitle(R.string.app_name);
+                setTitle(R.string.app_name);
                 loadReminderCalendar();
                 break;
             case R.id.radioButtonSolarTerms:
-                getSupportActionBar().setTitle(R.string.solar_terms_24);
+                setTitle(R.string.solar_terms_24);
                 loadSolarTerms();
                 break;
         }
@@ -213,7 +212,7 @@ public class MainActivity extends BaseActivity {
             new GetCalendar(this, lunarReminderCalendarId).execute();
             new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
         }
-        isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
+        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (isFirstOpen) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
@@ -248,6 +247,14 @@ public class MainActivity extends BaseActivity {
         if (actionBar != null) {
             // Show the Up button in the action bar.
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    public void setTitle(int title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Show the Up button in the action bar.
+            actionBar.setTitle(title);
         }
     }
 
