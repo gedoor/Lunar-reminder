@@ -68,7 +68,7 @@
     <string name="pref_title_cache_data">缓存数据</string>
     <string name="pref_description_cache_data">缓存Calendar Events数据,加载更快</string>
 
-    <string name="pref_header_reminder_calendar_config">日历配置</string>
+    <string name="pref_header_reminder_calendar_config">提醒日历配置</string>
 
     <string name="pref_title_calendar_name">日历名称</string>
     <string name="pref_title_account_name">日历用户</string>
@@ -78,7 +78,7 @@
 
     <string name="select_color">选择颜色</string>
 
-    <string name="pref_header_reminder_event_config">事件配置</string>
+    <string name="pref_header_reminder_event_config">提醒事件配置</string>
 
     <string name="default_repeat_year">默认重复年数</string>
     <string name="default_reminder">默认提醒</string>
@@ -86,6 +86,8 @@
     <string name="color_picker_default_title" msgid="1248663997452044787">"选择颜色"</string>
     <string name="color_swatch_description" msgid="2883438431173736180">"颜色 <xliff:g id="COLOR_INDEX">%1$d</xliff:g>"</string>
     <string name="color_swatch_description_selected" msgid="5020921249944943124">"已选择颜色 <xliff:g id="COLOR_INDEX">%1$d</xliff:g>"</string>
+
+    <string name="pref_header_solar_terms_config">节气日历配置</string>
 
     <string name="tomato">番茄红</string>
     <string name="tangerine">橘红</string>

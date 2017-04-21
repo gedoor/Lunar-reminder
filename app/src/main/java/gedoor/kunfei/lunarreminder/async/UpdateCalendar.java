@@ -3,7 +3,6 @@ package gedoor.kunfei.lunarreminder.async;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -27,22 +26,23 @@ import gedoor.kunfei.lunarreminder.R;
  */
 
 public class UpdateCalendar extends AsyncTask<Void, Integer, Boolean> {
+    private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
+    private final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
     private Context mContext;
     private ProgressDialog mDialog;
     private String calendarId;
-    private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
-    private final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    private int backgroundColor;
 
-    public UpdateCalendar(Context context, ProgressDialog dialog, String calendarId) {
+    public UpdateCalendar(Context context, ProgressDialog dialog, String calendarId, int backgroundColor) {
         mContext = context;
         mDialog = dialog;
         this.calendarId = calendarId;
+        this.backgroundColor = backgroundColor;
     }
 
     @Override
     protected final Boolean doInBackground(Void... ignored) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        int calendarColor = sharedPreferences.getInt(mContext.getString(R.string.pref_key_calendar_color),0);
         String mGoogleAccount = sharedPreferences.getString(mContext.getString(R.string.pref_key_google_account), null);
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
@@ -51,7 +51,7 @@ public class UpdateCalendar extends AsyncTask<Void, Integer, Boolean> {
                 .build();
         try {
             CalendarListEntry calendarListEntry = client.calendarList().get(calendarId).execute();
-            calendarListEntry.setBackgroundColor(String.format("#%06X", 0xFFFFFF & calendarColor));
+            calendarListEntry.setBackgroundColor(String.format("#%06X", 0xFFFFFF & backgroundColor));
             client.calendarList().update(calendarListEntry.getId(), calendarListEntry).setColorRgbFormat(true).execute();
         } catch (IOException e) {
             e.printStackTrace();

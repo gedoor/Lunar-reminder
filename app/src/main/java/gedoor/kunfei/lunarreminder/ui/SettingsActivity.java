@@ -112,7 +112,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || AppPreferenceFragment.class.getName().equals(fragmentName)
                 || CalendarPreferenceFragment.class.getName().equals(fragmentName)
-                || EventPreferenceFragment.class.getName().equals(fragmentName);
+                || EventPreferenceFragment.class.getName().equals(fragmentName)
+                || SolarTermsPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -147,7 +148,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_calendar);
+            addPreferencesFromResource(R.xml.pref_reminder_calendar);
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account)));
@@ -174,8 +175,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         private void applyCalendarSetting() {
             String calendarId = preferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+            int bgColor = preferences.getInt(getString(R.string.pref_key_reminder_calendar_color), 0);
             ProgressDialog dialog = ProgressDialog.show(this.getActivity(), "提示", "正在更新日历设置");
-            new UpdateCalendar(this.getActivity(), dialog, calendarId).execute();
+            new UpdateCalendar(this.getActivity(), dialog, calendarId, bgColor).execute();
         }
     }
 
@@ -187,7 +189,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_event);
+            addPreferencesFromResource(R.xml.pref_reminder_event);
             setHasOptionsMenu(true);
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
@@ -235,6 +237,47 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             });
             builder.create();
             builder.show();
+        }
+
+    }
+
+    /**
+     * 节气日历设置
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class SolarTermsPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_solar_terms_calendar);
+            setHasOptionsMenu(true);
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_google_account)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_solar_terms_calendar_id)));
+        }
+        // 添加菜单
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.menu_pref, menu);
+            super.onCreateOptionsMenu(menu,inflater);
+        }
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+            if (id == android.R.id.home) {
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            } else if (id == R.id.action_apply) {
+                applyCalendarSetting();
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+        private void applyCalendarSetting() {
+            String calendarId = preferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);
+            int bgColor = preferences.getInt(getString(R.string.pref_key_solar_terms_calendar_color), 0);
+            ProgressDialog dialog = ProgressDialog.show(this.getActivity(), "提示", "正在更新日历设置");
+            new UpdateCalendar(this.getActivity(), dialog, calendarId, bgColor).execute();
         }
 
     }

@@ -35,7 +35,7 @@ public class LoadEventList extends CalendarAsyncTask {
     @Override
     protected void doInBackground() throws IOException {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_calendar_color), 0);
+        int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_reminder_calendar_color), 0);
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
         int id = 0;
         String ccYear = "";

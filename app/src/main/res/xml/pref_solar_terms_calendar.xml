@@ -2,7 +2,7 @@
     xmlns:attr="http://schemas.android.com/apk/res-auto">
 
     <Preference
-        android:key="@string/pref_key_calendar_name"
+        android:key="@string/pref_key_solar_terms_calendar_name"
         android:title="@string/pref_title_calendar_name"
         android:summary="@string/lunar_reminder_calendar_name"/>
 
@@ -11,12 +11,12 @@
         android:title="@string/pref_title_account_name"/>
 
     <Preference
-        android:key="@string/pref_key_lunar_reminder_calendar_id"
+        android:key="@string/pref_key_solar_terms_calendar_id"
         android:title="@string/pref_title_calendar_id"
         android:summary=""/>
 
     <gedoor.kunfei.lunarreminder.ui.preference.ColorPreference
-        android:key="@string/pref_key_calendar_color"
+        android:key="@string/pref_key_solar_terms_calendar_color"
         android:title="@string/pref_title_calendar_background"
         android:defaultValue="@color/yellow"
         attr:dialogTitle="@string/select_color"

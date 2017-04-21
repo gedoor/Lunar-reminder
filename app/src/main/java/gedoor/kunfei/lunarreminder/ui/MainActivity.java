@@ -53,6 +53,7 @@ public class MainActivity extends BaseActivity {
 
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
+    private MenuItem menuShowAll;
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
@@ -134,6 +135,7 @@ public class MainActivity extends BaseActivity {
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
             getCalendarId();
+            new GetCalendar(this).execute();
             switch (radioGroupDrawer.getCheckedRadioButtonId()) {
                 case R.id.radioButtonReminder:
                     new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
@@ -150,12 +152,12 @@ public class MainActivity extends BaseActivity {
             switch (checkedId) {
                 case R.id.radioButtonReminder:
                     setTitle(R.string.app_name);
-                    fab.show();
+                    showReminderHelp(true);
                     new LoadEventList(this).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
                     setTitle(R.string.solar_terms_24);
-                    fab.hide();
+                    showReminderHelp(false);
                     loadSolarTerms();
                     break;
             }
@@ -209,7 +211,7 @@ public class MainActivity extends BaseActivity {
         } else if (googleEvents != null) {
             new LoadEventList(this).execute();
         } else {
-            new GetCalendar(this, lunarReminderCalendarId).execute();
+            new GetCalendar(this).execute();
             new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
         }
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
@@ -258,13 +260,30 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void showReminderHelp(Boolean show) {
+        if (show) {
+            fab.show();
+            menuShowAll.setEnabled(true);
+            menuShowAll.setVisible(true);
+        } else {
+            fab.hide();
+            menuShowAll.setEnabled(false);
+            menuShowAll.setVisible(false);
+        }
+    }
+
     // 添加菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-    //菜单
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        menuShowAll = menu.getItem(0);
+        return super.onPrepareOptionsMenu(menu);
+    }
+        //菜单
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -272,7 +291,7 @@ public class MainActivity extends BaseActivity {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
                 swOnRefresh();
-                lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
+                getCalendarId();
                 new GetLunarReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:

@@ -2,12 +2,10 @@ package gedoor.kunfei.lunarreminder.async;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 import com.google.gson.Gson;
 
@@ -16,22 +14,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ACache;
-import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
-import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsF;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsJ;
 
@@ -52,11 +45,12 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
-        deleteEvents();
+//        deleteEvents();
+        Calendar c = Calendar.getInstance();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_calendar_color), 0);
+        int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), 0);
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
-        String urlStr = "http://data.weather.gov.hk/gts/time/calendar/text/T2017c.txt";
+        String urlStr = "http://data.weather.gov.hk/gts/time/calendar/text/T" + c.get(Calendar.YEAR) + "c.txt";
         URL url = new URL(urlStr);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         int code = connection.getResponseCode();
@@ -73,7 +67,6 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
                         int year = Integer.parseInt(dt[0]);
                         int month = Integer.parseInt(dt[1]);
                         int day = Integer.parseInt(dt[2]);
-                        Calendar c = Calendar.getInstance();
                         c.set(Calendar.YEAR, year);
                         c.set(Calendar.MONTH, month - 1);
                         c.set(Calendar.DAY_OF_MONTH, day);

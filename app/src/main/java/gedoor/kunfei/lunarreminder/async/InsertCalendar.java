@@ -37,7 +37,7 @@ public class InsertCalendar extends CalendarAsyncTask {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(calendarPrefKey, calendarId);
-        editor.putInt(activity.getString(R.string.pref_key_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
+        editor.putInt(activity.getString(R.string.pref_key_reminder_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
         editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
         editor.apply();
 
