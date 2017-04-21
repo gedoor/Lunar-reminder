@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity {
         //列表长按
         listViewEvents.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
-            if (mId.equals("")) {
+            if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
                 return true;
             }
             PopupMenu popupMenu = new PopupMenu(this, view);
