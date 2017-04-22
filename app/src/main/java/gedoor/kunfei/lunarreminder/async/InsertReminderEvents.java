@@ -23,9 +23,9 @@ public class InsertReminderEvents extends CalendarAsyncTask{
     private Event event;
     private int repeatNum;
 
-    public InsertReminderEvents(BaseActivity activity, String calendarid, Event event, int repeatNum) {
+    public InsertReminderEvents(BaseActivity activity, String calendarId, Event event, int repeatNum) {
         super(activity);
-        this.calendarId = calendarid;
+        this.calendarId = calendarId;
         this.event  = event;
         DateTime start = event.getStart().getDate() == null ? event.getStart().getDateTime() : event.getStart().getDate();
         cc = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
