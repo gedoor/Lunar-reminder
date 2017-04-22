@@ -22,6 +22,7 @@
     <string name="title_activity_settings">设置</string>
     <string name="create_event_short_label">创建事件</string>
     <string name="exit_event_description">尚未保存，是否继续编辑。</string>
+    <string name="version">版本:</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>

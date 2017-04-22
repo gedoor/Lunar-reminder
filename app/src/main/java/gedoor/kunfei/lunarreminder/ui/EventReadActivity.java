@@ -44,7 +44,7 @@ public class EventReadActivity extends BaseActivity {
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
     List<EventReminder> listReminder;
-    ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<HashMap<String, String>>();
+    ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<>();
     long eventID;
     int position;
     String lunarRepeatNum;

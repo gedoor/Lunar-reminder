@@ -1,8 +1,6 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,8 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.TextView;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,6 +31,7 @@ import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
 import gedoor.kunfei.lunarreminder.async.LoadReminderEventList;
+import gedoor.kunfei.lunarreminder.async.LoadReminderEventListTest;
 import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
 import gedoor.kunfei.lunarreminder.async.UpdateReminderEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
@@ -65,7 +63,10 @@ public class MainActivity extends BaseActivity {
     FloatingActionButton fab;
     @BindView(R.id.drawer)
     DrawerLayout drawer;
+    @BindView(R.id.text_view_version)
+    TextView textViewVersion;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +153,7 @@ public class MainActivity extends BaseActivity {
                 case R.id.radioButtonReminder:
                     setTitle(R.string.app_name);
                     showReminderHelp(true);
-                    new LoadReminderEventList(this).execute();
+                    loadReminderCalendar();
                     break;
                 case R.id.radioButtonSolarTerms:
                     setTitle(R.string.solar_terms_24);
@@ -161,6 +162,7 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         });
+        textViewVersion.setText(getText(R.string.version) + sharedPreferences.getString("version", null));
     }
 
     @Override
@@ -286,9 +288,10 @@ public class MainActivity extends BaseActivity {
         switch (id) {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
-                swOnRefresh();
-                getCalendarId();
-                new GetReminderEvents(this, lunarReminderCalendarId).execute();
+//                swOnRefresh();
+                new LoadReminderEventListTest(this).execute();
+//                getCalendarId();
+//                new GetReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);

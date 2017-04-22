@@ -5,11 +5,13 @@ import android.annotation.SuppressLint;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Events;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.Calendar;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
+import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
@@ -45,7 +47,10 @@ public class GetReminderEvents extends CalendarAsyncTask {
             Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                     .setTimeMin(startDT).setTimeMax(endDT).execute();
             googleEvents = events.getItems();
-
+            ACache mCache = ACache.get(activity);
+            Gson gson = new Gson();
+            String gEvents = gson.toJson(googleEvents);
+            mCache.put("events", gEvents);
         }
         new LoadReminderEventList(activity).execute();
     }

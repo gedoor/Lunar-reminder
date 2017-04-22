@@ -25,6 +25,8 @@ public class AboutActivity extends AppCompatActivity {
     TextView zfb;
     @BindView(R.id.weXin)
     TextView weXin;
+    @BindView(R.id.text_about_version)
+    TextView textViewVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,7 @@ public class AboutActivity extends AppCompatActivity {
             editor.putBoolean(getString(R.string.pref_key_first_open), false);
             editor.commit();
         }
-
+        textViewVersion.setText(sharedPreferences.getString("version", "0.0.0"));
     }
 
     private void setupActionBar() {

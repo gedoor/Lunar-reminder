@@ -26,10 +26,13 @@ public class LunarReminderApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         CrashHandler crashHandler = CrashHandler.getInstance();
         //注册crashHandler
         crashHandler.init(getApplicationContext(), DEBUG);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("version", getVersionName());
+        editor.apply();
     }
 
     public String getVersionName() {
@@ -43,7 +46,5 @@ public class LunarReminderApplication extends Application {
         }
         return packInfo.versionName;
     }
-
-
 
 }
