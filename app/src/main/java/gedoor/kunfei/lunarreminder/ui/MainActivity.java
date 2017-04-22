@@ -21,7 +21,6 @@ import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteReminderEvents;
@@ -31,7 +30,6 @@ import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
 import gedoor.kunfei.lunarreminder.async.LoadCalendars;
 import gedoor.kunfei.lunarreminder.async.LoadReminderEventList;
-import gedoor.kunfei.lunarreminder.async.LoadReminderEventListTest;
 import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
 import gedoor.kunfei.lunarreminder.async.UpdateReminderEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
@@ -288,10 +286,9 @@ public class MainActivity extends BaseActivity {
         switch (id) {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
-//                swOnRefresh();
-                new LoadReminderEventListTest(this).execute();
-//                getCalendarId();
-//                new GetReminderEvents(this, lunarReminderCalendarId).execute();
+                swOnRefresh();
+                getCalendarId();
+                new GetReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
