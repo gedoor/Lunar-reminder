@@ -2,6 +2,7 @@ package gedoor.kunfei.lunarreminder.ui;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
+    public Context mContext;
     public SharedPreferences sharedPreferences;
     public String lunarReminderCalendarId;
     public String solarTermsCalendarId;
@@ -56,37 +58,38 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mContext = this;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         getCalendarId();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        MobclickAgent.onResume(mContext);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        MobclickAgent.onPause(mContext);
     }
 
     public void initGoogleAccount() {
         //get permission
-        if (!EasyPermissions.hasPermissions(this, perms)) {
+        if (!EasyPermissions.hasPermissions(mContext, perms)) {
             EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
             return;
         }
         //检查google服务
         if (!checkGooglePlayServicesAvailable()) {
-            Toast.makeText(this, "检测不到Google服务,程序无法使用", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.no_google_services, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
         //初始化Google账号
         mGoogleAccount = mGoogleAccount == null ? sharedPreferences.getString(getString(R.string.pref_key_google_account), null) : mGoogleAccount;
-        credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
+        credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
         credential.setSelectedAccountName(mGoogleAccount);
         if (credential.getSelectedAccountName() == null) {
             startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
@@ -126,15 +129,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         GoogleApiAvailability apiAvailability =
                 GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(this);
+                apiAvailability.isGooglePlayServicesAvailable(mContext);
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
     //获取权限
     public void afterPermissionGranted() {
-        if (EasyPermissions.hasPermissions(this, perms)) {
+        if (EasyPermissions.hasPermissions(mContext, perms)) {
             initGoogleAccount();
         } else {
-            Toast.makeText(this, "没有权限,程序无法使用", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "没有权限,程序无法使用", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -163,7 +166,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             credential.setSelectedAccountName(mGoogleAccount);
                             initGoogleAccount();
                         } else {
-                            Toast.makeText(this, "无法获取google用户,将退出", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "无法获取google用户,将退出", Toast.LENGTH_LONG).show();
                             finish();
                         }
                     }

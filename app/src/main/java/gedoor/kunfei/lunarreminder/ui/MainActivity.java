@@ -51,7 +51,6 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_SETTINGS = 2;
     public static final int REQUEST_ABOUT = 3;
 
-    private Context mContext;
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuItem menuShowAll;
@@ -72,20 +71,20 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mContext = this;
+
         setupActionBar();
         initDrawer();
         //悬浮按钮
         fab.setOnClickListener((View view) -> {
             googleEvent = null;
-            Intent intent = new Intent(this, EventEditActivity.class);
+            Intent intent = new Intent(mContext, EventEditActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("position", -1);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
 
-        adapter = new SimpleAdapterEvent(this, list, R.layout.item_event,
+        adapter = new SimpleAdapterEvent(mContext, list, R.layout.item_event,
                 new String[]{"start", "summary"},
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
@@ -96,7 +95,7 @@ public class MainActivity extends BaseActivity {
             if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
                 return;
             }
-            Intent intent = new Intent(this, EventReadActivity.class);
+            Intent intent = new Intent(mContext, EventReadActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("position", Integer.parseInt(mId));
             bundle.putLong("id", position);
@@ -109,29 +108,27 @@ public class MainActivity extends BaseActivity {
             if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
                 return true;
             }
-            startActionMode(mActionModeCallback);
-
-//            PopupMenu popupMenu = new PopupMenu(this, view);
-//            Menu menu = popupMenu.getMenu();
-//            getMenuInflater().inflate(R.menu.menu_event_list, menu);
-//            popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
-//                switch (item.getItemId()) {
-//                    case Menu.FIRST:
-//                        Intent intent = new Intent(this, EventEditActivity.class);
-//                        Bundle bundle = new Bundle();
-//                        bundle.putInt("position", Integer.parseInt(mId));
-//                        bundle.putLong("id", position);
-//                        intent.putExtras(bundle);
-//                        startActivityForResult(intent, REQUEST_REMINDER);
-//                        return true;
-//                    case Menu.FIRST + 1:
-//                        swOnRefresh();
-//                        new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvents.get(Integer.parseInt(mId))).execute();
-//                        return true;
-//                }
-//                return true;
-//            });
-//            popupMenu.show();
+            PopupMenu popupMenu = new PopupMenu(mContext, view);
+            Menu menu = popupMenu.getMenu();
+            getMenuInflater().inflate(R.menu.menu_event_list, menu);
+            popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
+                switch (item.getItemId()) {
+                    case R.id.action_edit:
+                        Intent intent = new Intent(mContext, EventEditActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("position", Integer.parseInt(mId));
+                        bundle.putLong("id", position);
+                        intent.putExtras(bundle);
+                        startActivityForResult(intent, REQUEST_REMINDER);
+                        return true;
+                    case R.id.action_delete:
+                        swOnRefresh();
+                        new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvents.get(Integer.parseInt(mId))).execute();
+                        return true;
+                }
+                return true;
+            });
+            popupMenu.show();
             return true;
         });
         //下拉刷新
@@ -165,35 +162,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.menu_event_list, menu);
-
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == R.id.action_edit) {
-                Toast.makeText(mContext, "test", Toast.LENGTH_LONG).show();
-                return true;
-            }
-            return true;
-        }
-    };
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

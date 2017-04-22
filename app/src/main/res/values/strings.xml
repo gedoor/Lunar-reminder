@@ -104,5 +104,6 @@
     <string name="default_color">默认颜色</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
+    <string name="no_google_services">检测不到Google服务,程序无法使用</string>
 
 </resources>
