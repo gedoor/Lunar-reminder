@@ -13,7 +13,7 @@ import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ACache;
 
 /**
- * Created by GKF on 2017/4/20.
+ * 载入节气
  */
 
 public class LoadSolarTermsList extends CalendarAsyncTask {
