@@ -9,13 +9,13 @@ import java.util.Locale;
  */
 
 public class ReminderHelp {
-    EventReminder reminder;
+    String method;
     int tqDay;
     int txHour;
     int txMinutesByHour;
 
     public ReminderHelp(EventReminder reminder) {
-        this.reminder = reminder;
+        this.method = reminder.getMethod();
         int tqMinutes = reminder.getMinutes();
         tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
         int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
@@ -23,10 +23,18 @@ public class ReminderHelp {
         txMinutesByHour = txMinutes%60;
     }
 
+    public ReminderHelp(String method, Double minutes ) {
+        this.method = method;
+        int tqMinutes = minutes.intValue();
+        tqDay = tqMinutes%1440 == 0 ? tqMinutes/1440 : tqMinutes/1440 + 1;
+        int txMinutes = tqMinutes%1440 == 0 ? 0 : 1440 - tqMinutes%1440;
+        txHour = txMinutes/60;
+        txMinutesByHour = txMinutes%60;
+    }
+
     public String getTitle() {
-        String txType = reminder.getMethod().equals("email") ? "通过邮件" : "";
-        String txTitle = "提前" + tqDay + "天" + String.format(Locale.CHINA,"%d:%02d", txHour, txMinutesByHour) + txType;
-        return txTitle;
+        String txType = method.equals("email") ? "通过邮件" : "";
+        return "提前" + tqDay + "天" + String.format(Locale.CHINA,"%d:%02d", txHour, txMinutesByHour) + txType;
     }
 
     public int getTqDay() {

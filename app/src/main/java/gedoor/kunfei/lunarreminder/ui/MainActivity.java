@@ -34,13 +34,16 @@ import gedoor.kunfei.lunarreminder.async.LoadSolarTermsList;
 import gedoor.kunfei.lunarreminder.async.UpdateReminderEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.ACache;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.getEvents;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
+import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 public class MainActivity extends BaseActivity {
     private static final int REQUEST_REMINDER = 1;
@@ -122,7 +125,7 @@ public class MainActivity extends BaseActivity {
                         return true;
                     case R.id.action_delete:
                         swOnRefresh();
-                        new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvents.get(Integer.parseInt(mId))).execute();
+                        new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
                         return true;
                 }
                 return true;
@@ -205,9 +208,10 @@ public class MainActivity extends BaseActivity {
     //载入提醒事件
     public void loadReminderCalendar() {
         getCalendarId();
+        getEvents(mContext);
         if (lunarReminderCalendarId == null) {
             new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
-        } else if (googleEvents != null) {
+        } else if (listEvent != null) {
             new LoadReminderEventList(this).execute();
         } else {
             new GetCalendar(this).execute();
@@ -359,7 +363,7 @@ public class MainActivity extends BaseActivity {
                             new UpdateReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
                             break;
                         case FinalFields.OPERATION_DELETE:
-                            new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvent).execute();
+                            new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvent.getExtendedProperties().getPrivate().get(LunarRepeatId)).execute();
                             break;
                     }
                     break;

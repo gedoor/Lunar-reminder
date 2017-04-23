@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -28,14 +29,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import gedoor.kunfei.lunarreminder.LunarReminderApplication;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.data.GEvent;
+import gedoor.kunfei.lunarreminder.data.Properties;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
@@ -43,14 +48,13 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
 import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 /**
- * Created by GKF on 2017/3/7.
- * 编辑创建Event
+ * 编辑创建事件
  */
 @SuppressLint("WrongConstant")
 public class EventEditActivity extends BaseActivity {
@@ -92,7 +96,7 @@ public class EventEditActivity extends BaseActivity {
             setResult(RESULT_CANCELED);
             finish();
         });
-
+        googleEvent = new Event();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
@@ -100,17 +104,14 @@ public class EventEditActivity extends BaseActivity {
             position = bundle.getInt("position");
             if (position == -1) {
                 isCreateEvent = true;
-                googleEvent = new Event();
                 initEvent();
             } else {
                 isCreateEvent = false;
-                googleEvent = googleEvents.get(position);
                 initGoogleEvent();
             }
         } else {
             isShortcut = true;
             isCreateEvent = true;
-            googleEvent = new Event();
             initEvent();
         }
 
@@ -150,26 +151,31 @@ public class EventEditActivity extends BaseActivity {
     //载入事件
     @SuppressLint("SetTextI18n")
     private void initGoogleEvent() {
-        textReminderMe.setText(googleEvent.getSummary());
-        textReminderMe.setSelection(googleEvent.getSummary().length());
-        DateTime start = googleEvent.getStart().getDate();
-        if (start == null) start = googleEvent.getStart().getDateTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
-        try {
-            cc.setTime(dateFormat.parse(start.toStringRfc3339()));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!LunarReminderApplication.getEvents(mContext)) {
+            Toast.makeText(mContext, "获取缓存事件出错, 请下拉强制刷新事件", Toast.LENGTH_LONG).show();
+            finish();
         }
+        GEvent gEvent = new GEvent(listEvent.get(position));
+        googleEvent.setExtendedProperties(new Properties(gEvent.getLunarRepeatId(), gEvent.getLunarRepeatNum()).getProperties());
+        googleEvent.setId(gEvent.getId());
+        textReminderMe.setText(gEvent.getSummary());
+        textReminderMe.setSelection(gEvent.getSummary().length());
+        cc.setTime(gEvent.getStart());
         vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-        Event.ExtendedProperties properties = googleEvent.getExtendedProperties();
-        lunarRepeatNum = properties.getPrivate().get(LunarRepeatYear);
+        lunarRepeatNum = gEvent.getLunarRepeatNum();
         if (lunarRepeatNum == null) {
             lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
-        reminders = googleEvent.getReminders();
-        if (reminders.getOverrides() != null) {
-            listReminder = reminders.getOverrides();
+        ArrayList<LinkedHashMap<String, Object>> listReminders = gEvent.getReminders();
+        if (listReminders != null) {
+            for (LinkedHashMap<String, Object> rd : listReminders) {
+                EventReminder reminder = new EventReminder();
+                Double minutes = (Double) rd.get("minutes");
+                reminder.setMinutes(minutes.intValue());
+                reminder.setMethod((String) rd.get("method"));
+                listReminder.add(reminder);
+            }
         }
         refreshReminders();
     }

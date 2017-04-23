@@ -1,15 +1,22 @@
 package gedoor.kunfei.lunarreminder;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.google.api.services.calendar.model.Event;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.CrashHandler;
 
 public class LunarReminderApplication extends Application {
@@ -19,7 +26,7 @@ public class LunarReminderApplication extends Application {
      */
     public final static boolean DEBUG = BuildConfig.DEBUG;
 
-    public static List<Event> googleEvents;
+    public static ArrayList<LinkedHashMap<String, ?>> listEvent;
     public static Event googleEvent;
     public static int eventRepeat;
 
@@ -33,6 +40,22 @@ public class LunarReminderApplication extends Application {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("version", getVersionName());
         editor.apply();
+    }
+
+    public static Boolean getEvents(Context context) {
+        if (listEvent != null) {
+            return true;
+        }
+        ACache aCache = ACache.get(context);
+        if (aCache.isExist("events", ACache.STRING)) {
+            String strEvents = aCache.getAsString("events");
+            Gson gson = new Gson();
+            listEvent = gson.fromJson(strEvents, new TypeToken<ArrayList<LinkedHashMap<String, ?>>>() {
+            }.getType());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getVersionName() {

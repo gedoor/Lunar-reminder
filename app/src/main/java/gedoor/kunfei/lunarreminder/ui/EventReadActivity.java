@@ -12,38 +12,43 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventReminder;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import gedoor.kunfei.lunarreminder.LunarReminderApplication;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
+import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
+import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvents;
 
 /**
- * Created by GKF on 2017/3/18.
+ * 显示事件
  */
 
 public class EventReadActivity extends BaseActivity {
     private static final int REQUEST_REMINDER = 1;
 
     ChineseCalendar cc = new ChineseCalendar();
-    Event.Reminders reminders;
-    List<EventReminder> listReminder;
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<>();
     long eventID;
     int position;
@@ -96,46 +101,41 @@ public class EventReadActivity extends BaseActivity {
     }
 
     private void InitGoogleEvent() {
-        googleEvent = googleEvents.get(position);
-        textReminderMe.setText(googleEvent.getSummary());
-        DateTime start = googleEvent.getStart().getDate();
-        if (start == null) start = googleEvent.getStart().getDateTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            cc.setTime(dateFormat.parse(start.toStringRfc3339()));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (!LunarReminderApplication.getEvents(mContext)) {
+            Toast.makeText(mContext, "获取缓存事件出错, 请下拉强制刷新事件", Toast.LENGTH_LONG).show();
+            finish();
         }
+        GEvent gEvent = new GEvent(listEvent.get(position));
+        textReminderMe.setText(gEvent.getSummary());
+        cc.setTime(gEvent.getStart());
         vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-        Event.ExtendedProperties properties = googleEvent.getExtendedProperties();
-        lunarRepeatNum = properties.getPrivate().get(LunarRepeatYear);
+
+        lunarRepeatNum = (String) gEvent.getLunarRepeatNum();
         if (lunarRepeatNum == null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         }
         vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
-        reminders = googleEvent.getReminders();
-        listReminder = reminders.getOverrides();
-        refreshReminders();
-    }
 
-    private void refreshReminders() {
-        //提醒
+        ArrayList<LinkedHashMap<String, Object>> listReminders = gEvent.getReminders();
         listReminderDis.clear();
-        if (listReminder != null) {
-            for (EventReminder reminder : listReminder) {
-                HashMap<String, String> listMap = new HashMap<String, String>();
-                listMap.put("txTitle", new ReminderHelp(reminder).getTitle());
+        if (listReminders != null) {
+            for (LinkedHashMap<String, Object> reminder : listReminders) {
+                HashMap<String, String> listMap = new HashMap<>();
+                listMap.put("txTitle", new ReminderHelp((String) reminder.get("method"), (Double) reminder.get("minutes")).getTitle());
                 listReminderDis.add(listMap);
             }
         } else {
-            HashMap<String, String> listMap = new HashMap<String, String>();
+            HashMap<String, String> listMap = new HashMap<>();
             listMap.put("txTitle", getString(R.string.defaultReminder));
             listReminderDis.add(listMap);
         }
+
         SimpleAdapter adapter = new SimpleAdapter(this, listReminderDis, R.layout.item_reminder, new String[]{"txTitle"}, new int[]{R.id.reminder_item_title});
         listViewReminder.setAdapter(adapter);
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

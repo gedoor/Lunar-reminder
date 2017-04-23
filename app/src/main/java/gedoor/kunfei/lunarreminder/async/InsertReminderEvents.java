@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.Event;
 import java.io.IOException;
 import java.util.Calendar;
 
+import gedoor.kunfei.lunarreminder.data.Properties;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;

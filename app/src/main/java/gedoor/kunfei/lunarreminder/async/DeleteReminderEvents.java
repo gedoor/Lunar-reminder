@@ -18,27 +18,23 @@ import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 public class DeleteReminderEvents extends CalendarAsyncTask {
     private String calendarId;
-    private Event event;
+    private String repeatId;
 
-    public DeleteReminderEvents(BaseActivity activity, String calendarId, Event event) {
+    public DeleteReminderEvents(BaseActivity activity, String calendarId, String repeatId) {
         super(activity);
-        this.event = event;
         this.calendarId = calendarId;
+        this.repeatId = repeatId;
     }
 
     @Override
     protected void doInBackground() throws IOException {
-        Event.ExtendedProperties properties = event.getExtendedProperties();
-        if (properties != null) {
-            String lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
-            Events events = client.events().list(calendarId).setFields("items(id)").setPrivateExtendedProperty(Collections.singletonList(LunarRepeatId + "=" + lunarRepeatId)).execute();
-            List<Event> items = events.getItems();
-            for (Event event : items) {
-                client.events().delete(calendarId, event.getId()).execute();
-            }
-        } else {
+
+        Events events = client.events().list(calendarId).setFields("items(id)").setPrivateExtendedProperty(Collections.singletonList(LunarRepeatId + "=" + repeatId)).execute();
+        List<Event> items = events.getItems();
+        for (Event event : items) {
             client.events().delete(calendarId, event.getId()).execute();
         }
+
         new GetReminderEvents(activity, calendarId).execute();
     }
 }
