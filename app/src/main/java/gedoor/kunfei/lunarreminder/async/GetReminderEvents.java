@@ -20,7 +20,7 @@ import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
+import static gedoor.kunfei.lunarreminder.App.listEvent;
 
 /**
  * 获取提醒事件

@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,9 +14,8 @@ import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
-import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
+import static gedoor.kunfei.lunarreminder.App.listEvent;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 /**

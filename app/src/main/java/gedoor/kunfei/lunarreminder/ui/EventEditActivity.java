@@ -20,23 +20,19 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventReminder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import gedoor.kunfei.lunarreminder.LunarReminderApplication;
+import gedoor.kunfei.lunarreminder.App;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
@@ -48,10 +44,9 @@ import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
-import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
+import static gedoor.kunfei.lunarreminder.App.listEvent;
+import static gedoor.kunfei.lunarreminder.App.eventRepeat;
+import static gedoor.kunfei.lunarreminder.App.googleEvent;
 
 /**
  * 编辑创建事件
@@ -150,7 +145,7 @@ public class EventEditActivity extends BaseActivity {
     //载入事件
     @SuppressLint("SetTextI18n")
     private void initGoogleEvent() {
-        if (!LunarReminderApplication.getEvents(mContext)) {
+        if (!App.getEvents(mContext)) {
             Toast.makeText(mContext, "获取缓存事件出错, 请下拉强制刷新事件", Toast.LENGTH_LONG).show();
             finish();
         }

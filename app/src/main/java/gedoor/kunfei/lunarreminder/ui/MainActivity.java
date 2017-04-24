@@ -25,7 +25,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteReminderEvents;
-import gedoor.kunfei.lunarreminder.async.GetCalendar;
 import gedoor.kunfei.lunarreminder.async.GetEventColors;
 import gedoor.kunfei.lunarreminder.async.GetReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
@@ -41,10 +40,10 @@ import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.ACache;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.eventRepeat;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.getEvents;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.googleEvent;
-import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
+import static gedoor.kunfei.lunarreminder.App.eventRepeat;
+import static gedoor.kunfei.lunarreminder.App.getEvents;
+import static gedoor.kunfei.lunarreminder.App.googleEvent;
+import static gedoor.kunfei.lunarreminder.App.listEvent;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 public class MainActivity extends BaseActivity {
