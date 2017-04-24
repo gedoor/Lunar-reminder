@@ -14,6 +14,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.services.calendar.model.Event;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -24,9 +26,11 @@ import gedoor.kunfei.lunarreminder.App;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
+import gedoor.kunfei.lunarreminder.data.Properties;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
+import static gedoor.kunfei.lunarreminder.App.googleEvent;
 import static gedoor.kunfei.lunarreminder.App.listEvent;
 
 /**
@@ -76,7 +80,7 @@ public class EventReadActivity extends BaseActivity {
                     startActivityForResult(intent, REQUEST_REMINDER);
                 }
         );
-
+        googleEvent = new Event();
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
@@ -94,6 +98,8 @@ public class EventReadActivity extends BaseActivity {
             finish();
         }
         GEvent gEvent = new GEvent(listEvent.get(position));
+        googleEvent.setExtendedProperties(new Properties(gEvent.getLunarRepeatId(), gEvent.getLunarRepeatNum()).getProperties());
+        googleEvent.setId(gEvent.getId());
         textReminderMe.setText(gEvent.getSummary());
         cc.setTime(gEvent.getStart());
         vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
