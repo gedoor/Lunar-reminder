@@ -25,13 +25,11 @@ public class GetCalendar extends CalendarAsyncTask {
         this.calendarName = calendarName;
         this.calendarId = calendarId;
     }
-
     protected void doInBackground() throws IOException {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         activity.getCalendarId();
-        CalendarListEntry calendarListEntry;
-        calendarListEntry = client.calendarList().get(calendarId).execute();
+        CalendarListEntry calendarListEntry = client.calendarList().get(calendarId).execute();
         if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
             editor.putInt(activity.getString(R.string.pref_key_reminder_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
             editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
@@ -41,6 +39,7 @@ public class GetCalendar extends CalendarAsyncTask {
             editor.putInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
             editor.apply();
         }
+
     }
 
 }

@@ -2,8 +2,10 @@ package gedoor.kunfei.lunarreminder.async;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.google.gson.Gson;
@@ -15,6 +17,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
@@ -42,6 +45,7 @@ public class GetReminderEvents extends CalendarAsyncTask {
     @Override
     protected void doInBackground() throws IOException {
         new GetCalendar(activity, calendarName, calendarId).execute();
+        new GetEventColors(activity).execute();
         if (activity.showAllEvents) {
             Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                     .execute();

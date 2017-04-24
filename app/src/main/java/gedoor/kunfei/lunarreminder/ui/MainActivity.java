@@ -178,7 +178,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initFinish() {
         swOnRefresh();
-        new GetEventColors(this).execute();
         switch (radioGroupDrawer.getCheckedRadioButtonId()) {
             case R.id.radioButtonReminder:
                 setTitle(R.string.app_name);
@@ -208,7 +207,8 @@ public class MainActivity extends BaseActivity {
 
     //载入提醒事件
     public void loadReminderCalendar() {
-        if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true)) {
+        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
+        if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true) && !isFirstOpen) {
             getEvents(mContext);
         }
         getCalendarId();
@@ -219,7 +219,6 @@ public class MainActivity extends BaseActivity {
         } else {
             new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
         }
-        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (isFirstOpen) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
