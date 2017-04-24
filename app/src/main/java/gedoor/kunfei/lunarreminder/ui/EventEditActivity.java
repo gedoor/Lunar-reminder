@@ -145,7 +145,6 @@ public class EventEditActivity extends BaseActivity {
             reminder.setMethod(reminderMethod[defaultReminder]);
             listReminder.add(reminder);
         }
-        reminders = new Event.Reminders();
         refreshReminders();
     }
     //载入事件
@@ -266,6 +265,7 @@ public class EventEditActivity extends BaseActivity {
         googleEvent.setStart(new EventTimeUtil(cc).getEventStartDT());
         googleEvent.setEnd(new EventTimeUtil(cc).getEventEndDT());
         googleEvent.setDescription(textReminderMe.getText().toString() + "(农历)");
+        reminders = new Event.Reminders();
         if (listReminder.size() > 0) {
             reminders.setUseDefault(false);
             reminders.setOverrides(listReminder);

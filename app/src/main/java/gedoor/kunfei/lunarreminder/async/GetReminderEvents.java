@@ -28,17 +28,20 @@ import static gedoor.kunfei.lunarreminder.LunarReminderApplication.listEvent;
 
 public class GetReminderEvents extends CalendarAsyncTask {
     private static final String TAG = "AsyncGetEvents";
+    private String calendarName;
     private String calendarId;
     private List<Event> events;
 
-    public GetReminderEvents(BaseActivity activity, String calendarId) {
+    public GetReminderEvents(BaseActivity activity, String calendarName, String calendarId) {
         super(activity);
         this.calendarId = calendarId;
+        this.calendarName = calendarName;
     }
 
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
+        new GetCalendar(activity, calendarName, calendarId).execute();
         if (activity.showAllEvents) {
             Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                     .execute();
@@ -59,6 +62,7 @@ public class GetReminderEvents extends CalendarAsyncTask {
 
     @Override
     protected void onPostExecute(Boolean success) {
+        super.onPostExecute(success);
         ACache mCache = ACache.get(activity);
         Gson gson = new Gson();
         String strEvents = gson.toJson(events);

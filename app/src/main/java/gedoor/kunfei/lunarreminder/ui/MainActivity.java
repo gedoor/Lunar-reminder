@@ -2,6 +2,7 @@ package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -136,13 +137,12 @@ public class MainActivity extends BaseActivity {
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
             getCalendarId();
-            new GetCalendar(this).execute();
             switch (radioGroupDrawer.getCheckedRadioButtonId()) {
                 case R.id.radioButtonReminder:
-                    new GetReminderEvents(this, lunarReminderCalendarId).execute();
+                    new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
-                    new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
+                    new InsertSolarTermsEvents(this, getString(R.string.solar_terms_calendar_name), solarTermsCalendarId).execute();
                     break;
             }
         });
@@ -207,15 +207,16 @@ public class MainActivity extends BaseActivity {
 
     //载入提醒事件
     public void loadReminderCalendar() {
+        if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true)) {
+            getEvents(mContext);
+        }
         getCalendarId();
-        getEvents(mContext);
         if (lunarReminderCalendarId == null) {
             new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
         } else if (listEvent != null) {
             new LoadReminderEventList(this).execute();
         } else {
-            new GetCalendar(this).execute();
-            new GetReminderEvents(this, lunarReminderCalendarId).execute();
+            new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
         }
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (isFirstOpen) {
@@ -234,7 +235,7 @@ public class MainActivity extends BaseActivity {
             if (mCache.isExist("jq", ACache.STRING)) {
                 new LoadSolarTermsList(this).execute();
             } else {
-                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
+                new InsertSolarTermsEvents(this, getString(R.string.solar_terms_calendar_name), solarTermsCalendarId).execute();
             }
         }
     }
@@ -292,7 +293,7 @@ public class MainActivity extends BaseActivity {
                 showAllEvents = !showAllEvents;
                 swOnRefresh();
                 getCalendarId();
-                new GetReminderEvents(this, lunarReminderCalendarId).execute();
+                new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);

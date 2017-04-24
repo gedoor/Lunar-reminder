@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
@@ -35,6 +36,6 @@ public class DeleteReminderEvents extends CalendarAsyncTask {
             client.events().delete(calendarId, event.getId()).execute();
         }
 
-        new GetReminderEvents(activity, calendarId).execute();
+        new GetReminderEvents(activity, activity.getString(R.string.lunar_reminder_calendar_name), calendarId).execute();
     }
 }

@@ -8,6 +8,7 @@ import com.google.api.services.calendar.model.Event;
 import java.io.IOException;
 import java.util.Calendar;
 
+import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.Properties;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
@@ -45,7 +46,7 @@ public class InsertReminderEvents extends CalendarAsyncTask{
             client.events().insert(calendarId, event).execute();
             cc.add(ChineseCalendar.CHINESE_YEAR, 1);
         }
-        new GetReminderEvents(activity, calendarId).execute();
+        new GetReminderEvents(activity, activity.getString(R.string.lunar_reminder_calendar_name), calendarId).execute();
     }
 
 }

@@ -17,9 +17,13 @@ import gedoor.kunfei.lunarreminder.ui.BaseActivity;
  */
 
 public class GetCalendar extends CalendarAsyncTask {
+    private String calendarName;
+    private String calendarId;
 
-    public GetCalendar(BaseActivity activity) {
+    public GetCalendar(BaseActivity activity, String calendarName, String calendarId) {
         super(activity);
+        this.calendarName = calendarName;
+        this.calendarId = calendarId;
     }
 
     protected void doInBackground() throws IOException {
@@ -27,14 +31,14 @@ public class GetCalendar extends CalendarAsyncTask {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         activity.getCalendarId();
         CalendarListEntry calendarListEntry;
-        if (activity.lunarReminderCalendarId != null) {
-            calendarListEntry = client.calendarList().get(activity.lunarReminderCalendarId).execute();
+        if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
+            calendarListEntry = client.calendarList().get(calendarId).execute();
             editor.putInt(activity.getString(R.string.pref_key_reminder_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
             editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
             editor.apply();
         }
-        if (activity.solarTermsCalendarId != null) {
-            calendarListEntry = client.calendarList().get(activity.solarTermsCalendarId).execute();
+        if (calendarName.equals(activity.getString(R.string.solar_terms_calendar_name))) {
+            calendarListEntry = client.calendarList().get(calendarId).execute();
             editor.putInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
             editor.apply();
         }

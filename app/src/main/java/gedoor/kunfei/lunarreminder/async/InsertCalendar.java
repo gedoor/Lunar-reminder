@@ -32,20 +32,20 @@ public class InsertCalendar extends CalendarAsyncTask {
         Calendar calendar = client.calendars().insert(mCalendar).execute();
         Log.d(TAG, "calendar timeZone:" + calendar.getTimeZone());
         calendarId = calendar.getId();
-        CalendarListEntry calendarListEntry = client.calendarList().get(calendarId).execute();
 
+    }
+
+    @Override
+    protected void onPostExecute(Boolean success) {
+        super.onPostExecute(success);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(calendarPrefKey, calendarId);
-        editor.putInt(activity.getString(R.string.pref_key_reminder_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
-        editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
         editor.apply();
-
         if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
-            new GetReminderEvents(activity, calendarId).execute();
+            new GetReminderEvents(activity, calendarName, calendarId).execute();
         } else {
-            new InsertSolarTermsEvents(activity, calendarId).execute();
+            new InsertSolarTermsEvents(activity, calendarName, calendarId).execute();
         }
-
     }
 }

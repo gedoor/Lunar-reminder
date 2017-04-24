@@ -44,14 +44,13 @@ public class LoadCalendars extends CalendarAsyncTask {
         if (calendarId == null) {
             new InsertCalendar(activity, calendarName, calendarPrefKey).execute();
         } else if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
-            new GetCalendar(activity).execute();
-            new GetReminderEvents(activity, calendarId).execute();
+            new GetReminderEvents(activity, calendarName, calendarId).execute();
         } else {
             ACache mCache = ACache.get(activity);
             if (mCache.isExist("jq", ACache.STRING)) {
                 new LoadSolarTermsList(activity).execute();
             } else {
-                new InsertSolarTermsEvents(activity, calendarId).execute();
+                new InsertSolarTermsEvents(activity, calendarName, calendarId).execute();
             }
         }
     }
