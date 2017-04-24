@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteReminderEvents;
 import gedoor.kunfei.lunarreminder.async.GetCalendar;
+import gedoor.kunfei.lunarreminder.async.GetEventColors;
 import gedoor.kunfei.lunarreminder.async.GetReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
@@ -178,6 +179,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initFinish() {
         swOnRefresh();
+        new GetEventColors(this).execute();
         switch (radioGroupDrawer.getCheckedRadioButtonId()) {
             case R.id.radioButtonReminder:
                 setTitle(R.string.app_name);
@@ -291,6 +293,9 @@ public class MainActivity extends BaseActivity {
         switch (id) {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("showAllEvents", showAllEvents);
+                editor.apply();
                 swOnRefresh();
                 getCalendarId();
                 new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();

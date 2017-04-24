@@ -20,7 +20,7 @@ public class GetCalendar extends CalendarAsyncTask {
     private String calendarName;
     private String calendarId;
 
-    public GetCalendar(BaseActivity activity, String calendarName, String calendarId) {
+    GetCalendar(BaseActivity activity, String calendarName, String calendarId) {
         super(activity);
         this.calendarName = calendarName;
         this.calendarId = calendarId;
@@ -31,18 +31,16 @@ public class GetCalendar extends CalendarAsyncTask {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         activity.getCalendarId();
         CalendarListEntry calendarListEntry;
+        calendarListEntry = client.calendarList().get(calendarId).execute();
         if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
-            calendarListEntry = client.calendarList().get(calendarId).execute();
             editor.putInt(activity.getString(R.string.pref_key_reminder_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
             editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
             editor.apply();
         }
         if (calendarName.equals(activity.getString(R.string.solar_terms_calendar_name))) {
-            calendarListEntry = client.calendarList().get(calendarId).execute();
             editor.putInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
             editor.apply();
         }
-
-        new GetEventColors(activity).execute();
     }
+
 }

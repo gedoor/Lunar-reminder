@@ -50,9 +50,6 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
         new GetCalendar(activity, calendarName, calendarId).execute();
 //        deleteEvents();
         Calendar c = Calendar.getInstance();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), 0);
-        String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
         String urlStr = "http://data.weather.gov.hk/gts/time/calendar/text/T" + c.get(Calendar.YEAR) + "c.txt";
         URL url = new URL(urlStr);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -89,7 +86,6 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
                         HashMap<String, String> hp = new HashMap<>();
                         hp.put("start", (start[0] + "\n" + start[1] + "-" + start[2]));
                         hp.put("summary", solarTermsJ[i]);
-                        hp.put("bgColor", strBgColor);
                         hp.put("id", activity.getString(R.string.solar_terms_calendar_name));
                         list.add(hp);
                     }
@@ -108,9 +104,7 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        activity.list.clear();
-        activity.list.addAll(list);
-        activity.eventListFinish();
+        new LoadSolarTermsList(activity).execute();
     }
 
     private void deleteEvents() throws IOException {

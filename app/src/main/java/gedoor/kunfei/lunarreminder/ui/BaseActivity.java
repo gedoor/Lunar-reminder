@@ -43,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    final String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
 
     public Context mContext;
     public SharedPreferences sharedPreferences;
@@ -52,14 +53,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     public GoogleAccountCredential credential;
     public Calendar client;
     public String mGoogleAccount;
-    String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
-    public boolean showAllEvents = false;
+    public boolean showAllEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        showAllEvents = sharedPreferences.getBoolean("showAllEvents", false);
         getCalendarId();
     }
 

@@ -34,4 +34,5 @@ public class GetEventColors extends CalendarAsyncTask {
             mCache.put("eventColors", eventColors);
         }
     }
+
 }
