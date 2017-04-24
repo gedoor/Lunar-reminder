@@ -2,9 +2,11 @@ package gedoor.kunfei.lunarreminder.async;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import com.google.gson.Gson;
@@ -47,7 +49,7 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
-        new GetCalendar(activity, calendarName, calendarId).execute();
+        getCalendarColor();
 //        deleteEvents();
         Calendar c = Calendar.getInstance();
         String urlStr = "http://data.weather.gov.hk/gts/time/calendar/text/T" + c.get(Calendar.YEAR) + "c.txt";
@@ -105,6 +107,14 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
         new LoadSolarTermsList(activity).execute();
+    }
+
+    private void getCalendarColor() throws IOException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        CalendarListEntry calendarListEntry = client.calendarList().get(calendarId).execute();
+        editor.putInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
+        editor.apply();
     }
 
     private void deleteEvents() throws IOException {

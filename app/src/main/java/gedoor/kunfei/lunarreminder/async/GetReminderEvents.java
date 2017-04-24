@@ -2,7 +2,9 @@ package gedoor.kunfei.lunarreminder.async;
 
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.CalendarListEntry;
@@ -44,8 +46,7 @@ public class GetReminderEvents extends CalendarAsyncTask {
     @SuppressLint("WrongConstant")
     @Override
     protected void doInBackground() throws IOException {
-        new GetCalendar(activity, calendarName, calendarId).execute();
-        new GetEventColors(activity).execute();
+        getCalendarColor();
         if (activity.showAllEvents) {
             Events events = client.events().list(calendarId).setSingleEvents(true).setOrderBy("startTime")
                     .execute();
@@ -67,6 +68,7 @@ public class GetReminderEvents extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
+        new GetEventColors(activity).execute();
         ACache mCache = ACache.get(activity);
         Gson gson = new Gson();
         String strEvents = gson.toJson(events);
@@ -76,4 +78,12 @@ public class GetReminderEvents extends CalendarAsyncTask {
         new LoadReminderEventList(activity).execute();
     }
 
+    private void getCalendarColor() throws IOException {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        CalendarListEntry calendarListEntry = client.calendarList().get(calendarId).execute();
+        editor.putInt(activity.getString(R.string.pref_key_reminder_calendar_color), Color.parseColor(calendarListEntry.getBackgroundColor()));
+        editor.putString(activity.getString(R.string.pref_key_timezone),calendarListEntry.getTimeZone());
+        editor.apply();
+    }
 }
