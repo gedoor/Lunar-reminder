@@ -25,7 +25,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import gedoor.kunfei.lunarreminder.async.DeleteReminderEvents;
-import gedoor.kunfei.lunarreminder.async.GetEventColors;
 import gedoor.kunfei.lunarreminder.async.GetReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.async.InsertSolarTermsEvents;
