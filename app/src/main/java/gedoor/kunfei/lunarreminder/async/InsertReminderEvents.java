@@ -36,7 +36,7 @@ public class InsertReminderEvents extends CalendarAsyncTask{
 
     @Override
     protected void doInBackground() throws IOException {
-        Event.ExtendedProperties properties = new Properties(lunarRepeatId, repeatNum).getProperties();
+        Event.ExtendedProperties properties = new Properties(lunarRepeatId, "year", repeatNum).getProperties();
         for (int i = 1; i <= repeatNum; i++) {
             Event event = this.event;
             event.setStart(new EventTimeUtil(cc).getEventStartDT());

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="gedoor.kunfei.lunarreminder.ui.EventEditActivity">
+    tools:context="gedoor.kunfei.lunarreminder.ui.EventReadActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -27,8 +27,8 @@
             android:background="@null"
             android:paddingStart="80dp"
             android:paddingEnd="30dp"
-            android:padding="20dp"
-            android:textSize="22sp"
+            android:padding="@dimen/padding_default"
+            android:textSize="@dimen/text_size_large"
             android:hint="@string/reminder_me"/>
 
     </android.support.design.widget.AppBarLayout>
@@ -40,6 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        app:fabSize="mini"
         app:layout_anchor="@+id/appBarLayout"
         app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_mode_edit_white_24dp" />

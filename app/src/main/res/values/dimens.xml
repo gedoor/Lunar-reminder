@@ -1,6 +1,15 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="margin_default">8dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+
+    <dimen name="padding_default">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+
+    <dimen name="text_size_default">16sp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+
     <dimen name="color_swatch_large">64dip</dimen>
     <dimen name="color_swatch_small">48dip</dimen>
     <dimen name="color_swatch_margins_large">8dip</dimen>

@@ -42,7 +42,7 @@ public class UpdateReminderEvents extends CalendarAsyncTask {
         Event.ExtendedProperties properties = event.getExtendedProperties();
         if (properties != null) {
             String lunarRepeatId = properties.getPrivate().get(LunarRepeatId);
-            Event.ExtendedProperties nProperties = new Properties(lunarRepeatId, repeatNum).getProperties();
+            Event.ExtendedProperties nProperties = new Properties(lunarRepeatId, "year", repeatNum).getProperties();
             Events events = client.events().list(calendarId).setFields("items(id)").setPrivateExtendedProperty(Collections.singletonList(LunarRepeatId + "=" + lunarRepeatId)).execute();
             List<Event> items = events.getItems();
             int i = repeatNum > items.size() ? repeatNum : items.size();

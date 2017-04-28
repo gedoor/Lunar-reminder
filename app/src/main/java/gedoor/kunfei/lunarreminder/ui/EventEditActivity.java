@@ -68,11 +68,15 @@ public class EventEditActivity extends BaseActivity {
     String lunarRepeatNum;
 
     @BindView(R.id.vw_chinese_date)
-    TextView vwChineseDate;
+    View vwChineseDate;
+    @BindView(R.id.tvw_chinese_date)
+    TextView textChineseDate;
     @BindView(R.id.text_reminder_me)
     EditText textReminderMe;
     @BindView(R.id.vw_repeat)
-    TextView vwRepeat;
+    View vwRepeat;
+    @BindView(R.id.tvw_repeat)
+    TextView textRepeat;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;
     @BindView(R.id.reminder_toolbar)
@@ -130,9 +134,9 @@ public class EventEditActivity extends BaseActivity {
         cc.set(Calendar.SECOND, 0);
         cc.set(Calendar.MILLISECOND, 0);
         cYear = cc.get(Calendar.YEAR);
-        vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
         lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), "12");
-        vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        textRepeat.setText(lunarRepeatNum);
         int defaultReminder = Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_default_reminder), "0"));
         if (defaultReminder != 0) {
             EventReminder reminder = new EventReminder();
@@ -155,12 +159,12 @@ public class EventEditActivity extends BaseActivity {
         textReminderMe.setText(gEvent.getSummary());
         textReminderMe.setSelection(gEvent.getSummary().length());
         cc.setTime(gEvent.getStart());
-        vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
         lunarRepeatNum = gEvent.getLunarRepeatNum();
         if (lunarRepeatNum == null) {
             lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
         }
-        vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        textRepeat.setText(lunarRepeatNum);
         ArrayList<LinkedHashMap<String, Object>> listReminders = gEvent.getReminders();
         if (listReminders != null) {
             for (LinkedHashMap<String, Object> rd : listReminders) {
@@ -330,7 +334,7 @@ public class EventEditActivity extends BaseActivity {
         builder.setView(view);
         builder.setPositiveButton(getString(R.string.ok), (DialogInterface dialog, int which) -> {
             lunarRepeatNum = String.valueOf(numberPicker.getValue());
-            vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+            textRepeat.setText(lunarRepeatNum);
         });
         builder.setNegativeButton(getString(R.string.cancel), (DialogInterface dialog, int which) -> {
         });
@@ -346,7 +350,7 @@ public class EventEditActivity extends BaseActivity {
     private void selectDate() {
         mDialog = new DialogGLC(this, ((ChineseCalendar cc) -> {
             this.cc = cc;
-            vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+            textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
         }));
 
         if (mDialog.isShowing()) {

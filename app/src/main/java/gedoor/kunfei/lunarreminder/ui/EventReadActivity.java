@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -46,12 +47,12 @@ public class EventReadActivity extends BaseActivity {
     int position;
     String lunarRepeatNum;
 
-    @BindView(R.id.vw_chinese_date)
-    TextView vwChineseDate;
+    @BindView(R.id.tvw_chinese_date)
+    TextView textChineseDate;
     @BindView(R.id.text_reminder_me)
     TextView textReminderMe;
-    @BindView(R.id.vw_repeat)
-    TextView vwRepeat;
+    @BindView(R.id.tvw_repeat)
+    TextView textRepeat;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;
     @BindView(R.id.reminder_toolbar)
@@ -102,14 +103,14 @@ public class EventReadActivity extends BaseActivity {
         googleEvent.setId(gEvent.getId());
         textReminderMe.setText(gEvent.getSummary());
         cc.setTime(gEvent.getStart());
-        vwChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
 
         lunarRepeatNum = (String) gEvent.getLunarRepeatNum();
         if (lunarRepeatNum == null) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
         }
-        vwRepeat.setText(getString(R.string.repeat) + lunarRepeatNum + getString(R.string.year));
+        textRepeat.setText(lunarRepeatNum);
 
         ArrayList<LinkedHashMap<String, Object>> listReminders = gEvent.getReminders();
         listReminderDis.clear();

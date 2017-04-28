@@ -24,8 +24,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:padding="10pt"
-            android:textSize="16sp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:padding="@dimen/padding_default"
+            android:textSize="@dimen/text_size_default"
             android:hint="@string/reminder_me"/>
 
     </android.support.design.widget.AppBarLayout>
