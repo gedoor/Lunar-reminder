@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -51,7 +50,7 @@ public class EventReadActivity extends BaseActivity {
     TextView textChineseDate;
     @BindView(R.id.text_reminder_me)
     TextView textReminderMe;
-    @BindView(R.id.tvw_repeat)
+    @BindView(R.id.tvw_repeat_num)
     TextView textRepeat;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;

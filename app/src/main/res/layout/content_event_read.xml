@@ -89,7 +89,7 @@
                         android:textSize="@dimen/text_size_default" />
                 </LinearLayout>
                 <LinearLayout
-                    android:id="@+id/vw_repeat"
+                    android:id="@+id/vw_repeat_num"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -103,7 +103,7 @@
                         android:textSize="@dimen/text_size_default" />
 
                     <TextView
-                        android:id="@+id/tvw_repeat"
+                        android:id="@+id/tvw_repeat_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_default"

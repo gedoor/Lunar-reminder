@@ -73,9 +73,9 @@ public class EventEditActivity extends BaseActivity {
     TextView textChineseDate;
     @BindView(R.id.text_reminder_me)
     EditText textReminderMe;
-    @BindView(R.id.vw_repeat)
+    @BindView(R.id.vw_repeat_num)
     View vwRepeat;
-    @BindView(R.id.tvw_repeat)
+    @BindView(R.id.tvw_repeat_num)
     TextView textRepeat;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;
@@ -310,22 +310,32 @@ public class EventEditActivity extends BaseActivity {
     }
 
     //单击事件
-    @OnClick({R.id.vw_chinese_date, R.id.vw_repeat})
+    @OnClick({R.id.vw_chinese_date, R.id.vw_repeat_num, R.id.vw_repeat_type})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.vw_chinese_date:
                 selectDate();
                 break;
-            case R.id.vw_repeat:
+            case R.id.vw_repeat_num:
                 selectRepeatYear();
                 break;
+            case R.id.vw_repeat_type:
+                selectRepeatType();
+                break;
         }
+    }
+
+    //选择重复方式
+    private void selectRepeatType() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_repeat_type);
+
     }
     //选择重复年数
     @SuppressLint("SetTextI18n")
     private void selectRepeatYear() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("选择重复年数");
+        builder.setTitle(R.string.select_repeat_num);
         @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_repeat_year, null);
         NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
         numberPicker.setMaxValue(36);
