@@ -7,7 +7,7 @@ package gedoor.kunfei.lunarreminder.data;
 
 public final class FinalFields {
     public static final String LunarRepeatId = "LunarRepeatId";
-    public static final String LunarRepeatYear = "LunarRepeatYear";
+    public static final String LunarRepeatNum = "LunarRepeatYear";
     public static final String LunarRepeatType = "LunarRepeatType";
 
     public static final String OPERATION = "operation";

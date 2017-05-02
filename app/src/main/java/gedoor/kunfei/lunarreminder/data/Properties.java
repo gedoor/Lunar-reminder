@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatType;
-import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatYear;
+import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatNum;
 
 /**
  * 标记重复事件字段
@@ -45,7 +45,7 @@ public class Properties {
         Event.ExtendedProperties properties = new Event.ExtendedProperties();
         HashMap<String, String> map = new HashMap<>();
         map.put(LunarRepeatId, lunarRepeatId);
-        map.put(LunarRepeatYear, repeatNum);
+        map.put(LunarRepeatNum, repeatNum);
         map.put(LunarRepeatType, lunarRepeatType);
 
         properties.setPrivate(map);

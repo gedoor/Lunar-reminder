@@ -39,7 +39,7 @@ import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.ACache;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
-import static gedoor.kunfei.lunarreminder.App.eventRepeat;
+import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
 import static gedoor.kunfei.lunarreminder.App.getEvents;
 import static gedoor.kunfei.lunarreminder.App.googleEvent;
 import static gedoor.kunfei.lunarreminder.App.listEvent;
@@ -125,7 +125,7 @@ public class MainActivity extends BaseActivity {
                         return true;
                     case R.id.action_delete:
                         swOnRefresh();
-                        new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
+                        new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
                         return true;
                 }
                 return true;
@@ -360,10 +360,10 @@ public class MainActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     switch (bundle.getInt(FinalFields.OPERATION)) {
                         case FinalFields.OPERATION_INSERT:
-                            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
+                            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatNum).execute();
                             break;
                         case FinalFields.OPERATION_UPDATE:
-                            new UpdateReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeat).execute();
+                            new UpdateReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatNum).execute();
                             break;
                         case FinalFields.OPERATION_DELETE:
                             new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvent.getExtendedProperties().getPrivate().get(LunarRepeatId)).execute();

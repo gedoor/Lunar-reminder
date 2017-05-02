@@ -97,18 +97,14 @@ public class EventReadActivity extends BaseActivity {
             Toast.makeText(mContext, "获取缓存事件出错, 请下拉强制刷新事件", Toast.LENGTH_LONG).show();
             finish();
         }
-        GEvent gEvent = new GEvent(listEvent.get(position));
+        GEvent gEvent = new GEvent(this, listEvent.get(position));
         googleEvent.setExtendedProperties(new Properties(gEvent.getLunarRepeatId(), gEvent.getLunarRepeatNum()).getProperties());
         googleEvent.setId(gEvent.getId());
         textReminderMe.setText(gEvent.getSummary());
         cc.setTime(gEvent.getStart());
         textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
 
-        lunarRepeatNum = (String) gEvent.getLunarRepeatNum();
-        if (lunarRepeatNum == null) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            lunarRepeatNum = preferences.getString(getString(R.string.pref_key_repeat_year), "12");
-        }
+        lunarRepeatNum = gEvent.getLunarRepeatNum();
         textRepeat.setText(lunarRepeatNum);
 
         ArrayList<LinkedHashMap<String, Object>> listReminders = gEvent.getReminders();

@@ -30,7 +30,8 @@ public class App extends Application {
 
     public static ArrayList<LinkedHashMap<String, ?>> listEvent;
     public static Event googleEvent;
-    public static int eventRepeat;
+    public static String eventRepeatType;
+    public static int eventRepeatNum;
 
     @Override
     public void onCreate() {

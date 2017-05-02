@@ -45,7 +45,8 @@ import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
 import static gedoor.kunfei.lunarreminder.App.listEvent;
-import static gedoor.kunfei.lunarreminder.App.eventRepeat;
+import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
+import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
 import static gedoor.kunfei.lunarreminder.App.googleEvent;
 
 /**
@@ -65,18 +66,17 @@ public class EventEditActivity extends BaseActivity {
 
     int cYear;
     int position;
+    String lunarRepeatType;
     String lunarRepeatNum;
 
-    @BindView(R.id.vw_chinese_date)
-    View vwChineseDate;
     @BindView(R.id.tvw_chinese_date)
     TextView textChineseDate;
     @BindView(R.id.text_reminder_me)
     EditText textReminderMe;
-    @BindView(R.id.vw_repeat_num)
-    View vwRepeat;
+    @BindView(R.id.tvw_repeat_type)
+    TextView textRepeatType;
     @BindView(R.id.tvw_repeat_num)
-    TextView textRepeat;
+    TextView textRepeatNum;
     @BindView(R.id.list_vw_reminder)
     ListView listViewReminder;
     @BindView(R.id.reminder_toolbar)
@@ -135,8 +135,9 @@ public class EventEditActivity extends BaseActivity {
         cc.set(Calendar.MILLISECOND, 0);
         cYear = cc.get(Calendar.YEAR);
         textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        lunarRepeatType = "year";
         lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), "12");
-        textRepeat.setText(lunarRepeatNum);
+        textRepeatNum.setText(lunarRepeatNum);
         int defaultReminder = Integer.parseInt(sharedPreferences.getString(getString(R.string.pref_key_default_reminder), "0"));
         if (defaultReminder != 0) {
             EventReminder reminder = new EventReminder();
@@ -153,18 +154,17 @@ public class EventEditActivity extends BaseActivity {
             Toast.makeText(mContext, "获取缓存事件出错, 请下拉强制刷新事件", Toast.LENGTH_LONG).show();
             finish();
         }
-        GEvent gEvent = new GEvent(listEvent.get(position));
+        GEvent gEvent = new GEvent(this, listEvent.get(position));
         googleEvent.setExtendedProperties(new Properties(gEvent.getLunarRepeatId(), gEvent.getLunarRepeatNum()).getProperties());
         googleEvent.setId(gEvent.getId());
         textReminderMe.setText(gEvent.getSummary());
         textReminderMe.setSelection(gEvent.getSummary().length());
         cc.setTime(gEvent.getStart());
         textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        lunarRepeatType = gEvent.getLunarRepeatType();
         lunarRepeatNum = gEvent.getLunarRepeatNum();
-        if (lunarRepeatNum == null) {
-            lunarRepeatNum = sharedPreferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year));
-        }
-        textRepeat.setText(lunarRepeatNum);
+        textRepeatType.setText(lunarRepeatType.equals("year") ? getString(R.string.year): getString(R.string.month));
+        textRepeatNum.setText(lunarRepeatNum);
         ArrayList<LinkedHashMap<String, Object>> listReminders = gEvent.getReminders();
         if (listReminders != null) {
             for (LinkedHashMap<String, Object> rd : listReminders) {
@@ -259,7 +259,8 @@ public class EventEditActivity extends BaseActivity {
     }
     //保存事件
     private void saveGoogleEvent() {
-        eventRepeat = Integer.parseInt(lunarRepeatNum);
+        eventRepeatType = lunarRepeatType;
+        eventRepeatNum = Integer.parseInt(lunarRepeatNum);
         googleEvent.setSummary(textReminderMe.getText().toString());
         googleEvent.setStart(new EventTimeUtil(cc).getEventStartDT());
         googleEvent.setEnd(new EventTimeUtil(cc).getEventEndDT());
@@ -268,7 +269,6 @@ public class EventEditActivity extends BaseActivity {
         if (listReminder.size() > 0) {
             reminders.setUseDefault(false);
             reminders.setOverrides(listReminder);
-
         } else {
             reminders.setUseDefault(true);
             reminders.setOverrides(null);
@@ -327,9 +327,18 @@ public class EventEditActivity extends BaseActivity {
 
     //选择重复方式
     private void selectRepeatType() {
+        String[] repeatType = new String[]{"year", "month"};
+        String[] repeatTypeStr = new String[]{getString(R.string.year), getString(R.string.month)};
+        int checkedItem = lunarRepeatType.equals(repeatType[1]) ? 1 : 0;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_repeat_type);
-
+        builder.setSingleChoiceItems(repeatTypeStr, checkedItem, (dialog, which) -> {
+            textRepeatType.setText(repeatTypeStr[which]);
+            lunarRepeatType = repeatType[which];
+            dialog.dismiss();
+        });
+        builder.create();
+        builder.show();
     }
     //选择重复次数
     @SuppressLint("SetTextI18n")
@@ -344,7 +353,7 @@ public class EventEditActivity extends BaseActivity {
         builder.setView(view);
         builder.setPositiveButton(R.string.ok, (DialogInterface dialog, int which) -> {
             lunarRepeatNum = String.valueOf(numberPicker.getValue());
-            textRepeat.setText(lunarRepeatNum);
+            textRepeatNum.setText(lunarRepeatNum);
         });
         builder.setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> {
         });

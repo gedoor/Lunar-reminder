@@ -38,7 +38,7 @@ public class LoadReminderEventList extends CalendarAsyncTask {
         int id = 0;
         String ccYear = "";
         for (LinkedHashMap<String, ?> event : listEvent) {
-            GEvent gEvent = new GEvent(event);
+            GEvent gEvent = new GEvent(activity, event);
             HashMap<String, String> listMap = new HashMap<>();
             listMap.put("id", String.valueOf(id));
             listMap.put("summary", gEvent.getSummary());
