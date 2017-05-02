@@ -219,20 +219,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         private void selectRepeatYear(Preference preference) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-            builder.setTitle("选择重复年数");
-            @SuppressLint("InflateParams") View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_year, null);
+            builder.setTitle(R.string.select_repeat_num);
+            @SuppressLint("InflateParams") View view = LayoutInflater.from(this.getActivity()).inflate(R.layout.dialog_repeat_num, null);
             NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
             numberPicker.setMaxValue(36);
             numberPicker.setMinValue(1);
             numberPicker.setValue(Integer.parseInt(preferences.getString(getString(R.string.pref_key_repeat_year), getString(R.string.pref_value_repeat_year))));
             builder.setView(view);
-            builder.setPositiveButton("确定",(DialogInterface dialog, int which)->{
+            builder.setPositiveButton(R.string.ok,(DialogInterface dialog, int which)->{
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(getString(R.string.pref_key_repeat_year), String.valueOf(numberPicker.getValue()));
                 editor.apply();
                 preference.setSummary(String.valueOf(numberPicker.getValue()));
             });
-            builder.setNegativeButton("取消", (DialogInterface dialog, int which)->{
+            builder.setNegativeButton(R.string.cancel, (DialogInterface dialog, int which)->{
 
             });
             builder.create();

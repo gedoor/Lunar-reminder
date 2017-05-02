@@ -331,22 +331,22 @@ public class EventEditActivity extends BaseActivity {
         builder.setTitle(R.string.select_repeat_type);
 
     }
-    //选择重复年数
+    //选择重复次数
     @SuppressLint("SetTextI18n")
     private void selectRepeatYear() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_repeat_num);
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_repeat_year, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_repeat_num, null);
         NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.number_picker_repeat_year);
         numberPicker.setMaxValue(36);
         numberPicker.setMinValue(1);
         numberPicker.setValue(Integer.parseInt(lunarRepeatNum));
         builder.setView(view);
-        builder.setPositiveButton(getString(R.string.ok), (DialogInterface dialog, int which) -> {
+        builder.setPositiveButton(R.string.ok, (DialogInterface dialog, int which) -> {
             lunarRepeatNum = String.valueOf(numberPicker.getValue());
             textRepeat.setText(lunarRepeatNum);
         });
-        builder.setNegativeButton(getString(R.string.cancel), (DialogInterface dialog, int which) -> {
+        builder.setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> {
         });
         builder.create();
         builder.show();
