@@ -40,6 +40,7 @@ import gedoor.kunfei.lunarreminder.util.ACache;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
 import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
+import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
 import static gedoor.kunfei.lunarreminder.App.getEvents;
 import static gedoor.kunfei.lunarreminder.App.googleEvent;
 import static gedoor.kunfei.lunarreminder.App.listEvent;
@@ -360,10 +361,10 @@ public class MainActivity extends BaseActivity {
                     Bundle bundle = data.getExtras();
                     switch (bundle.getInt(FinalFields.OPERATION)) {
                         case FinalFields.OPERATION_INSERT:
-                            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatNum).execute();
+                            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatType, eventRepeatNum).execute();
                             break;
                         case FinalFields.OPERATION_UPDATE:
-                            new UpdateReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatNum).execute();
+                            new UpdateReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatType, eventRepeatNum).execute();
                             break;
                         case FinalFields.OPERATION_DELETE:
                             new DeleteReminderEvents(this, lunarReminderCalendarId, googleEvent.getExtendedProperties().getPrivate().get(LunarRepeatId)).execute();

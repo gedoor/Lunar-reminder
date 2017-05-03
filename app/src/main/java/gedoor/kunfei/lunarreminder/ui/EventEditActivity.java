@@ -276,7 +276,7 @@ public class EventEditActivity extends BaseActivity {
         googleEvent.setReminders(reminders);
         if (isShortcut) {
             getCalendarId();
-            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, Integer.parseInt(lunarRepeatNum)).execute();
+            new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, lunarRepeatType, Integer.parseInt(lunarRepeatNum)).execute();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

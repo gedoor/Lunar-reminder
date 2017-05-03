@@ -23,14 +23,16 @@ public class InsertReminderEvents extends CalendarAsyncTask{
     private String lunarRepeatId = String.valueOf(cc.getTimeInMillis());
     private String calendarId;
     private Event event;
+    private String repeatType;
     private int repeatNum;
 
-    public InsertReminderEvents(BaseActivity activity, String calendarId, Event event, int repeatNum) {
+    public InsertReminderEvents(BaseActivity activity, String calendarId, Event event, String repeatType, int repeatNum) {
         super(activity);
         this.calendarId = calendarId;
         this.event  = event;
         DateTime start = event.getStart().getDate() == null ? event.getStart().getDateTime() : event.getStart().getDate();
         cc = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
+        this.repeatType = repeatType;
         this.repeatNum = repeatNum;
     }
 
@@ -44,7 +46,13 @@ public class InsertReminderEvents extends CalendarAsyncTask{
             event.setExtendedProperties(properties);
 
             client.events().insert(calendarId, event).execute();
-            cc.add(ChineseCalendar.CHINESE_YEAR, 1);
+
+            if (repeatType.equals("month")) {
+                cc.add(ChineseCalendar.CHINESE_MONTH, 1);
+            } else {
+                cc.add(ChineseCalendar.CHINESE_YEAR, 1);
+            }
+
         }
         new GetReminderEvents(activity, activity.getString(R.string.lunar_reminder_calendar_name), calendarId).execute();
     }

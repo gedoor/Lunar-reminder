@@ -26,14 +26,16 @@ public class UpdateReminderEvents extends CalendarAsyncTask {
     private String calendarId;
     private Event event;
     private ChineseCalendar cc;
+    private String repeatType;
     private int repeatNum;
 
-    public UpdateReminderEvents(BaseActivity activity, String calendarId, Event event, int repeatNum) {
+    public UpdateReminderEvents(BaseActivity activity, String calendarId, Event event, String repeatType, int repeatNum) {
         super(activity);
         this.calendarId = calendarId;
         this.event = event;
         DateTime start = event.getStart().getDate() == null ? event.getStart().getDateTime() : event.getStart().getDate();
         cc = new ChineseCalendar(new EventTimeUtil(null).getCalendar(start));
+        this.repeatType = repeatType;
         this.repeatNum = repeatNum;
     }
 
@@ -70,7 +72,12 @@ public class UpdateReminderEvents extends CalendarAsyncTask {
                     event.setExtendedProperties(nProperties);
                     client.events().insert(calendarId, event).execute();
                 }
-                cc.add(ChineseCalendar.CHINESE_YEAR, 1);
+
+                if (repeatType.equals("month")) {
+                    cc.add(ChineseCalendar.CHINESE_MONTH, 1);
+                } else {
+                    cc.add(ChineseCalendar.CHINESE_YEAR, 1);
+                }
             }
         } else {
             client.events().update(calendarId, event.getId(), event).execute();
