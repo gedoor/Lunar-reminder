@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:paddingStart="60dp"
+            android:paddingStart="65dp"
             android:paddingEnd="30dp"
             android:padding="@dimen/padding_default"
             android:textSize="@dimen/text_size_large"
