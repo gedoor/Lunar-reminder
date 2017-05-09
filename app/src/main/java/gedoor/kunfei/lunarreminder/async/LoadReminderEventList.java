@@ -37,6 +37,10 @@ public class LoadReminderEventList extends CalendarAsyncTask {
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
         int id = 0;
         String ccYear = "";
+        if (listEvent == null) {
+            new GetReminderEvents(activity, activity.lunarReminderCalendarId).execute();
+            return;
+        }
         for (LinkedHashMap<String, ?> event : listEvent) {
             GEvent gEvent = new GEvent(activity, event);
             HashMap<String, String> listMap = new HashMap<>();

@@ -139,7 +139,7 @@ public class MainActivity extends BaseActivity {
             getCalendarId();
             switch (radioGroupDrawer.getCheckedRadioButtonId()) {
                 case R.id.radioButtonReminder:
-                    new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
+                    new GetReminderEvents(this, lunarReminderCalendarId).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
                     new InsertSolarTermsEvents(this, getString(R.string.solar_terms_calendar_name), solarTermsCalendarId).execute();
@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity {
         } else if (listEvent != null) {
             new LoadReminderEventList(this).execute();
         } else {
-            new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
+            new GetReminderEvents(this, lunarReminderCalendarId).execute();
         }
         if (isFirstOpen) {
             Intent intent = new Intent(this, AboutActivity.class);
@@ -296,7 +296,7 @@ public class MainActivity extends BaseActivity {
                 editor.apply();
                 swOnRefresh();
                 getCalendarId();
-                new GetReminderEvents(this, getString(R.string.lunar_reminder_calendar_name), lunarReminderCalendarId).execute();
+                new GetReminderEvents(this, lunarReminderCalendarId).execute();
                 return true;
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);

@@ -82,7 +82,7 @@ public class UpdateReminderEvents extends CalendarAsyncTask {
         } else {
             client.events().update(calendarId, event.getId(), event).execute();
         }
-        new GetReminderEvents(activity, activity.getString(R.string.lunar_reminder_calendar_name), calendarId).execute();
+        new GetReminderEvents(activity, calendarId).execute();
     }
 
 

@@ -54,7 +54,7 @@ public class InsertReminderEvents extends CalendarAsyncTask{
             }
 
         }
-        new GetReminderEvents(activity, activity.getString(R.string.lunar_reminder_calendar_name), calendarId).execute();
+        new GetReminderEvents(activity, calendarId).execute();
     }
 
 }

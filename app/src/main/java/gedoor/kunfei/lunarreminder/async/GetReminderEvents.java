@@ -33,14 +33,12 @@ import static gedoor.kunfei.lunarreminder.App.listEvent;
 
 public class GetReminderEvents extends CalendarAsyncTask {
     private static final String TAG = "AsyncGetEvents";
-    private String calendarName;
     private String calendarId;
     private List<Event> events;
 
-    public GetReminderEvents(BaseActivity activity, String calendarName, String calendarId) {
+    public GetReminderEvents(BaseActivity activity, String calendarId) {
         super(activity);
         this.calendarId = calendarId;
-        this.calendarName = calendarName;
     }
 
     @SuppressLint("WrongConstant")

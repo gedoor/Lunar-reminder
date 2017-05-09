@@ -36,6 +36,6 @@ public class DeleteReminderEvents extends CalendarAsyncTask {
             client.events().delete(calendarId, event.getId()).execute();
         }
 
-        new GetReminderEvents(activity, activity.getString(R.string.lunar_reminder_calendar_name), calendarId).execute();
+        new GetReminderEvents(activity, calendarId).execute();
     }
 }
