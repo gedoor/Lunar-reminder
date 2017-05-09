@@ -36,13 +36,11 @@ import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsJ;
  */
 
 public class InsertSolarTermsEvents extends CalendarAsyncTask {
-    private String calendarName;
     private String calendarId;
     private ArrayList<HashMap<String, String>> list = new ArrayList<>();
 
-    public InsertSolarTermsEvents(BaseActivity activity,String calendarName , String calendarId) {
+    public InsertSolarTermsEvents(BaseActivity activity, String calendarId) {
         super(activity);
-        this.calendarName = calendarName;
         this.calendarId = calendarId;
     }
 

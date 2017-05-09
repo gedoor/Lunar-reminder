@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity {
                     new GetReminderEvents(this, lunarReminderCalendarId).execute();
                     break;
                 case R.id.radioButtonSolarTerms:
-                    new InsertSolarTermsEvents(this, getString(R.string.solar_terms_calendar_name), solarTermsCalendarId).execute();
+                    new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
                     break;
             }
         });
@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity {
             if (mCache.isExist("jq", ACache.STRING)) {
                 new LoadSolarTermsList(this).execute();
             } else {
-                new InsertSolarTermsEvents(this, getString(R.string.solar_terms_calendar_name), solarTermsCalendarId).execute();
+                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
             }
         }
     }

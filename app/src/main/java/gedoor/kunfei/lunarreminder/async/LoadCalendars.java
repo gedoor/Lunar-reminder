@@ -50,7 +50,7 @@ public class LoadCalendars extends CalendarAsyncTask {
             if (mCache.isExist("jq", ACache.STRING)) {
                 new LoadSolarTermsList(activity).execute();
             } else {
-                new InsertSolarTermsEvents(activity, calendarName, calendarId).execute();
+                new InsertSolarTermsEvents(activity, calendarId).execute();
             }
         }
     }
