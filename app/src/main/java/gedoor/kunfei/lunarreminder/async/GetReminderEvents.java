@@ -70,7 +70,7 @@ public class GetReminderEvents extends CalendarAsyncTask {
         ACache mCache = ACache.get(activity);
         Gson gson = new Gson();
         String strEvents = gson.toJson(events);
-        mCache.put("events", strEvents);
+        mCache.put("events", strEvents, ACache.TIME_DAY);
         listEvent = gson.fromJson(strEvents, new TypeToken<ArrayList<LinkedHashMap<String, ?>>>() {
         }.getType());
         new LoadReminderEventList(activity).execute();
