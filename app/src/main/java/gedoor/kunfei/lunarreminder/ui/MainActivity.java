@@ -57,6 +57,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
+    @BindView(R.id.text_view_no_events)
+    TextView viewNoEvents;
     @BindView(R.id.radioGroupDrawer)
     RadioGroup radioGroupDrawer;
     @BindView(R.id.swipe_refresh)
@@ -91,7 +93,7 @@ public class MainActivity extends BaseActivity {
                 new String[]{"start", "summary"},
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
-
+        listViewEvents.setEmptyView(viewNoEvents);
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
