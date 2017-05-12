@@ -115,6 +115,6 @@
     <string name="no_google_services">检测不到Google服务,程序无法使用</string>
     <string name="select_repeat_num">选择重复次数</string>
     <string name="select_repeat_type">选择重复方式</string>
-    <string name="no_events">建立你的第一个农历提醒吧</string>
+    <string name="no_events">点击 ➕ 创建你的第一个农历提醒吧</string>
 
 </resources>
