@@ -25,6 +25,8 @@
     <string name="create_event_short_label">创建事件</string>
     <string name="exit_event_description">尚未保存，是否继续编辑。</string>
     <string name="version">版本:</string>
+    <string name="how_days_before">提前天数</string>
+    <string name="time">时间</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>
@@ -115,6 +117,8 @@
     <string name="no_google_services">检测不到Google服务,程序无法使用</string>
     <string name="select_repeat_num">选择重复次数</string>
     <string name="select_repeat_type">选择重复方式</string>
+    <string name="customize_reminder">自定义提醒</string>
     <string name="no_events">点击 ➕ 创建你的第一个农历提醒吧</string>
+    <string name="reminder_by_email">通过邮件提醒</string>
 
 </resources>
