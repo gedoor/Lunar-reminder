@@ -5,28 +5,20 @@
     android:padding="10dp"
     android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
-        android:text="@string/customize_reminder" />
-
     <TextView
         android:id="@+id/textView_daysAgo"
         android:labelFor="@id/editText_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_default"
-        android:text="@string/how_days_ago" />
+        android:text="@string/how_days_before" />
 
     <EditText
         android:id="@+id/editText_day"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="number" />
 
     <TextView
         android:id="@+id/textView_time"
@@ -53,7 +45,7 @@
         android:padding="@dimen/padding_default" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBox_byEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/reminder_by_email" />
