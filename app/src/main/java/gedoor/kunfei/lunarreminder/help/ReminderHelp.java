@@ -6,13 +6,14 @@ import java.util.Locale;
 
 /**
  * Created by GKF on 2017/4/10.
+ * Reminder转化
  */
 
 public class ReminderHelp {
-    String method;
-    int tqDay;
-    int txHour;
-    int txMinutesByHour;
+    private String method;
+    private int tqDay;
+    private int txHour;
+    private int txMinutesByHour;
 
     public ReminderHelp(EventReminder reminder) {
         this.method = reminder.getMethod();
@@ -47,5 +48,9 @@ public class ReminderHelp {
 
     public int getTxMinutesByHour() {
         return txMinutesByHour;
+    }
+
+    public String getTime() {
+        return String.format(Locale.CHINA, "%02d:%02d", txHour, txMinutesByHour);
     }
 }
