@@ -1,6 +1,7 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -117,8 +119,14 @@ public class EventEditActivity extends BaseActivity {
             initEvent();
         }
 
-        listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> selectReminder(position));
-
+        listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            View viewX = this.getCurrentFocus();
+            if (viewX != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            selectReminder(position);
+        });
     }
 
     @Override
