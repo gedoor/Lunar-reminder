@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -63,6 +64,8 @@ public class EventEditActivity extends BaseActivity {
     static String[] reminderMethod = new String[]{"", "popup", "email", "popup", "email"};
     boolean isCreateEvent;
     boolean isShortcut;
+    boolean isCreateReminder;
+    EventReminder oldReminder;
 
     int cYear;
     int position;
@@ -197,22 +200,22 @@ public class EventEditActivity extends BaseActivity {
         int checkedItem = 1;
         String[] reminderTitle = new String[]{getString(R.string.reminder0), getString(R.string.reminder1), getString(R.string.reminder2),
                 getString(R.string.reminder3), getString(R.string.reminder4), getString(R.string.reminder_customize)};
-        boolean isCreateReminder = listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder));
+        isCreateReminder = listReminderDis.get(position).get("txTitle").equals(getString(R.string.create_reminder));
         if (!isCreateReminder) {
-            EventReminder reminder = listReminder.get(position);
-            if (reminder.getMinutes() == reminderMinutes[1]) {
-                if (reminder.getMethod().equals("email")) {
+            oldReminder = listReminder.get(position);
+            if (oldReminder.getMinutes() == reminderMinutes[1]) {
+                if (oldReminder.getMethod().equals("email")) {
                     checkedItem = 2;
                 }
-            } else if (reminder.getMinutes() == reminderMinutes[3]) {
-                if (reminder.getMethod().equals("email")) {
+            } else if (oldReminder.getMinutes() == reminderMinutes[3]) {
+                if (oldReminder.getMethod().equals("email")) {
                     checkedItem = 4;
                 } else {
                     checkedItem = 3;
                 }
             } else {
                 checkedItem = 5;
-                reminderTitle[5] = getString(R.string.reminder_customize) + " - " + new ReminderHelp(reminder).getTitle();
+                reminderTitle[5] = getString(R.string.reminder_customize) + " - " + new ReminderHelp(oldReminder).getTitle();
             }
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -241,10 +244,46 @@ public class EventEditActivity extends BaseActivity {
                     refreshReminders();
                     break;
                 case 5:
+                    if (isCreateReminder) {
+                        oldReminder = new EventReminder();
+                        oldReminder.setMinutes(900);
+                        oldReminder.setMethod("popup");
+                    }
+                    customizeReminder(oldReminder);
                     break;
             }
             dialog.dismiss();
         });
+        builder.show();
+    }
+
+    //自定义提醒
+    private void customizeReminder(EventReminder reminder) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.customize_reminder);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.dialog_customize_reminder, null);
+        EditText textBeforeDay = (EditText) view.findViewById(R.id.editText_day);
+        EditText textTime = (EditText) view.findViewById(R.id.editText_time);
+        CheckBox byEmail = (CheckBox) view.findViewById(R.id.checkBox_byEmail);
+        ReminderHelp reminderHelp = new ReminderHelp(reminder);
+        textBeforeDay.setText(String.valueOf(reminderHelp.getTqDay()));
+        textTime.setText(reminderHelp.getTime());
+        if (reminder.getMethod().equals("email")) {
+            byEmail.setChecked(true);
+        }
+        builder.setView(view);
+        builder.setPositiveButton(R.string.ok, (DialogInterface dialog, int which) -> {
+            String[] time = textTime.getText().toString().split(":");
+            reminder.setMinutes(Integer.valueOf(textBeforeDay.getText().toString())*1440 - Integer.valueOf(time[0])*60 - Integer.valueOf(time[1]));
+            reminder.setMethod(byEmail.isChecked() ? "email" : "popup");
+            if (isCreateReminder) {
+                listReminder.add(reminder);
+            }
+            refreshReminders();
+        });
+        builder.setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> {
+        });
+        builder.create();
         builder.show();
     }
 
