@@ -120,11 +120,7 @@ public class EventEditActivity extends BaseActivity {
         }
 
         listViewReminder.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            View viewX = this.getCurrentFocus();
-            if (viewX != null) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+            hideIMM();
             selectReminder(position);
         });
     }
@@ -364,9 +360,11 @@ public class EventEditActivity extends BaseActivity {
                 selectDate();
                 break;
             case R.id.vw_repeat_num:
+                hideIMM();
                 selectRepeatYear();
                 break;
             case R.id.vw_repeat_type:
+                hideIMM();
                 selectRepeatType();
                 break;
         }
@@ -410,6 +408,15 @@ public class EventEditActivity extends BaseActivity {
 
     public interface DialogListener {
         void getCalendar(ChineseCalendar cc);
+    }
+
+    //隐藏输入法
+    private void hideIMM() {
+        View viewX = this.getCurrentFocus();
+        if (viewX != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(viewX.getWindowToken(), 0);
+        }
     }
 
     @SuppressLint("SetTextI18n")
