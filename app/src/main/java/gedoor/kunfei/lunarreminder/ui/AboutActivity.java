@@ -45,7 +45,7 @@ public class AboutActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(getString(R.string.pref_key_first_open), false);
-            editor.commit();
+            editor.apply();
         }
         textViewVersion.setText(sharedPreferences.getString("version", "0.0.0"));
     }
