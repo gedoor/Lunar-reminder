@@ -50,6 +50,20 @@
         <item>@string/graphite</item>
     </string-array>
 
+    <string-array name="themes_name">
+        <item>@string/default_color</item>
+        <item>@string/tangerine</item>
+        <item>@string/tomato</item>
+        <item>@string/banana</item>
+    </string-array>
+
+    <string-array name="themes">
+        <item>default_color</item>
+        <item>tangerine</item>
+        <item>tomato</item>
+        <item>banana</item>
+    </string-array>
+
     <string-array name="reminder_list_str">
         <item>@string/reminder0</item>
         <item>@string/reminder1</item>
@@ -57,6 +71,7 @@
         <item>@string/reminder3</item>
         <item>@string/reminder4</item>
     </string-array>
+
     <string-array name="reminder_list_value">
         <item>0</item>
         <item>1</item>
