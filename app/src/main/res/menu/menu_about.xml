@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="gedoor.kunfei.lunarreminder.ui.AboutActivity">
+
+    <item
+        android:id="@+id/action_score"
+        android:orderInCategory="100"
+        android:title="@string/goScore"
+        app:showAsAction="always" />
+
+</menu>
