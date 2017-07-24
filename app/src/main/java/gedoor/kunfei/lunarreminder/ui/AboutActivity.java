@@ -50,6 +50,12 @@ public class AboutActivity extends AppCompatActivity {
         textViewVersion.setText(sharedPreferences.getString("version", "0.0.0"));
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+    }
+
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
