@@ -12,6 +12,7 @@
     <string name="pref_key_timezone">glTimeZone</string>
     <string name="pref_key_first_open">firstOpen</string>
     <string name="pref_key_default_reminder">defaultReminder</string>
+    <string name="pref_key_app_theme">theme</string>
 
     <string name="lunar_reminder_calendar_name">Lunar Reminder</string>
     <string name="solar_terms_calendar_name">Solar Terms</string>
