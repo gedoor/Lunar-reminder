@@ -1,5 +1,6 @@
 package gedoor.kunfei.lunarreminder.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.data.Properties;
+import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
@@ -60,6 +62,7 @@ public class EventReadActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new InitTheme(this, false);
         setContentView(R.layout.activity_event_read);
         ButterKnife.bind(this);
 
@@ -92,6 +95,7 @@ public class EventReadActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void InitGoogleEvent() {
         if (!App.getEvents(mContext)) {
             Toast.makeText(mContext, "获取缓存事件出错, 请下拉强制刷新事件", Toast.LENGTH_LONG).show();

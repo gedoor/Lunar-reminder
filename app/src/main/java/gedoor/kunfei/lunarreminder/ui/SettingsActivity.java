@@ -127,6 +127,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.pref_app);
             setHasOptionsMenu(true);
 
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_app_theme)));
         }
 
         @Override

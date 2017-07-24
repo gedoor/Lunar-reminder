@@ -35,6 +35,7 @@ import gedoor.kunfei.lunarreminder.async.UpdateReminderEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
+import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.ACache;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -74,6 +75,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new InitTheme(this, true);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 

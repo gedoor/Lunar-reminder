@@ -40,6 +40,7 @@ import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.data.Properties;
+import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
 import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
@@ -90,6 +91,7 @@ public class EventEditActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new InitTheme(this, false);
         setContentView(R.layout.activity_event_edit);
         ButterKnife.bind(this);
 
@@ -286,6 +288,7 @@ public class EventEditActivity extends BaseActivity {
             refreshReminders();
         });
         builder.setNegativeButton(R.string.cancel, (DialogInterface dialog, int which) -> {
+
         });
         builder.create();
         builder.show();
