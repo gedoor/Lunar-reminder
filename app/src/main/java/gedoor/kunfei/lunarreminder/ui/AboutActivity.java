@@ -4,11 +4,14 @@ package gedoor.kunfei.lunarreminder.ui;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -18,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.help.InitTheme;
 
 
 public class AboutActivity extends AppCompatActivity {
@@ -31,6 +35,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new InitTheme(this, true);
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
 
@@ -53,12 +58,24 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
+    // 添加菜单
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_about, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             this.finish();
             return true;
+        } else if (id == R.id.action_score) {
+            String mAddress = "market://details?id=" + getPackageName();
+            Intent marketIntent = new Intent("android.intent.action.VIEW");
+            marketIntent.setData(Uri.parse(mAddress ));
+            startActivity(marketIntent);
         }
         return super.onOptionsItemSelected(item);
     }
