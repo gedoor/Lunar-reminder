@@ -27,6 +27,7 @@
     <string name="version">版本:</string>
     <string name="how_days_before">提前天数</string>
     <string name="time">时间</string>
+    <string name="goScore">去评分</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>
@@ -60,7 +61,6 @@
     <string name="reminder3">提前1周9:00</string>
     <string name="reminder4">提前1周9:00通过邮件</string>
     <string name="reminder_customize">自定义</string>
-    
 
     <string name="about_description">说明</string>
     <string name="about_description_body">农历提醒是一个在google日历中新建按农历重复事件的应用，该应用可以实现新建-修改-删除农历事件，且该应用不存储日历数据，实时读取google日历数据。</string>
@@ -69,7 +69,7 @@
     <string name="about_donate">捐赠</string>
     <string name="about_donate_zfb">支付宝:gekunfei@qq.com</string>
     <string name="about_donate_wexin">微信:kunfei_ge</string>
-    <string name="about_donate_des">上架 Google play 需25$，如果觉得软件好请捐赠，五星好评支持我。</string>
+    <string name="about_donate_des">您的支持是我的动力，如果觉得软件好用请捐赠，五星好评支持我。</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_header_app_config">程序配置</string>
@@ -111,7 +111,7 @@
     <string name="grape">葡萄紫</string>
     <string name="flamingo">红鹤色</string>
     <string name="graphite">石墨黑</string>
-    <string name="default_color">默认颜色</string>
+    <string name="default_color">默认</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
     <string name="no_google_services">检测不到Google服务,程序无法使用</string>
