@@ -25,6 +25,8 @@ import gedoor.kunfei.lunarreminder.help.InitTheme;
 
 
 public class AboutActivity extends AppCompatActivity {
+    SharedPreferences sharedPreferences;
+
     @BindView(R.id.zfb)
     TextView zfb;
     @BindView(R.id.weXin)
@@ -41,19 +43,13 @@ public class AboutActivity extends AppCompatActivity {
 
         setupActionBar();
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(getString(R.string.pref_key_first_open), false);
             editor.apply();
         }
         textViewVersion.setText(sharedPreferences.getString("version", "0.0.0"));
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
     }
 
     private void setupActionBar() {
@@ -82,6 +78,9 @@ public class AboutActivity extends AppCompatActivity {
             Intent marketIntent = new Intent("android.intent.action.VIEW");
             marketIntent.setData(Uri.parse(mAddress ));
             startActivity(marketIntent);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getString(R.string.pref_key_apk_score), true);
+            editor.apply();
         }
         return super.onOptionsItemSelected(item);
     }
