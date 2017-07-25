@@ -11,6 +11,7 @@
     <string name="pref_key_google_account">glAccountName</string>
     <string name="pref_key_timezone">glTimeZone</string>
     <string name="pref_key_first_open">firstOpen</string>
+    <string name="pref_key_apk_score">apkScore</string>
     <string name="pref_key_default_reminder">defaultReminder</string>
     <string name="pref_key_app_theme">theme</string>
 
