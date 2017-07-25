@@ -73,7 +73,7 @@ public class AboutActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             this.finish();
             return true;
-        } else if (id == R.id.action_score) {
+        } else if (id == R.id.action_Scoring) {
             String mAddress = "market://details?id=" + getPackageName();
             Intent marketIntent = new Intent("android.intent.action.VIEW");
             marketIntent.setData(Uri.parse(mAddress ));
