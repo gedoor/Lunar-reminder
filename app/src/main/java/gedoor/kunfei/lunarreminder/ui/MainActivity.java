@@ -1,9 +1,11 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -177,6 +180,8 @@ public class MainActivity extends BaseActivity {
         mDrawerToggle.syncState();
         //初始化googleAccount
         initGoogleAccount();
+        //评分对话框
+        apkScoring();
     }
 
     @Override
@@ -337,6 +342,35 @@ public class MainActivity extends BaseActivity {
     public void refreshView() {
         adapter.notifyDataSetChanged();
         swNoRefresh();
+    }
+
+    private void apkScoring() {
+        int openNum = sharedPreferences.getInt(getString(R.string.pref_key_open_num), 0);
+        boolean apkScoring = sharedPreferences.getBoolean(getString(R.string.pref_key_apk_score), false);
+        if (openNum < 100) {
+            openNum = openNum + 1;
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(getString(R.string.pref_key_open_num), openNum);
+            editor.apply();
+        }
+        if (openNum > 5 & !apkScoring) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.scoring);
+            builder.setMessage(R.string.scoringBody);
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
+                String mAddress = "market://details?id=" + getPackageName();
+                Intent marketIntent = new Intent("android.intent.action.VIEW");
+                marketIntent.setData(Uri.parse(mAddress ));
+                startActivity(marketIntent);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(getString(R.string.pref_key_apk_score), true);
+                editor.apply();
+            });
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+
+            });
+            builder.show();
+        }
     }
 
     @Override
