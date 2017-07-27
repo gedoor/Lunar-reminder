@@ -43,6 +43,13 @@ public class InitTheme {
                     context.setTheme(R.style.AppTheme_banana_NoActionBar);
                 }
                 break;
+            case "peacock":
+                if (hasActionBar) {
+                    context.setTheme(R.style.AppTheme_peacock);
+                } else {
+                    context.setTheme(R.style.AppTheme_peacock_NoActionBar);
+                }
+                break;
         }
 
     }

@@ -27,7 +27,8 @@
     <string name="version">版本:</string>
     <string name="how_days_before">提前天数</string>
     <string name="time">时间</string>
-    <string name="goScore">去评分</string>
+    <string name="scoring">去评分</string>
+    <string name="scoringBody">支持我，去应用商店评分并反馈意见。</string>
 
     <string-array name="indicator_string_array">
         <item>农历</item>

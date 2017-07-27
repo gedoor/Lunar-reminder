@@ -55,6 +55,7 @@
         <item>@string/tangerine</item>
         <item>@string/tomato</item>
         <item>@string/banana</item>
+        <item>@string/peacock</item>
     </string-array>
 
     <string-array name="themes">
@@ -62,6 +63,7 @@
         <item>tangerine</item>
         <item>tomato</item>
         <item>banana</item>
+        <item>peacock</item>
     </string-array>
 
     <string-array name="reminder_list_str">
