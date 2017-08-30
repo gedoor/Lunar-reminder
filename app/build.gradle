@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 def gitTag = 'git tag'.execute([], project.rootDir).text.trim().split("\n").last()
 def gitCommits = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
 
-def keystoreFilepath = ''
 def keystorePSW = ''
 def keystoreAlias = ''
 def keystoreAliasPSW = ''
@@ -13,7 +12,7 @@ def keyFile = file('s.keystore.temp')
 Properties properties = new Properties()
 // local.properties file in the root director
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
-keystoreFilepath = properties.getProperty("keystore.path")
+def keystoreFilepath = properties.getProperty("keystore.path")
 
 if (keystoreFilepath) {
     keystorePSW = properties.getProperty("keystore.password")
@@ -40,7 +39,7 @@ android {
         versionCode 10000 + gitCommits
         versionName gitTag
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        project.ext.set("archivesBaseName", "Lunar-reminder-" + gitTag);
+        project.ext.set("archivesBaseName", "LunarReminder-" + gitTag)
     }
 
     compileOptions {

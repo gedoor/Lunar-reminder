@@ -39,16 +39,16 @@ public class SimpleAdapterEvent extends SimpleAdapter {
 
         String mId = listItem.get(position).get("id");
         String bgColor = listItem.get(position).get("bgColor");
-        TextView start = (TextView) view.findViewById(R.id.event_item_date);
-        TextView title = (TextView) view.findViewById(R.id.event_item_title);
+        TextView start = view.findViewById(R.id.event_item_date);
+        CustomTextView title = view.findViewById(R.id.event_item_title);
         if (mId.equals("")) {
             start.setTextSize(30);
-            title.setBackground(mContext.getResources().getDrawable(R.color.colorTransparent));
+            title.setSolidColor(mContext.getResources().getColor(R.color.colorTransparent));
             title.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
             title.setTextSize(30);
         } else {
             start.setTextSize(16);
-            title.setBackground(new ColorDrawable(Color.parseColor(bgColor)));
+            title.setSolidColor(Color.parseColor(bgColor));
             title.setTextColor(mContext.getResources().getColor(R.color.colorWhite));
             title.setTextSize(16);
         }
