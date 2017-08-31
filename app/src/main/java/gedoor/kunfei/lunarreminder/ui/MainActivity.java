@@ -15,8 +15,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -99,6 +101,7 @@ public class MainActivity extends BaseActivity {
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
         listViewEvents.setEmptyView(viewNoEvents);
+
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
@@ -287,10 +290,11 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
+    //菜单状态
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         menuShowAll = menu.getItem(0);
+        menuShowAll.setChecked(showAllEvents);
         return super.onPrepareOptionsMenu(menu);
     }
     //菜单
@@ -300,6 +304,7 @@ public class MainActivity extends BaseActivity {
         switch (id) {
             case R.id.action_showAllEvents:
                 showAllEvents = !showAllEvents;
+                item.setChecked(showAllEvents);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("showAllEvents", showAllEvents);
                 editor.apply();
