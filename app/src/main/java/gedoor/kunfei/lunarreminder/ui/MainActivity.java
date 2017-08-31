@@ -101,7 +101,7 @@ public class MainActivity extends BaseActivity {
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
         listViewEvents.setEmptyView(viewNoEvents);
-
+        registerForContextMenu(listViewEvents);
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
@@ -115,35 +115,7 @@ public class MainActivity extends BaseActivity {
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
-        //列表长按
-        listViewEvents.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            String mId = list.get(position).get("id");
-            if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
-                return true;
-            }
-            PopupMenu popupMenu = new PopupMenu(mContext, view);
-            Menu menu = popupMenu.getMenu();
-            getMenuInflater().inflate(R.menu.menu_event_list, menu);
-            popupMenu.setOnMenuItemClickListener((MenuItem item) -> {
-                switch (item.getItemId()) {
-                    case R.id.action_edit:
-                        Intent intent = new Intent(mContext, EventEditActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("position", Integer.parseInt(mId));
-                        bundle.putLong("id", position);
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, REQUEST_REMINDER);
-                        return true;
-                    case R.id.action_delete:
-                        swOnRefresh();
-                        new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
-                        return true;
-                }
-                return true;
-            });
-            popupMenu.show();
-            return true;
-        });
+
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
             getCalendarId();
@@ -330,6 +302,43 @@ public class MainActivity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    //上下文菜单
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        String mId = list.get(info.position).get("id");
+        if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
+            return;
+        }
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_event_list, menu);
+        menu.setHeaderTitle(R.string.action);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        String mId = list.get(info.position).get("id");
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                Intent intent = new Intent(mContext, EventEditActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("position", Integer.parseInt(mId));
+                bundle.putLong("id", info.position);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, REQUEST_REMINDER);
+                return true;
+            case R.id.action_delete:
+                swOnRefresh();
+                new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     //刷新动画开始

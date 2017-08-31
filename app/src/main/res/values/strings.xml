@@ -1,6 +1,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">农历提醒</string>
     <string name="event">事件</string>
+    <string name="action">操作</string>
     <string name="action_settings">设置</string>
     <string name="action_showAllEvents">显示全部事件</string>
     <string name="action_about">关于</string>
