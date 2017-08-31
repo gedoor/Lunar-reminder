@@ -65,6 +65,8 @@ public class MainActivity extends BaseActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuItem menuShowAll;
 
+    @BindView(R.id.main_view)
+    View mainView;
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
     @BindView(R.id.text_view_no_events)
@@ -137,7 +139,7 @@ public class MainActivity extends BaseActivity {
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_REMINDER);
                 } else if (which == 1) {
-                    Snackbar.make(listViewEvents, getString(R.string.confirmDeletion), Snackbar.LENGTH_LONG)
+                    Snackbar.make(mainView, getString(R.string.confirmDeletion), Snackbar.LENGTH_LONG)
                             .setAction(R.string.ok, v -> {
                                 swOnRefresh();
                                 new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
