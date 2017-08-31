@@ -15,17 +15,20 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,7 +104,7 @@ public class MainActivity extends BaseActivity {
                 new int[]{R.id.event_item_date, R.id.event_item_title});
         listViewEvents.setAdapter(adapter);
         listViewEvents.setEmptyView(viewNoEvents);
-        registerForContextMenu(listViewEvents);
+
         //列表点击
         listViewEvents.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             String mId = list.get(position).get("id");
@@ -115,7 +118,33 @@ public class MainActivity extends BaseActivity {
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_REMINDER);
         });
-
+        //列表长按AlertDialog
+        listViewEvents.setOnItemLongClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            String mId = list.get(position).get("id");
+            if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
+                return true;
+            }
+            String[] actions = {getString(R.string.action_edit), getString(R.string.action_del)};
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(list.get(position).get("summary"));
+            builder.setItems(actions, (dialog, which) -> {
+                if (which == 0) {
+                    Intent intent = new Intent(mContext, EventEditActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("position", Integer.parseInt(mId));
+                    bundle.putLong("id", position);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, REQUEST_REMINDER);
+                } else if (which == 1) {
+                    swOnRefresh();
+                    new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
+                }
+                dialog.dismiss();
+            });
+            builder.create();
+            builder.show();
+            return true;
+        });
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
             getCalendarId();
@@ -302,43 +331,6 @@ public class MainActivity extends BaseActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-    //上下文菜单
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        String mId = list.get(info.position).get("id");
-        if (mId.equals("") | mId.equals(getString(R.string.solar_terms_calendar_name))) {
-            return;
-        }
-
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_event_list, menu);
-        menu.setHeaderTitle(R.string.action);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        String mId = list.get(info.position).get("id");
-        switch (item.getItemId()) {
-            case R.id.action_edit:
-                Intent intent = new Intent(mContext, EventEditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("position", Integer.parseInt(mId));
-                bundle.putLong("id", info.position);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, REQUEST_REMINDER);
-                return true;
-            case R.id.action_delete:
-                swOnRefresh();
-                new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 
     //刷新动画开始
