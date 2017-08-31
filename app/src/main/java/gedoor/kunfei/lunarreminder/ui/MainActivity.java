@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity {
             String[] actions = {getString(R.string.action_edit), getString(R.string.action_del)};
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(list.get(position).get("summary"));
-            builder.setItems(actions, (dialog, which) -> {
+            builder.setItems(actions, (DialogInterface dialog, int which) -> {
                 if (which == 0) {
                     Intent intent = new Intent(mContext, EventEditActivity.class);
                     Bundle bundle = new Bundle();
@@ -136,8 +137,12 @@ public class MainActivity extends BaseActivity {
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_REMINDER);
                 } else if (which == 1) {
-                    swOnRefresh();
-                    new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
+                    Snackbar.make(listViewEvents, getString(R.string.confirmDeletion), Snackbar.LENGTH_LONG)
+                            .setAction(R.string.ok, v -> {
+                                swOnRefresh();
+                                new DeleteReminderEvents(this, lunarReminderCalendarId, new GEvent(this, listEvent.get(Integer.parseInt(mId))).getLunarRepeatId()).execute();
+                            })
+                            .show();
                 }
                 dialog.dismiss();
             });

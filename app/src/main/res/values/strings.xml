@@ -30,7 +30,7 @@
     <string name="time">时间</string>
     <string name="scoring">去评分</string>
     <string name="scoringBody">支持我，去应用商店评分并反馈意见。</string>
-
+    <string name="confirmDeletion">确认删除！</string>
     <string-array name="indicator_string_array">
         <item>农历</item>
         <item>公历</item>
