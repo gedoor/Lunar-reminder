@@ -127,10 +127,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     //检测google服务
     private boolean checkGooglePlayServicesAvailable() {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
-        final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(mContext);
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
     //获取权限
