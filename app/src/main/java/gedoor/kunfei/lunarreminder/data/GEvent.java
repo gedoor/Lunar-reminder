@@ -15,6 +15,7 @@ import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatType;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatNum;
 
 /**
+ * 事件
  * Created by GKF on 2017/4/23.
  */
 
