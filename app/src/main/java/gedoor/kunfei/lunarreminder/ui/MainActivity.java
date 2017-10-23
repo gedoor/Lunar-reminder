@@ -410,7 +410,7 @@ public class MainActivity extends BaseActivity {
                 case REQUEST_REMINDER:
                     swOnRefresh();
                     Bundle bundle = data.getExtras();
-                    switch (bundle.getInt(FinalFields.OPERATION)) {
+                    switch (bundle != null ? bundle.getInt(FinalFields.OPERATION) : 0) {
                         case FinalFields.OPERATION_INSERT:
                             new InsertReminderEvents(this, lunarReminderCalendarId, googleEvent, eventRepeatType, eventRepeatNum).execute();
                             break;
