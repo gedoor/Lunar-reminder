@@ -3,7 +3,7 @@
     <shortcut
         android:shortcutId="create_event"
         android:enabled="true"
-        android:icon="@mipmap/add_128px"
+        android:icon="@mipmap/ic_add_reminder"
         android:shortcutShortLabel="@string/create_event_short_label"
         android:shortcutLongLabel="@string/create_event_short_label">
 

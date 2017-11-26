@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def gitTag = 'git tag'.execute([], project.rootDir).text.trim().split("\n").last()
+def version = "0.5.7"
 def gitCommits = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
 
 def keystorePSW = ''
@@ -37,9 +37,9 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 10000 + gitCommits
-        versionName gitTag
+        versionName version
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        project.ext.set("archivesBaseName", "LunarReminder-" + gitTag)
+        project.ext.set("archivesBaseName", "LunarReminder-" + version)
     }
 
     compileOptions {
@@ -89,9 +89,9 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:appcompat-v7:27.0.0'
-    compile 'com.android.support:design:27.0.0'
-    compile 'com.android.support:support-v4:27.0.0'
+    compile 'com.android.support:appcompat-v7:27.0.1'
+    compile 'com.android.support:design:27.0.1'
+    compile 'com.android.support:support-v4:27.0.1'
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     compile 'pub.devrel:easypermissions:0.3.0'
