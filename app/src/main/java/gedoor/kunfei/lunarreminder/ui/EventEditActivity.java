@@ -280,6 +280,9 @@ public class EventEditActivity extends BaseActivity {
         builder.setView(view);
         builder.setPositiveButton(R.string.ok, (DialogInterface dialog, int which) -> {
             String[] time = textTime.getText().toString().split(":");
+            if (!(Integer.valueOf(textBeforeDay.getText().toString()) > 0)) {
+                return;
+            }
             reminder.setMinutes(Integer.valueOf(textBeforeDay.getText().toString())*1440 - Integer.valueOf(time[0])*60 - Integer.valueOf(time[1]));
             reminder.setMethod(byEmail.isChecked() ? "email" : "popup");
             if (isCreateReminder) {
