@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,20 +19,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +58,11 @@ public class MainActivity extends BaseActivity {
     private static final int REQUEST_SETTINGS = 2;
     public static final int REQUEST_ABOUT = 3;
 
+    private static final int CALENDAR1=1;
+    private static final int CALENDAR2=2;
+
+    private int calendarChose=CALENDAR1;
+
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuItem menuShowAll;
@@ -71,14 +73,14 @@ public class MainActivity extends BaseActivity {
     ListView listViewEvents;
     @BindView(R.id.text_view_no_events)
     TextView viewNoEvents;
-    @BindView(R.id.radioGroupDrawer)
-    RadioGroup radioGroupDrawer;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.drawer)
     DrawerLayout drawer;
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
     @BindView(R.id.text_view_version)
     TextView textViewVersion;
 
@@ -155,33 +157,36 @@ public class MainActivity extends BaseActivity {
         //下拉刷新
         swipeRefresh.setOnRefreshListener(() -> {
             getCalendarId();
-            switch (radioGroupDrawer.getCheckedRadioButtonId()) {
-                case R.id.radioButtonReminder:
+            switch (calendarChose) {
+                case CALENDAR1:
                     new GetReminderEvents(this, lunarReminderCalendarId).execute();
                     break;
-                case R.id.radioButtonSolarTerms:
+                case CALENDAR2:
                     new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
                     break;
             }
         });
-        //切换日历
-        radioGroupDrawer.setOnCheckedChangeListener((group, checkedId) -> {
-            drawer.closeDrawers();
-            swOnRefresh();
-            switch (checkedId) {
-                case R.id.radioButtonReminder:
-                    setTitle(R.string.app_name);
-                    showReminderHelp(true);
-                    loadReminderCalendar();
-                    break;
-                case R.id.radioButtonSolarTerms:
-                    setTitle(R.string.solar_terms_24);
-                    showReminderHelp(false);
-                    loadSolarTerms();
-                    break;
-            }
-        });
+
         textViewVersion.setText(getText(R.string.version) + sharedPreferences.getString("version", null));
+    }
+
+    private void setCalendarChooser(int key) {
+        switch (key) {
+            case CALENDAR1:
+                setTitle(R.string.app_name);
+                loadReminderCalendar();
+                showReminderHelp(true);
+                navigationView.setCheckedItem(R.id.navReminder);
+                calendarChose = CALENDAR1;
+                break;
+            case CALENDAR2:
+                setTitle(R.string.solar_terms_24);
+                loadSolarTerms();
+                showReminderHelp(false);
+                navigationView.setCheckedItem(R.id.navSolarTerms);
+                calendarChose = CALENDAR2;
+                break;
+        }
     }
 
     @Override
@@ -198,16 +203,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initFinish() {
         swOnRefresh();
-        switch (radioGroupDrawer.getCheckedRadioButtonId()) {
-            case R.id.radioButtonReminder:
-                setTitle(R.string.app_name);
-                loadReminderCalendar();
-                break;
-            case R.id.radioButtonSolarTerms:
-                setTitle(R.string.solar_terms_24);
-                loadSolarTerms();
-                break;
-        }
+        setCalendarChooser(calendarChose);
     }
 
     @Override
@@ -264,6 +260,8 @@ public class MainActivity extends BaseActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerToggle.syncState();
         drawer.addDrawerListener(mDrawerToggle);
+
+        setUpNavigationView();
     }
 
     private void setupActionBar() {
@@ -271,6 +269,34 @@ public class MainActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void setUpNavigationView() {
+        ColorStateList textSl = new ColorStateList(new int[][]{{-16842912}, {16842912}},
+                new int[]{getResources().getColor(R.color.colorBlack), getResources().getColor(R.color.colorLightGrey)});
+        navigationView.setItemTextColor(textSl);
+
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            drawer.closeDrawers();
+            switch (menuItem.getItemId()) {
+                case R.id.navReminder:
+                    setCalendarChooser(CALENDAR1);
+                    return true;
+                case R.id.navSolarTerms:
+                    setCalendarChooser(CALENDAR2);
+                    return true;
+                case R.id.action_settings:
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    this.startActivityForResult(intent, REQUEST_SETTINGS);
+                    return true;
+                case R.id.action_about:
+                    Intent intent_about = new Intent(this, AboutActivity.class);
+                    this.startActivityForResult(intent_about, REQUEST_ABOUT);
+                    return true;
+            }
+
+            return true;
+        });
     }
 
     public void setTitle(@StringRes int title) {
@@ -281,6 +307,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void showReminderHelp(Boolean show) {
+        if (menuShowAll == null) {
+            return;
+        }
         if (show) {
             fab.show();
             menuShowAll.setEnabled(true);
@@ -295,7 +324,7 @@ public class MainActivity extends BaseActivity {
     // 添加菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
         return true;
     }
     //菜单状态
@@ -319,14 +348,6 @@ public class MainActivity extends BaseActivity {
                 swOnRefresh();
                 getCalendarId();
                 new GetReminderEvents(this, lunarReminderCalendarId).execute();
-                return true;
-            case R.id.action_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                this.startActivityForResult(intent, REQUEST_SETTINGS);
-                return true;
-            case R.id.action_about:
-                Intent intent_about = new Intent(this, AboutActivity.class);
-                this.startActivityForResult(intent_about, REQUEST_ABOUT);
                 return true;
             case android.R.id.home:
                 if (drawer.isDrawerOpen(GravityCompat.START)

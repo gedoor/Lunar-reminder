@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def version = "0.5.9"
+def version = "0.6.0"
 def gitCommits = Integer.parseInt('git rev-list --count HEAD'.execute([], project.rootDir).text.trim())
 
 def keystorePSW = ''
