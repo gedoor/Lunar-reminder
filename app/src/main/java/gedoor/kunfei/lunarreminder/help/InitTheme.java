@@ -12,45 +12,64 @@ import gedoor.kunfei.lunarreminder.R;
  */
 
 public class InitTheme {
+    int themeRes;
     SharedPreferences sharedPreferences;
 
     public InitTheme(Context context, Boolean hasActionBar) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         String theme = sharedPreferences.getString(context.getString(R.string.pref_key_app_theme), "default_color");
-        if (theme.equals("default_color")) {
-            return;
-        }
 
         switch (theme) {
+            case "default_color":
+                if (hasActionBar) {
+                    themeRes = R.style.AppTheme;
+                    context.setTheme(R.style.AppTheme);
+                } else {
+                    themeRes = R.style.AppTheme;
+                    context.setTheme(R.style.AppTheme_NoActionBar);
+                }
+                break;
             case "tangerine":
                 if (hasActionBar) {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_tangerine);
                 } else {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_tangerine_NoActionBar);
                 }
                 break;
             case "tomato":
                 if (hasActionBar) {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_tomato);
                 } else {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_tomato_NoActionBar);
                 }
                 break;
             case "banana":
                 if (hasActionBar) {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_banana);
                 } else {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_banana_NoActionBar);
                 }
                 break;
             case "peacock":
                 if (hasActionBar) {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_peacock);
                 } else {
+                    themeRes = R.style.AppTheme;
                     context.setTheme(R.style.AppTheme_peacock_NoActionBar);
                 }
                 break;
         }
 
+    }
+
+    public int getThemeRes() {
+        return themeRes;
     }
 }

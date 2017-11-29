@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity {
 
     private int calendarChose=CALENDAR1;
 
+    private InitTheme initTheme;
     private SimpleAdapterEvent adapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private MenuItem menuShowAll;
@@ -88,7 +89,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new InitTheme(this, true);
+        initTheme = new InitTheme(this, true);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -272,8 +273,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setUpNavigationView() {
-        ColorStateList textSl = new ColorStateList(new int[][]{{-16842912}, {16842912}},
-                new int[]{getResources().getColor(R.color.colorBlack), getResources().getColor(R.color.colorLightGrey)});
+        ColorStateList textSl = getResources().getColorStateList(R.color.selecter);
         navigationView.setItemTextColor(textSl);
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
