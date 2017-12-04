@@ -1,7 +1,6 @@
 package gedoor.kunfei.lunarreminder.ui;
 
 
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,13 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.help.DonateAliPay;
+import gedoor.kunfei.lunarreminder.help.DonateByAliPay;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 
 
@@ -89,7 +87,7 @@ public class AboutActivity extends AppCompatActivity {
         ClipboardManager clipboardManager = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         switch (view.getId()) {
             case R.id.zfb:
-                DonateAliPay.openAlipayPayPage(this, "tsx06677nwdk3javroq4ef0");
+                DonateByAliPay.openAlipayPayPage(this, "tsx06677nwdk3javroq4ef0");
                 break;
         }
     }

@@ -11,7 +11,7 @@ import java.net.URLEncoder;
  * 支付宝捐赠
  */
 
-public class DonateAliPay {
+public class DonateByAliPay {
 
     public static boolean openAlipayPayPage(Context context, String qrcode) {
         try {
