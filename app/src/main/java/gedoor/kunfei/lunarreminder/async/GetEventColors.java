@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.ACache;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 /**
  * 获取Event颜色ID和颜色
@@ -22,16 +22,16 @@ public class GetEventColors extends CalendarAsyncTask {
     }
 
     protected void doInBackground() throws IOException {
-        ACache mCache = ACache.get(activity);
-        if (mCache.isExist("eventColors", ACache.STRING)) {
+        String strEC = (String) SharedPreferencesUtil.getString(activity, "eventColors", null);
+        if (strEC == null) {
             HashMap<String, String> hp = new HashMap<>();
-            Colors colors = client.colors().get().setFields("items(event)").execute();
+            Colors colors = client.colors().get().execute();
             for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
                 hp.put(color.getValue().getBackground(), color.getKey());
             }
             Gson gson = new Gson();
             String eventColors = gson.toJson(hp);
-            mCache.put("eventColors", eventColors);
+            SharedPreferencesUtil.saveData(activity,"eventColors", eventColors);
         }
     }
 

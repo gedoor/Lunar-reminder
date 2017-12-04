@@ -24,8 +24,8 @@ import java.util.List;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsF;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.solarTermsJ;
@@ -48,7 +48,7 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     @Override
     protected void doInBackground() throws IOException {
         getCalendarColor();
-//        deleteEvents();
+        // deleteEvents();
         Calendar c = Calendar.getInstance();
         String urlStr = "http://data.weather.gov.hk/gts/time/calendar/text/T" + c.get(Calendar.YEAR) + "c.txt";
         URL url = new URL(urlStr);
@@ -94,8 +94,7 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
             is.close();
             Gson gson = new Gson();
             String str = gson.toJson(list);
-            ACache mCache = ACache.get(activity);
-            mCache.put("jq", str);
+            SharedPreferencesUtil.saveData(activity, "jq", str);
         }
         connection.disconnect();
 

@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.ACache;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 /**
  * 载入节气
@@ -32,8 +32,7 @@ public class LoadSolarTermsList extends CalendarAsyncTask {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), 0);
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
-        ACache mCache = ACache.get(activity);
-        String str = mCache.getAsString("jq");
+        String str = (String) SharedPreferencesUtil.getString(activity,"jq", null);
         Gson gson = new Gson();
         list = gson.fromJson(str, new TypeToken<ArrayList<HashMap<String, String>>>(){}.getType());
         for (HashMap<String, String> hp : list) {

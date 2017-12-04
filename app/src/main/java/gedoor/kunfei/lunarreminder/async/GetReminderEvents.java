@@ -21,9 +21,9 @@ import java.util.List;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 import static gedoor.kunfei.lunarreminder.App.listEvent;
 
@@ -66,11 +66,9 @@ public class GetReminderEvents extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        new GetEventColors(activity).execute();
-        ACache mCache = ACache.get(activity);
         Gson gson = new Gson();
         String strEvents = gson.toJson(events);
-        mCache.put("events", strEvents, ACache.TIME_DAY);
+        SharedPreferencesUtil.saveData(activity, "events", strEvents);
         listEvent = gson.fromJson(strEvents, new TypeToken<ArrayList<LinkedHashMap<String, ?>>>() {
         }.getType());
         new LoadReminderEventList(activity).execute();

@@ -43,7 +43,7 @@ import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
-import gedoor.kunfei.lunarreminder.util.ACache;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 
 import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
@@ -166,10 +166,6 @@ public class MainActivity extends BaseActivity {
         } else {
             new GetReminderEvents(this, lunarReminderCalendarId).execute();
         }
-        if (isFirstOpen) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
-        }
     }
 
     //载入节气
@@ -178,8 +174,8 @@ public class MainActivity extends BaseActivity {
         if (solarTermsCalendarId == null) {
             new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
         } else {
-            ACache mCache = ACache.get(this);
-            if (mCache.isExist("jq", ACache.STRING)) {
+            String strJQ = (String) SharedPreferencesUtil.getString(this, "jq", null);
+            if (strJQ != null) {
                 new LoadSolarTermsList(this).execute();
             } else {
                 new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();

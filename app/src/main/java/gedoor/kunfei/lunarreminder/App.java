@@ -16,10 +16,9 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import gedoor.kunfei.lunarreminder.util.ACache;
 import gedoor.kunfei.lunarreminder.util.CrashHandler;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 public class App extends Application {
     /**
@@ -49,9 +48,8 @@ public class App extends Application {
         if (listEvent != null) {
             return true;
         }
-        ACache aCache = ACache.get(context);
-        if (aCache.isExist("events", ACache.STRING)) {
-            String strEvents = aCache.getAsString("events");
+        String strEvents = (String) SharedPreferencesUtil.getString(context, "events", null);
+        if (strEvents != null) {
             Gson gson = new Gson();
             listEvent = gson.fromJson(strEvents, new TypeToken<ArrayList<LinkedHashMap<String, ?>>>() {
             }.getType());

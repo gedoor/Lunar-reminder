@@ -84,6 +84,12 @@ public class SharedPreferencesUtil {
         return null;
     }
 
+    public static String getString(Context context, String key, Object defValue) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences
+                (FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, (String) defValue);
+    }
+
     /**
      * 清空文件
      *

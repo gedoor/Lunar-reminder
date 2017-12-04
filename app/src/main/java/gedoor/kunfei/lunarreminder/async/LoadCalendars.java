@@ -12,7 +12,7 @@ import java.util.TimeZone;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.ACache;
+import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 public class LoadCalendars extends CalendarAsyncTask {
     private static final String TAG = "AsyncLoadCalendars";
@@ -46,8 +46,8 @@ public class LoadCalendars extends CalendarAsyncTask {
         } else if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
             new GetReminderEvents(activity, calendarId).execute();
         } else {
-            ACache mCache = ACache.get(activity);
-            if (mCache.isExist("jq", ACache.STRING)) {
+            String strJQ = (String) SharedPreferencesUtil.getString(activity, "jq", null);
+            if (strJQ == null) {
                 new LoadSolarTermsList(activity).execute();
             } else {
                 new InsertSolarTermsEvents(activity, calendarId).execute();
