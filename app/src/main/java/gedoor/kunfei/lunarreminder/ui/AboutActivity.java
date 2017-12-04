@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.help.DonateAliPay;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 
 
@@ -29,8 +30,6 @@ public class AboutActivity extends AppCompatActivity {
 
     @BindView(R.id.zfb)
     TextView zfb;
-    @BindView(R.id.weXin)
-    TextView weXin;
     @BindView(R.id.text_about_version)
     TextView textViewVersion;
 
@@ -85,17 +84,12 @@ public class AboutActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.zfb, R.id.weXin})
+    @OnClick({R.id.zfb})
     public void onViewClicked(View view) {
         ClipboardManager clipboardManager = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         switch (view.getId()) {
             case R.id.zfb:
-                Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
-                clipboardManager.setPrimaryClip(ClipData.newPlainText("支付宝", "gekunfei@qq.com"));
-                break;
-            case R.id.weXin:
-                Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
-                clipboardManager.setPrimaryClip(ClipData.newPlainText("微信", "kunfei_ge"));
+                DonateAliPay.openAlipayPayPage(this, "tsx06677nwdk3javroq4ef0");
                 break;
         }
     }

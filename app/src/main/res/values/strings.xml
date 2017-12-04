@@ -69,8 +69,8 @@
     <string name="about_author">作者</string>
     <string name="about_author_name">kunfei</string>
     <string name="about_donate">捐赠</string>
-    <string name="about_donate_zfb">支付宝:gekunfei@qq.com (点击复制)</string>
-    <string name="about_donate_wexin">微信:kunfei_ge (点击复制)</string>
+    <string name="about_donate_zfb">支付宝:gekunfei@qq.com (点我)</string>
+    <string name="about_donate_wexin">微信:kunfei_ge (点我)</string>
     <string name="about_donate_des">您的支持是我的动力，如果觉得软件好用请捐赠，五星好评支持我。</string>
 
     <!-- Strings related to Settings -->
