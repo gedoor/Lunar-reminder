@@ -95,16 +95,100 @@ public class MainActivity extends BaseActivity {
 
         setupActionBar();
         initDrawer();
-        //悬浮按钮
-        fab.setOnClickListener((View view) -> {
-            googleEvent = null;
-            Intent intent = new Intent(mContext, EventEditActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("position", -1);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_REMINDER);
-        });
+        initFloatingActionButton();
+        initListView();
 
+        textViewVersion.setText(getText(R.string.version) + sharedPreferences.getString("version", null));
+    }
+
+    private void setCalendarChooser(int key) {
+        swOnRefresh();
+        switch (key) {
+            case CALENDAR1:
+                setTitle(R.string.app_name);
+                loadReminderCalendar();
+                showReminderHelp(true);
+                navigationView.setCheckedItem(R.id.navReminder);
+                calendarChose = CALENDAR1;
+                break;
+            case CALENDAR2:
+                setTitle(R.string.solar_terms_24);
+                loadSolarTerms();
+                showReminderHelp(false);
+                navigationView.setCheckedItem(R.id.navSolarTerms);
+                calendarChose = CALENDAR2;
+                break;
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // 这个必须要，没有的话进去的默认是个箭头。。正常应该是三横杠的
+        mDrawerToggle.syncState();
+        //初始化googleAccount
+        initGoogleAccount();
+        //评分对话框
+        apkScoring();
+    }
+
+    @Override
+    public void initFinish() {
+        setCalendarChooser(calendarChose);
+    }
+
+    @Override
+    public void syncSuccess() {
+
+    }
+
+    @Override
+    public void syncError() {
+        swNoRefresh();
+    }
+
+    @Override
+    public void eventListFinish() {
+        refreshView();
+    }
+
+    //载入提醒事件
+    public void loadReminderCalendar() {
+        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
+        if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true) && !isFirstOpen) {
+            getEvents(mContext);
+        }
+        getCalendarId();
+        if (lunarReminderCalendarId == null) {
+            new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
+        } else if (listEvent != null) {
+            new LoadReminderEventList(this).execute();
+        } else {
+            new GetReminderEvents(this, lunarReminderCalendarId).execute();
+        }
+        if (isFirstOpen) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    //载入节气
+    public void loadSolarTerms() {
+        getCalendarId();
+        if (solarTermsCalendarId == null) {
+            new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
+        } else {
+            ACache mCache = ACache.get(this);
+            if (mCache.isExist("jq", ACache.STRING)) {
+                new LoadSolarTermsList(this).execute();
+            } else {
+                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
+            }
+        }
+    }
+
+    //初始化ListView
+    private void initListView() {
         adapter = new SimpleAdapterEvent(mContext, list, R.layout.item_event,
                 new String[]{"start", "summary"},
                 new int[]{R.id.event_item_date, R.id.event_item_title});
@@ -167,94 +251,17 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         });
-
-        textViewVersion.setText(getText(R.string.version) + sharedPreferences.getString("version", null));
     }
-
-    private void setCalendarChooser(int key) {
-        switch (key) {
-            case CALENDAR1:
-                setTitle(R.string.app_name);
-                loadReminderCalendar();
-                showReminderHelp(true);
-                navigationView.setCheckedItem(R.id.navReminder);
-                calendarChose = CALENDAR1;
-                break;
-            case CALENDAR2:
-                setTitle(R.string.solar_terms_24);
-                loadSolarTerms();
-                showReminderHelp(false);
-                navigationView.setCheckedItem(R.id.navSolarTerms);
-                calendarChose = CALENDAR2;
-                break;
-        }
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // 这个必须要，没有的话进去的默认是个箭头。。正常应该是三横杠的
-        mDrawerToggle.syncState();
-        //初始化googleAccount
-        initGoogleAccount();
-        //评分对话框
-        apkScoring();
-    }
-
-    @Override
-    public void initFinish() {
-        swOnRefresh();
-        setCalendarChooser(calendarChose);
-    }
-
-    @Override
-    public void syncSuccess() {
-
-    }
-
-    @Override
-    public void syncError() {
-        swNoRefresh();
-    }
-
-    @Override
-    public void eventListFinish() {
-        refreshView();
-    }
-
-    //载入提醒事件
-    public void loadReminderCalendar() {
-        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
-        if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true) && !isFirstOpen) {
-            getEvents(mContext);
-        }
-        getCalendarId();
-        if (lunarReminderCalendarId == null) {
-            new LoadCalendars(this, getString(R.string.lunar_reminder_calendar_name), getString(R.string.pref_key_lunar_reminder_calendar_id)).execute();
-        } else if (listEvent != null) {
-            new LoadReminderEventList(this).execute();
-        } else {
-            new GetReminderEvents(this, lunarReminderCalendarId).execute();
-        }
-        if (isFirstOpen) {
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
-        }
-    }
-
-    //载入节气
-    public void loadSolarTerms() {
-        getCalendarId();
-        if (solarTermsCalendarId == null) {
-            new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
-        } else {
-            ACache mCache = ACache.get(this);
-            if (mCache.isExist("jq", ACache.STRING)) {
-                new LoadSolarTermsList(this).execute();
-            } else {
-                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
-            }
-        }
+    //悬浮按钮
+    private void initFloatingActionButton() {
+        fab.setOnClickListener((View view) -> {
+            googleEvent = null;
+            Intent intent = new Intent(mContext, EventEditActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("position", -1);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_REMINDER);
+        });
     }
     //侧边栏初始化
     private void initDrawer() {
