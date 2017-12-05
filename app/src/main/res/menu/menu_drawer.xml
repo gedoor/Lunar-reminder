@@ -6,9 +6,11 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/navReminder"
+            android:icon="@drawable/ic_event_available_black_24dp"
             android:title="@string/app_name" />
         <item
             android:id="@+id/navSolarTerms"
+            android:icon="@drawable/ic_event_black_24dp"
             android:title="@string/solar_terms_24" />
     </group>
 
@@ -19,18 +21,21 @@
             android:id="@+id/action_settings"
             android:orderInCategory="100"
             android:title="@string/action_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/action_about"
             android:orderInCategory="100"
             android:title="@string/action_about"
+            android:icon="@drawable/ic_open_in_new_black_24dp"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/action_donate"
             android:orderInCategory="100"
             android:title="@string/about_donate"
+            android:icon="@drawable/ic_open_in_new_black_24dp"
             app:showAsAction="never" />
     </group>
 
