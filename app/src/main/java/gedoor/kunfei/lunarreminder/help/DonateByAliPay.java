@@ -19,8 +19,8 @@ public class DonateByAliPay {
         } catch (Exception e) {
         }
         try {
-            final String alipayqr = "alipayqr://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode=" + qrcode;
-            openUri(context, alipayqr + "%3F_s%3Dweb-other&_t=" + System.currentTimeMillis());
+            final String alipayqr = "alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/" + qrcode;
+            openUri(context, alipayqr);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

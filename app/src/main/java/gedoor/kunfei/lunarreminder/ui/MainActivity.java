@@ -41,6 +41,7 @@ import gedoor.kunfei.lunarreminder.async.UpdateReminderEvents;
 import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
+import gedoor.kunfei.lunarreminder.help.DonateByAliPay;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
@@ -51,6 +52,7 @@ import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
 import static gedoor.kunfei.lunarreminder.App.getEvents;
 import static gedoor.kunfei.lunarreminder.App.googleEvent;
 import static gedoor.kunfei.lunarreminder.App.listEvent;
+import static gedoor.kunfei.lunarreminder.App.qrCodeAliPay;
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 
 public class MainActivity extends BaseActivity {
@@ -284,20 +286,22 @@ public class MainActivity extends BaseActivity {
             switch (menuItem.getItemId()) {
                 case R.id.navReminder:
                     setCalendarChooser(CALENDAR1);
-                    return true;
+                    break;
                 case R.id.navSolarTerms:
                     setCalendarChooser(CALENDAR2);
-                    return true;
+                    break;
                 case R.id.action_settings:
                     Intent intent = new Intent(this, SettingsActivity.class);
                     this.startActivityForResult(intent, REQUEST_SETTINGS);
-                    return true;
+                    break;
                 case R.id.action_about:
                     Intent intent_about = new Intent(this, AboutActivity.class);
                     this.startActivityForResult(intent_about, REQUEST_ABOUT);
-                    return true;
+                    break;
+                case R.id.action_donate:
+                    DonateByAliPay.openAlipayPayPage(this, qrCodeAliPay);
+                    break;
             }
-
             return true;
         });
     }

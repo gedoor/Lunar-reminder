@@ -22,6 +22,8 @@ import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.help.DonateByAliPay;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 
+import static gedoor.kunfei.lunarreminder.App.qrCodeAliPay;
+
 
 public class AboutActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
@@ -87,7 +89,7 @@ public class AboutActivity extends AppCompatActivity {
         ClipboardManager clipboardManager = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
         switch (view.getId()) {
             case R.id.zfb:
-                DonateByAliPay.openAlipayPayPage(this, "tsx06677nwdk3javroq4ef0");
+                DonateByAliPay.openAlipayPayPage(this, qrCodeAliPay);
                 break;
         }
     }

@@ -26,6 +26,7 @@ public class App extends Application {
      * 在Release状态下关闭以提示程序性能
      */
     public final static boolean DEBUG = BuildConfig.DEBUG;
+    public final static String qrCodeAliPay = "tsx06677nwdk3javroq4ef0";
 
     public static ArrayList<LinkedHashMap<String, ?>> listEvent;
     public static Event googleEvent;
