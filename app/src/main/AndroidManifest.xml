@@ -31,7 +31,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.EventEditActivity"
             android:label="@string/event"
@@ -43,11 +43,11 @@
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data android:value="58eef5aa65b6d60c3b001c09" android:name="UMENG_APPKEY" />
         <meta-data android:value="coolApk" android:name="UMENG_CHANNEL" />

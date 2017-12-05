@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,8 @@ import static gedoor.kunfei.lunarreminder.App.qrCodeAliPay;
 public class AboutActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
 
+    @BindView(R.id.main_toolbar)
+    Toolbar toolBar;
     @BindView(R.id.zfb)
     TextView zfb;
     @BindView(R.id.text_about_version)
@@ -36,10 +39,11 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new InitTheme(this, true);
+        new InitTheme(this, false);
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
 
+        setSupportActionBar(toolBar);
         setupActionBar();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

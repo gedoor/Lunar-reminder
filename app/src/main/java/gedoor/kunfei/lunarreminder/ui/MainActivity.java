@@ -19,6 +19,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -72,6 +73,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.main_view)
     View mainView;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
     @BindView(R.id.list_view_events)
     ListView listViewEvents;
     @BindView(R.id.text_view_no_events)
@@ -92,9 +95,10 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        initTheme = new InitTheme(this, true);
+        initTheme = new InitTheme(this, false);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
 
         setupActionBar();
         initDrawer();
@@ -102,7 +106,7 @@ public class MainActivity extends BaseActivity {
         initListView();
 
     }
-
+    //显示日历
     private void setCalendarChooser(int key) {
         swOnRefresh();
         switch (key) {
@@ -277,19 +281,20 @@ public class MainActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
+    //侧边栏按钮
     private void setUpNavigationView() {
-        ColorStateList textSl = getResources().getColorStateList(R.color.selecter);
-        navigationView.setItemTextColor(textSl);
-
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawer.closeDrawers();
             switch (menuItem.getItemId()) {
                 case R.id.navReminder:
-                    setCalendarChooser(CALENDAR1);
+                    if (calendarChose != CALENDAR1) {
+                        setCalendarChooser(CALENDAR1);
+                    }
                     break;
                 case R.id.navSolarTerms:
-                    setCalendarChooser(CALENDAR2);
+                    if (calendarChose != CALENDAR2) {
+                        setCalendarChooser(CALENDAR2);
+                    }
                     break;
                 case R.id.action_settings:
                     Intent intent = new Intent(this, SettingsActivity.class);

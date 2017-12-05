@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 
 /**
@@ -20,7 +21,6 @@ import gedoor.kunfei.lunarreminder.help.InitTheme;
  * to be used with AppCompat.
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
-
     private AppCompatDelegate mDelegate;
 
     @Override
