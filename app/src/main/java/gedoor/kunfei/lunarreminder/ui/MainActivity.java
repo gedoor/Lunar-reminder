@@ -84,12 +84,13 @@ public class MainActivity extends BaseActivity {
     DrawerLayout drawer;
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
-    @BindView(R.id.text_view_version)
-    TextView textViewVersion;
+    @BindView(R.id.google_user)
+    TextView tvGoogleAccount;
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         initTheme = new InitTheme(this, true);
         setContentView(R.layout.activity_main);
@@ -100,7 +101,6 @@ public class MainActivity extends BaseActivity {
         initFloatingActionButton();
         initListView();
 
-        textViewVersion.setText(getText(R.string.version) + sharedPreferences.getString("version", null));
     }
 
     private void setCalendarChooser(int key) {
@@ -136,6 +136,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initFinish() {
+        tvGoogleAccount.setText(mGoogleAccount);
         setCalendarChooser(calendarChose);
     }
 
