@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1001905863552",
+    "firebase_url": "https://lunar-reminder.firebaseio.com",
+    "project_id": "lunar-reminder",
+    "storage_bucket": "lunar-reminder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001905863552:android:9c419457058587ed",
+        "android_client_info": {
+          "package_name": "gedoor.kunfei.lunarreminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001905863552-mc8qve81gb6bsrvl06vgh1ap6jop4ipa.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1001905863552-1527327fsoa17utkcjh3pafm337jt67u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gedoor.kunfei.lunarreminder",
+            "certificate_hash": "fbfcde72f4dc64d95978add0c30825186f07be07"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0wnYZV_XUQ4v0qXbkm63KdUnSbl3JU70"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001905863552-mc8qve81gb6bsrvl06vgh1ap6jop4ipa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
