@@ -20,7 +20,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,13 +66,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onResume(mContext);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPause(mContext);
     }
 
     public void initGoogleAccount() {

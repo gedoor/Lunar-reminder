@@ -10,8 +10,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.umeng.analytics.MobclickAgent;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -88,7 +86,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 } catch (InterruptedException e) {
                 }
                 if (!debug) {
-                    MobclickAgent.onKillProcess(mContext);
                     android.os.Process.killProcess(android.os.Process.myPid());
                     System.exit(10);
                 } else
@@ -137,7 +134,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
             }.start();
         }
-        MobclickAgent.reportError(mContext, ex);
         return true;
     }
 
