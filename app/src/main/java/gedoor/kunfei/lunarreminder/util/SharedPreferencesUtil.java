@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class SharedPreferencesUtil {
-    //存储的sharedpreferences文件名
-    public static final String FILE_NAME = "cached_data";
+    //存储的sharedPreferences文件名
+    private static final String FILE_NAME = "cached_data";
 
     /**
      * 保存数据到文件
@@ -34,7 +34,7 @@ public class SharedPreferencesUtil {
             editor.putLong(key, (Long) data);
         }
 
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -51,7 +51,7 @@ public class SharedPreferencesUtil {
 
         editor.remove(key);
 
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -98,7 +98,7 @@ public class SharedPreferencesUtil {
     public static void clearData(Context context) {
         SharedPreferences sharedPreferences = context
                 .getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().clear().commit();
+        sharedPreferences.edit().clear().apply();
     }
 
 
