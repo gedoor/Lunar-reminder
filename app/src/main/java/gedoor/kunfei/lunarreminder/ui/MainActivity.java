@@ -160,6 +160,7 @@ public class MainActivity extends BaseActivity {
     }
 
     //载入提醒事件
+    @Override
     public void loadReminderCalendar() {
         Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true) && !isFirstOpen) {
@@ -176,17 +177,16 @@ public class MainActivity extends BaseActivity {
     }
 
     //载入节气
+    @Override
     public void loadSolarTerms() {
         getCalendarId();
+        String strJQ = SharedPreferencesUtil.getString(this, "jq", null);
         if (solarTermsCalendarId == null) {
             new LoadCalendars(this, getString(R.string.solar_terms_calendar_name), getString(R.string.pref_key_solar_terms_calendar_id)).execute();
-        } else {
-            String strJQ = (String) SharedPreferencesUtil.getString(this, "jq", null);
-            if (strJQ != null) {
-                new LoadSolarTermsList(this).execute();
-            } else {
-                new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
-            }
+        } else if (strJQ != null) {
+            new LoadSolarTermsList(this, strJQ).execute();
+        }else {
+            new InsertSolarTermsEvents(this, solarTermsCalendarId).execute();
         }
     }
 

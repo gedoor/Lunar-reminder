@@ -31,7 +31,6 @@ public class LoadCalendars extends CalendarAsyncTask {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         CalendarList feed = client.calendarList().list().setFields("items(id,summary)").execute();
-        String timeZone = TimeZone.getDefault().toString();
         for (CalendarListEntry calendar : feed.getItems()) {
             Log.d(TAG, "return calendar summary:" + calendar.getSummary() + " timeZone:" + calendar.getTimeZone());
             if (calendar.getSummary().equals(calendarName)) {
@@ -41,18 +40,17 @@ public class LoadCalendars extends CalendarAsyncTask {
                 editor.apply();
             }
         }
+    }
+
+    @Override
+    protected void onPostExecute(Boolean success) {
+        super.onPostExecute(success);
         if (calendarId == null) {
             new InsertCalendar(activity, calendarName, calendarPrefKey).execute();
         } else if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
-            new GetReminderEvents(activity, calendarId).execute();
+            activity.loadReminderCalendar();
         } else {
-            String strJQ = (String) SharedPreferencesUtil.getString(activity, "jq", null);
-            if (strJQ == null) {
-                new LoadSolarTermsList(activity).execute();
-            } else {
-                new InsertSolarTermsEvents(activity, calendarId).execute();
-            }
+            activity.loadSolarTerms();
         }
     }
-
 }

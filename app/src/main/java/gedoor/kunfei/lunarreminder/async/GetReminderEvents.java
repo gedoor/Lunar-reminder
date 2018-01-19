@@ -60,18 +60,17 @@ public class GetReminderEvents extends CalendarAsyncTask {
                     .setTimeMin(startDT).setTimeMax(endDT).execute();
             this.events = events.getItems();
         }
-
-    }
-
-    @Override
-    protected void onPostExecute(Boolean success) {
-        super.onPostExecute(success);
         Gson gson = new Gson();
         String strEvents = gson.toJson(events);
         SharedPreferencesUtil.saveData(activity, "events", strEvents);
         listEvent = gson.fromJson(strEvents, new TypeToken<ArrayList<LinkedHashMap<String, ?>>>() {
         }.getType());
-        new LoadReminderEventList(activity).execute();
+    }
+
+    @Override
+    protected void onPostExecute(Boolean success) {
+        super.onPostExecute(success);
+        activity.loadReminderCalendar();
     }
 
     private void getCalendarColor() throws IOException {
