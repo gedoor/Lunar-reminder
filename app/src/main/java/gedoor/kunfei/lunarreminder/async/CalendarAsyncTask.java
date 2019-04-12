@@ -14,6 +14,7 @@
 
 package gedoor.kunfei.lunarreminder.async;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -30,6 +31,7 @@ import java.util.Map;
 import gedoor.kunfei.lunarreminder.ui.BaseActivity;
 
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean> {
+    @SuppressLint("StaticFieldLeak")
     BaseActivity activity;
     com.google.api.services.calendar.Calendar client;
     private String errorStr;

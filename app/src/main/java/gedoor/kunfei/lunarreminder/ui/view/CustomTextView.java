@@ -20,7 +20,7 @@ import gedoor.kunfei.lunarreminder.R;
  * CustomTextView
  * @author Qiugang & jiaowenzheng
  */
-public class CustomTextView extends android.support.v7.widget.AppCompatTextView {
+public class CustomTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private GradientDrawable normalGD;
     private GradientDrawable pressedGD;

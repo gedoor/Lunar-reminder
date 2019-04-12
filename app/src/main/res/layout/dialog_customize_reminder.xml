@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="10dp"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/textView_daysAgo"
-        android:labelFor="@id/editText_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:labelFor="@id/editText_day"
         android:padding="@dimen/padding_default"
         android:text="@string/how_days_before" />
 
@@ -18,13 +19,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="number" />
+        android:importantForAutofill="no"
+        android:inputType="number"
+        tools:ignore="UnusedAttribute" />
 
     <TextView
         android:id="@+id/textView_time"
-        android:labelFor="@id/editText_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:labelFor="@id/editText_time"
         android:padding="@dimen/padding_default"
         android:text="@string/time" />
 

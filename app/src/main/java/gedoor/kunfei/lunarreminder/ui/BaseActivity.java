@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.data.FinalFields;
-import gedoor.kunfei.lunarreminder.async.InsertCalendar;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
