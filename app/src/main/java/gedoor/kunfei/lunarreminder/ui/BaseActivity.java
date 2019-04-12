@@ -116,6 +116,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
+    public void loadReminderCalendar() {
+
+    }
+
+    public void loadSolarTerms() {
+
+    }
+
     public void getCalendarId() {
         lunarReminderCalendarId = sharedPreferences.getString(getString(R.string.pref_key_lunar_reminder_calendar_id), null);
         solarTermsCalendarId = sharedPreferences.getString(getString(R.string.pref_key_solar_terms_calendar_id), null);

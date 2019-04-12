@@ -43,9 +43,9 @@ public class InsertCalendar extends CalendarAsyncTask {
         editor.putString(calendarPrefKey, calendarId);
         editor.apply();
         if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
-            new GetReminderEvents(activity, calendarId).execute();
+            activity.loadReminderCalendar();
         } else {
-            new InsertSolarTermsEvents(activity, calendarId).execute();
+            activity.loadSolarTerms();
         }
     }
 }

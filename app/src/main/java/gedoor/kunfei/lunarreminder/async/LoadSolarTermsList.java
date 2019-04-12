@@ -21,9 +21,11 @@ import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 public class LoadSolarTermsList extends CalendarAsyncTask {
     private ArrayList<HashMap<String, String>> list;
+    String jqStr;
 
-    public LoadSolarTermsList(BaseActivity activity) {
+    public LoadSolarTermsList(BaseActivity activity, String jqStr) {
         super(activity);
+        this.jqStr = jqStr;
     }
 
     @SuppressLint("WrongConstant")
@@ -32,9 +34,8 @@ public class LoadSolarTermsList extends CalendarAsyncTask {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int intBgColor = sharedPreferences.getInt(activity.getString(R.string.pref_key_solar_terms_calendar_color), 0);
         String strBgColor = String.format("#%06X", 0xFFFFFF & intBgColor);
-        String str = (String) SharedPreferencesUtil.getString(activity,"jq", null);
         Gson gson = new Gson();
-        list = gson.fromJson(str, new TypeToken<ArrayList<HashMap<String, String>>>(){}.getType());
+        list = gson.fromJson(jqStr, new TypeToken<ArrayList<HashMap<String, String>>>(){}.getType());
         for (HashMap<String, String> hp : list) {
             hp.put("bgColor", strBgColor);
         }

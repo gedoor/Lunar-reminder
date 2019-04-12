@@ -49,7 +49,7 @@ public class App extends Application {
         if (listEvent != null) {
             return true;
         }
-        String strEvents = (String) SharedPreferencesUtil.getString(context, "events", null);
+        String strEvents = SharedPreferencesUtil.getString(context, "events", null);
         if (strEvents != null) {
             Gson gson = new Gson();
             listEvent = gson.fromJson(strEvents, new TypeToken<ArrayList<LinkedHashMap<String, ?>>>() {

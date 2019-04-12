@@ -103,7 +103,7 @@ public class InsertSolarTermsEvents extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        new LoadSolarTermsList(activity).execute();
+        activity.loadSolarTerms();
     }
 
     private void getCalendarColor() throws IOException {
