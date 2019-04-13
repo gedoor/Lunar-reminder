@@ -1,11 +1,7 @@
-package gedoor.kunfei.lunarreminder.ui.view;
+package gedoor.kunfei.lunarreminder.ui.Adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
@@ -13,9 +9,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.widget.CustomTextView;
 
 
 /**

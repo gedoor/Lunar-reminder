@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 
 import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 
 import static gedoor.kunfei.lunarreminder.App.listEvent;

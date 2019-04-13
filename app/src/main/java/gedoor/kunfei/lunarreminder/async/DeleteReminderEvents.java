@@ -4,12 +4,10 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 
 import static gedoor.kunfei.lunarreminder.data.FinalFields.LunarRepeatId;
 

@@ -1,17 +1,15 @@
 package gedoor.kunfei.lunarreminder.async;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.api.services.calendar.model.Calendar;
-import com.google.api.services.calendar.model.CalendarListEntry;
 
 import java.io.IOException;
 
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 
 public class InsertCalendar extends CalendarAsyncTask {
     private static final String TAG = "AsyncInsertCalendar";

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="gedoor.kunfei.lunarreminder.ui.AboutActivity">
+    tools:context="gedoor.kunfei.lunarreminder.ui.activity.AboutActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

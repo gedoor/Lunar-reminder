@@ -21,7 +21,7 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         tools:targetApi="n">
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -32,23 +32,23 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.EventEditActivity"
+            android:name=".ui.activity.EventEditActivity"
             android:label="@string/event"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.EventReadActivity"
+            android:name=".ui.activity.EventReadActivity"
             android:label="@string/event"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.AboutActivity"
+            android:name=".ui.activity.AboutActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar"/>
 

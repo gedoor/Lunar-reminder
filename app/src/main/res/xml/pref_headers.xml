@@ -3,22 +3,22 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="gedoor.kunfei.lunarreminder.ui.SettingsActivity$AppPreferenceFragment"
+        android:fragment="gedoor.kunfei.lunarreminder.ui.activity.SettingsActivity$AppPreferenceFragment"
         android:icon="@drawable/ic_developer_mode_black_24dp"
         android:title="@string/pref_header_app_config" />
 
     <header
-        android:fragment="gedoor.kunfei.lunarreminder.ui.SettingsActivity$CalendarPreferenceFragment"
+        android:fragment="gedoor.kunfei.lunarreminder.ui.activity.SettingsActivity$CalendarPreferenceFragment"
         android:icon="@drawable/ic_date_range_black_24dp"
         android:title="@string/pref_header_reminder_calendar_config" />
 
     <header
-        android:fragment="gedoor.kunfei.lunarreminder.ui.SettingsActivity$EventPreferenceFragment"
+        android:fragment="gedoor.kunfei.lunarreminder.ui.activity.SettingsActivity$EventPreferenceFragment"
         android:icon="@drawable/ic_event_note_black_24dp"
         android:title="@string/pref_header_reminder_event_config" />
 
     <header
-        android:fragment="gedoor.kunfei.lunarreminder.ui.SettingsActivity$SolarTermsPreferenceFragment"
+        android:fragment="gedoor.kunfei.lunarreminder.ui.activity.SettingsActivity$SolarTermsPreferenceFragment"
         android:icon="@drawable/ic_date_range_black_24dp"
         android:title="@string/pref_header_solar_terms_config" />
 

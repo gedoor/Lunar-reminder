@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.Properties;
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
 

@@ -25,10 +25,8 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlaySe
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 
 public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean> {
     @SuppressLint("StaticFieldLeak")

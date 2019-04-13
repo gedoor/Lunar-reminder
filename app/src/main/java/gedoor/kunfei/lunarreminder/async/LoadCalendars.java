@@ -8,11 +8,9 @@ import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
 
 import java.io.IOException;
-import java.util.TimeZone;
 
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 
 public class LoadCalendars extends CalendarAsyncTask {
     private static final String TAG = "AsyncLoadCalendars";

@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.ui;
+package gedoor.kunfei.lunarreminder.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -45,6 +45,7 @@ import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
+import gedoor.kunfei.lunarreminder.widget.DialogGLC;
 
 import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
 import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
@@ -56,7 +57,7 @@ import static gedoor.kunfei.lunarreminder.App.listEvent;
  */
 @SuppressLint("WrongConstant")
 public class EventEditActivity extends BaseActivity {
-    ChineseCalendar cc = new ChineseCalendar();
+     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
     List<EventReminder> listReminder = new ArrayList<>();
     ArrayList<HashMap<String, String>> listReminderDis = new ArrayList<>();
@@ -66,7 +67,7 @@ public class EventEditActivity extends BaseActivity {
     boolean isShortcut;
     boolean isCreateReminder;
     EventReminder oldReminder;
-
+    DialogGLC mDialog;
     int cYear;
     int position;
     String lunarRepeatType;
@@ -424,19 +425,19 @@ public class EventEditActivity extends BaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void selectDate() {
-//        mDialog = new DialogGLC(this, ((ChineseCalendar cc) -> {
-//            this.cc = cc;
-//            textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-//        }));
-//
-//        if (mDialog.isShowing()) {
-//            mDialog.dismiss();
-//        } else {
-//            mDialog.setCancelable(true);
-//            mDialog.setCanceledOnTouchOutside(true);
-//            mDialog.show();
-//            mDialog.initCalendar(cc, false);
-//        }
+        mDialog = new DialogGLC(this, ((ChineseCalendar cc) -> {
+            this.cc = cc;
+            textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+        }));
+
+        if (mDialog.isShowing()) {
+            mDialog.dismiss();
+        } else {
+            mDialog.setCancelable(true);
+            mDialog.setCanceledOnTouchOutside(true);
+            mDialog.show();
+            mDialog.initCalendar(cc, false);
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.ui;
+package gedoor.kunfei.lunarreminder.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -42,7 +42,7 @@ import gedoor.kunfei.lunarreminder.R;
 import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.help.DonateByAliPay;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
-import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
+import gedoor.kunfei.lunarreminder.ui.Adapter.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
 
 import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;

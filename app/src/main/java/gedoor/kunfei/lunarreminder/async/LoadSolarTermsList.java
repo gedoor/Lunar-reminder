@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import gedoor.kunfei.lunarreminder.R;
-import gedoor.kunfei.lunarreminder.ui.BaseActivity;
-import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
+import gedoor.kunfei.lunarreminder.ui.activity.BaseActivity;
 
 /**
  * 载入节气

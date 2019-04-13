@@ -1,4 +1,4 @@
-package gedoor.kunfei.lunarreminder.ui.view;
+package gedoor.kunfei.lunarreminder.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
