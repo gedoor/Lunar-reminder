@@ -12,10 +12,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 
@@ -39,7 +39,7 @@ public abstract class  BaseActivity extends AppCompatActivity {
     public static final int REQUEST_AUTHORIZATION = 103;
 
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
-    final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    final JsonFactory jsonFactory = new AndroidJsonFactory();
     final String[] perms = {Manifest.permission.GET_ACCOUNTS, Manifest.permission.READ_PHONE_STATE};
 
     public Context mContext;

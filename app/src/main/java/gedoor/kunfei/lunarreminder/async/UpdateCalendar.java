@@ -8,10 +8,10 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.CalendarListEntry;
@@ -27,7 +27,7 @@ import gedoor.kunfei.lunarreminder.R;
 
 public class UpdateCalendar extends AsyncTask<Void, Integer, Boolean> {
     private final HttpTransport transport = AndroidHttp.newCompatibleTransport();
-    private final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+    private final JsonFactory jsonFactory = new AndroidJsonFactory();
     private Context mContext;
     private ProgressDialog mDialog;
     private String calendarId;
