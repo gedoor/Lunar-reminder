@@ -72,8 +72,5 @@ dependencies {
     //颜色选择
     implementation 'com.jaredrummler:colorpicker:1.1.0'
 
-    //other
-    implementation 'cn.carbs.android:IndicatorView:1.0.2'
-    implementation 'cn.carbswang.android:NumberPickerView:1.1.0'
 }
 apply plugin: 'com.google.gms.google-services'
