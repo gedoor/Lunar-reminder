@@ -70,7 +70,9 @@ public class GetReminderEvents extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        activity.loadReminderCalendar();
+        if (success) {
+            activity.loadReminderCalendar();
+        }
     }
 
     private void getCalendarColor() throws IOException {

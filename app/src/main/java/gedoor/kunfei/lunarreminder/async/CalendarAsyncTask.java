@@ -58,7 +58,6 @@ public abstract class CalendarAsyncTask extends AsyncTask<Void, Integer, Boolean
         } catch (UserRecoverableAuthIOException userRecoverableException) {
             publishProgress(-1);
             activity.startActivityForResult(userRecoverableException.getIntent(), BaseActivity.REQUEST_AUTHORIZATION);
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
             errorStr = e.getMessage();

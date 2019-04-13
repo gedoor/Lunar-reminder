@@ -69,8 +69,10 @@ public class LoadReminderEventList extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        activity.list.clear();
-        activity.list.addAll(list);
-        activity.eventListFinish();
+        if (success) {
+            activity.list.clear();
+            activity.list.addAll(list);
+            activity.eventListFinish();
+        }
     }
 }

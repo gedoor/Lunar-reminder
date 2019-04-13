@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity {
     //载入提醒事件
     @Override
     public void loadReminderCalendar() {
-        Boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
+        boolean isFirstOpen = sharedPreferences.getBoolean(getString(R.string.pref_key_first_open), true);
         if (sharedPreferences.getBoolean(getString(R.string.pref_key_cache_events), true) && !isFirstOpen) {
             getEvents(mContext);
         }

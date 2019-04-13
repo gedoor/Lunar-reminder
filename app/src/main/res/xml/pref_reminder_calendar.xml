@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:attr="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
         android:key="@string/pref_key_lunar_reminder_calendar_name"
@@ -15,15 +15,10 @@
         android:title="@string/pref_title_calendar_id"
         android:summary=""/>
 
-    <gedoor.kunfei.lunarreminder.ui.preference.ColorPreference
+    <com.jaredrummler.android.colorpicker.ColorPreference
+        android:defaultValue="@color/yellow"
         android:key="@string/pref_key_reminder_calendar_color"
         android:title="@string/pref_title_calendar_background"
-        android:defaultValue="@color/yellow"
-        attr:dialogTitle="@string/select_color"
-        attr:colors="@array/calendar_rainbow"
-        attr:columns="5"
-        attr:material="true"
-        attr:backwardsOrder="true"
-        attr:strokeWidth="0"/>
+        app:cpv_dialogType="preset" />
 
 </PreferenceScreen>

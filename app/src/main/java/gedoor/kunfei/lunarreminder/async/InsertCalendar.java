@@ -38,14 +38,16 @@ public class InsertCalendar extends CalendarAsyncTask {
     @Override
     protected void onPostExecute(Boolean success) {
         super.onPostExecute(success);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(calendarPrefKey, calendarId);
-        editor.apply();
-        if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
-            activity.loadReminderCalendar();
-        } else {
-            activity.loadSolarTerms();
+        if (success) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(calendarPrefKey, calendarId);
+            editor.apply();
+            if (calendarName.equals(activity.getString(R.string.lunar_reminder_calendar_name))) {
+                activity.loadReminderCalendar();
+            } else {
+                activity.loadSolarTerms();
+            }
         }
     }
 }
