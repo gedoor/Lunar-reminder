@@ -44,7 +44,6 @@ import gedoor.kunfei.lunarreminder.help.DonateByAliPay;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.ui.view.SimpleAdapterEvent;
 import gedoor.kunfei.lunarreminder.util.SharedPreferencesUtil;
-import pub.devrel.easypermissions.AfterPermissionGranted;
 
 import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
 import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
@@ -427,11 +426,6 @@ public class MainActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-    @SuppressLint("WrongConstant")
-    @AfterPermissionGranted(REQUEST_PERMS)
-    private void methodRequiresPermission() {
-        afterPermissionGranted();
     }
 
     @Override

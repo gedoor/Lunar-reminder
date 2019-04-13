@@ -192,10 +192,8 @@ public class ColorPreference extends Preference implements ColorPickerSwatch
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mColorView.setBackground(new ShapeDrawable(new OvalShape()));
             ((ShapeDrawable) mColorView.getBackground()).getPaint().setColor(mCurrentValue);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mColorView.setBackground(new ColorCircleDrawable(mCurrentValue));
         } else {
-            mColorView.setBackgroundDrawable(new ColorCircleDrawable(mCurrentValue));
+            mColorView.setBackground(new ColorCircleDrawable(mCurrentValue));
         }
         mColorView.invalidate();
     }

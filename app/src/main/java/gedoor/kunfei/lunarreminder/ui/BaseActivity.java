@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -25,15 +23,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import gedoor.kunfei.lunarreminder.R;
-import pub.devrel.easypermissions.EasyPermissions;
+import gedoor.kunfei.lunarreminder.util.PermissionUtils;
 
 /**
  * Created by GKF on 2017/4/12.
  * 农历初始化
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class  BaseActivity extends AppCompatActivity {
     public static final int REQUEST_PERMS = 101;
     public static final int REQUEST_ACCOUNT_PICKER = 102;
     public static final int REQUEST_AUTHORIZATION = 103;
@@ -72,29 +72,39 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void initGoogleAccount() {
-        //get permission
-        if (!EasyPermissions.hasPermissions(mContext, perms)) {
-            EasyPermissions.requestPermissions(this, "get permissions", REQUEST_PERMS, perms);
-            return;
-        }
-        //检查google服务
-        if (!checkGooglePlayServicesAvailable()) {
-            Toast.makeText(mContext, R.string.no_google_services, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        //初始化Google账号
-        mGoogleAccount = mGoogleAccount == null ? sharedPreferences.getString(getString(R.string.pref_key_google_account), null) : mGoogleAccount;
-        credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
-        credential.setSelectedAccountName(mGoogleAccount);
-        if (credential.getSelectedAccountName() == null) {
-            startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
-            return;
-        }
-        client = new Calendar.Builder(transport, jsonFactory, credential)
-                .setApplicationName("Google-LunarReminder")
-                .build();
-        initFinish();
+        PermissionUtils.checkMorePermissions(this, perms, new PermissionUtils.PermissionCheckCallBack() {
+            @Override
+            public void onHasPermission() {
+                //检查google服务
+                if (!checkGooglePlayServicesAvailable()) {
+                    Toast.makeText(mContext, R.string.no_google_services, Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+                }
+                //初始化Google账号
+                mGoogleAccount = mGoogleAccount == null ? sharedPreferences.getString(getString(R.string.pref_key_google_account), null) : mGoogleAccount;
+                credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
+                credential.setSelectedAccountName(mGoogleAccount);
+                if (credential.getSelectedAccountName() == null) {
+                    startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+                    return;
+                }
+                client = new Calendar.Builder(transport, jsonFactory, credential)
+                        .setApplicationName("Google-LunarReminder")
+                        .build();
+                initFinish();
+            }
+
+            @Override
+            public void onUserHasAlreadyTurnedDown(String... permission) {
+                Toast.makeText(BaseActivity.this, "请给于电话和账户访问权限", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onAlreadyTurnedDownAndNoAsk(String... permission) {
+                PermissionUtils.requestMorePermissions(BaseActivity.this, permission, REQUEST_PERMS);
+            }
+        });
     }
 
     public void initFinish() {
@@ -134,25 +144,49 @@ public abstract class BaseActivity extends AppCompatActivity {
         final int connectionStatusCode = apiAvailability.isGooglePlayServicesAvailable(mContext);
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
-    //获取权限
-    public void afterPermissionGranted() {
-        if (EasyPermissions.hasPermissions(mContext, perms)) {
-            initGoogleAccount();
-        } else {
-            Toast.makeText(mContext, "没有权限,程序无法使用", Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+        PermissionUtils.checkMorePermissions(this, perms, new PermissionUtils.PermissionCheckCallBack() {
+            @Override
+            public void onHasPermission() {
+                //检查google服务
+                if (!checkGooglePlayServicesAvailable()) {
+                    Toast.makeText(mContext, R.string.no_google_services, Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+                }
+                //初始化Google账号
+                mGoogleAccount = mGoogleAccount == null ? sharedPreferences.getString(getString(R.string.pref_key_google_account), null) : mGoogleAccount;
+                credential = GoogleAccountCredential.usingOAuth2(mContext, Collections.singleton(CalendarScopes.CALENDAR));
+                credential.setSelectedAccountName(mGoogleAccount);
+                if (credential.getSelectedAccountName() == null) {
+                    startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+                    return;
+                }
+                client = new Calendar.Builder(transport, jsonFactory, credential)
+                        .setApplicationName("Google-LunarReminder")
+                        .build();
+                initFinish();
+            }
+
+            @Override
+            public void onUserHasAlreadyTurnedDown(String... permission) {
+                PermissionUtils.requestMorePermissions(BaseActivity.this, permission, REQUEST_PERMS);
+            }
+
+            @Override
+            public void onAlreadyTurnedDownAndNoAsk(String... permission) {
+                Toast.makeText(mContext, "没有权限,程序无法使用", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_ACCOUNT_PICKER:

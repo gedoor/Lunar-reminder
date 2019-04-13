@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +20,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventReminder;
 
@@ -32,33 +30,32 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import gedoor.kunfei.lunarreminder.App;
-import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.R;
+import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
+import gedoor.kunfei.lunarreminder.data.FinalFields;
 import gedoor.kunfei.lunarreminder.data.GEvent;
 import gedoor.kunfei.lunarreminder.data.Properties;
 import gedoor.kunfei.lunarreminder.help.InitTheme;
 import gedoor.kunfei.lunarreminder.help.ReminderHelp;
-import gedoor.kunfei.lunarreminder.async.InsertReminderEvents;
-import gedoor.kunfei.lunarreminder.ui.view.DialogGLC;
 import gedoor.kunfei.lunarreminder.util.ChineseCalendar;
 import gedoor.kunfei.lunarreminder.util.EventTimeUtil;
-import pub.devrel.easypermissions.AfterPermissionGranted;
 
-import static gedoor.kunfei.lunarreminder.App.listEvent;
-import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
 import static gedoor.kunfei.lunarreminder.App.eventRepeatNum;
+import static gedoor.kunfei.lunarreminder.App.eventRepeatType;
 import static gedoor.kunfei.lunarreminder.App.googleEvent;
+import static gedoor.kunfei.lunarreminder.App.listEvent;
 
 /**
  * 编辑创建事件
  */
 @SuppressLint("WrongConstant")
 public class EventEditActivity extends BaseActivity {
-    DialogGLC mDialog;
     ChineseCalendar cc = new ChineseCalendar();
     Event.Reminders reminders;
     List<EventReminder> listReminder = new ArrayList<>();
@@ -427,24 +424,19 @@ public class EventEditActivity extends BaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void selectDate() {
-        mDialog = new DialogGLC(this, ((ChineseCalendar cc) -> {
-            this.cc = cc;
-            textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
-        }));
-
-        if (mDialog.isShowing()) {
-            mDialog.dismiss();
-        } else {
-            mDialog.setCancelable(true);
-            mDialog.setCanceledOnTouchOutside(true);
-            mDialog.show();
-            mDialog.initCalendar(cc, false);
-        }
-    }
-
-    @AfterPermissionGranted(REQUEST_PERMS)
-    private void methodRequiresPermission() {
-        afterPermissionGranted();
+//        mDialog = new DialogGLC(this, ((ChineseCalendar cc) -> {
+//            this.cc = cc;
+//            textChineseDate.setText(cc.getChinese(ChineseCalendar.CHINESE_MONTH) + cc.getChinese(ChineseCalendar.CHINESE_DATE));
+//        }));
+//
+//        if (mDialog.isShowing()) {
+//            mDialog.dismiss();
+//        } else {
+//            mDialog.setCancelable(true);
+//            mDialog.setCanceledOnTouchOutside(true);
+//            mDialog.show();
+//            mDialog.initCalendar(cc, false);
+//        }
     }
 
     @Override
